@@ -9,5 +9,5 @@ data class FundEntity(
     val id: Int = 0,
     val name: String,
     val balance: Double,
-    val createdAt: Long = System.currentTimeMillis(),
+    val createdAt: Long = System.currentTimeMillis()
 )
