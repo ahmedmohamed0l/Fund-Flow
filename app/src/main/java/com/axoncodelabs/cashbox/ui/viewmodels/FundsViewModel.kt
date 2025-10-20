@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FundsViewModel @Inject constructor(
-    private val repository: CashBoxRepository,
+    private val repository: CashBoxRepository
 ) : ViewModel() {
     val funds = repository.getAllFunds().stateIn(
         viewModelScope,
@@ -31,31 +31,64 @@ class FundsViewModel @Inject constructor(
     val selectedFund: State<FundEntity?> = _selectedFund
 
     // Actions
-    fun showAddFundDialog() {_showAddFundDialog.value = true}
-    fun hideAddFundDialog() {_showAddFundDialog.value = false}
+    fun showAddFundDialog() {
+        _showAddFundDialog.value = true
+    }
 
-    fun showTransferDialog() {_showTransferDialog.value = true}
-    fun hideTransferDialog() {_showTransferDialog.value = false}
+    fun hideAddFundDialog() {
+        _showAddFundDialog.value = false
+    }
 
-    fun selectFund(fund: FundEntity?) {_selectedFund.value = fund}
+    fun showTransferDialog() {
+        _showTransferDialog.value = true
+    }
+
+    fun hideTransferDialog() {
+        _showTransferDialog.value = false
+    }
+
+    fun selectFund(fund: FundEntity?) {
+        _selectedFund.value = fund
+    }
 
     suspend fun addFund(name: String, balance: Double): Result<Boolean> {
         return try {
             repository.insertFund(FundEntity(name = name, balance = balance))
             Result.success(true)
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    suspend fun updateFund(fund: FundEntity): Result<Boolean>{
+    suspend fun updateFund(fund: FundEntity): Result<Boolean> {
         return try {
             repository.updateFund(fund)
             Result.success(true)
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
+    suspend fun deleteFund(fund: FundEntity): Result<Boolean> {
+        return try {
+            repository.deleteFund(fund)
+            Result.success(true)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
+    suspend fun transferFunds(
+        fromFundId: Int,
+        toFundId: Int,
+        amount: Double,
+        description: String,
+    ): Result<Boolean> {
+        return try {
+            repository.transferBetweenFunds(fromFundId, toFundId, amount, description)
+            Result.success(true)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }
