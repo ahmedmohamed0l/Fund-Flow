@@ -1,6 +1,8 @@
 package com.axoncodelabs.cashbox.data.di
 
+import android.app.Application
 import android.content.Context
+import androidx.room.Room
 import com.axoncodelabs.cashbox.data.local.CashBoxDatabase
 import com.axoncodelabs.cashbox.data.local.dao.FundDao
 import com.axoncodelabs.cashbox.data.local.dao.TransactionDao
@@ -17,8 +19,12 @@ import jakarta.inject.Singleton
 object AppModule {
     @Provides
     @Singleton
-    fun provideCashBoxDatabase(@ApplicationContext context: Context): CashBoxDatabase {
-        return CashBoxDatabase.getInstance(context)
+    fun provideCashBoxDatabase(app : Application): CashBoxDatabase {
+        return Room.databaseBuilder(
+            app,
+            CashBoxDatabase::class.java,
+            "cashbox_db"
+        ).build()
     }
 
     @Provides

@@ -17,18 +17,4 @@ import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 abstract class CashBoxDatabase : RoomDatabase() {
     abstract fun fundDao(): FundDao
     abstract fun transactionDao(): TransactionDao
-
-    companion object {
-        @Volatile
-        private var instance: CashBoxDatabase? = null
-        fun getInstance(context: Context): CashBoxDatabase {
-            return instance ?: synchronized(this) {
-                instance ?: Room.databaseBuilder(
-                    context.applicationContext,
-                    CashBoxDatabase::class.java,
-                    "cashbox_db"
-                ).build().also { instance = it }
-            }
-        }
-    }
 }
