@@ -29,7 +29,4 @@ class ExpensesViewModel @Inject constructor(
 
     private val _showDatePickerDialog = mutableStateOf(false)
     val showDatePickerDialog: State<Boolean> = _showDatePickerDialog
-
-    //TODO CHECKPOINT: "ChatGPT" (ExpensesViewModel -> Create UI Event/State)
-
 }
