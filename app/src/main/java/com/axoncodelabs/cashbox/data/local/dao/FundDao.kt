@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface FundDao {
     @Insert
-    suspend fun insertFund(fund: FundEntity) : Long
+    suspend fun insertFund(fund: FundEntity): Long
 
     @Update
     suspend fun updateFund(fund: FundEntity)

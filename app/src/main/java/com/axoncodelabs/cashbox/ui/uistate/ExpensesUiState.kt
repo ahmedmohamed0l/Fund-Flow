@@ -1,5 +1,4 @@
 package com.axoncodelabs.cashbox.ui.uistate
 
-data class ExpensesUiState(
-
-)
+/* Temporarily paused to test Hilt build
+data class ExpensesUiState()*/

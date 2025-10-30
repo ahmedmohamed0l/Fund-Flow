@@ -1,12 +1,9 @@
 package com.axoncodelabs.cashbox.data.repository
 
-import com.axoncodelabs.cashbox.data.local.dao.FundDao
-import com.axoncodelabs.cashbox.data.local.dao.TransactionDao
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionType
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 interface CashBoxRepository {
     // Funds
@@ -29,14 +26,13 @@ interface CashBoxRepository {
         startDate: Long,
         endDate: Long,
     ): Flow<List<TransactionEntity>>
+
     fun getTransactionsSumByType(
         fundId: Int,
         type: TransactionType,
         startDate: Long,
         endDate: Long,
     ): Flow<Double>
-    /* I'll not use it
-        fun getTransactionsByFundAndDate(fundId: Int, startDate: Long, endDate: Long) : Flow<List<TransactionEntity>>*/
 
     // Funds Transfer
     suspend fun transferBetweenFunds(

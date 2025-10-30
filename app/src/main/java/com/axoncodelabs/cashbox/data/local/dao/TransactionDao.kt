@@ -44,12 +44,4 @@ interface TransactionDao {
         startDate: Long,
         endDate: Long,
     ): Flow<Double>
-
-    /* I'll not use it
-    @Query("SELECT * FROM transactions WHERE fundId = :fundId AND date BETWEEN :startDate AND :endDate ORDER BY date DESC")
-    fun getTransactionsByFundAndDate(
-        fundId: Int,
-        startDate: Long,
-        endDate: Long,
-    ): Flow<List<TransactionEntity>>*/
 }

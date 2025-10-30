@@ -1,5 +1,6 @@
 package com.axoncodelabs.cashbox.ui.viewmodels
 
+/* Temporarily paused to test Hilt build
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -91,4 +92,4 @@ class FundsViewModel @Inject constructor(
             Result.failure(e)
         }
     }
-}
+}*/
