@@ -1,3 +1,48 @@
 <resources>
     <string name="app_name">Cash Box</string>
+    <!--_______________[ExpensesScreen]_______________-->
+    <string name="ExpensesScreen_Identifier">المصروفات</string>
+    <string name="NoExpensesPage_Title">ابدأ في إضافة مصروفاتك اليومية من الزر الأخضر لتتمكن من مشاهدتها لاحقاً</string>
+    <string name="NoExpensesPage_Description">ولا تنسي أن تكتب كل المصروفات حتي لو كانت صغيرة مثل المواصلات، وجبة الافطار، مصروفات المنزل، مصروف الأولاد</string>
+    <!--_____[AddExpense]_____-->
+    <string name="AddExpenseValue_Hint">أكتب المبلغ المصروف</string>
+    <string name="AddExpenseFund_Hint">اختر الصندوق</string>
+    <string name="AddExpenseDescription_Hint">الوصف مثال: (المواصلات او الايجار او إلخ..)</string>
+    <string name="AddExpense_Bttn">إضافة المصروف</string>
+
+    <!--_______________[FundsScreen]_______________-->
+    <string name="FundsScreen_Identifier">الصناديق</string>
+    <string name="Funds_Total">مجموع الصناديق</string>
+    <!--_____[AddDeposit]_____-->
+    <string name="AddDeposit_FundNameLapel">اسم الصندوق</string>
+    <string name="AddDeposit_AddAmount">أضف رصيد</string>
+    <string name="AddDeposit_Amount_Hint">المبلغ.. 0.0</string>
+    <string name="AddDeposit_Description_Hint">وصف عملية الشحن</string>
+    <string name="AddDeposit_Date">تاريخ المعاملة</string>
+    <string name="AddDeposit_Bttn">حفظ</string>
+    <!--_____[MoneyTransfer]_____-->
+    <string name="MoneyTransfer_From">تحويل من صندوق</string>
+    <string name="MoneyTransfer_To">تحويل إلى صندوق</string>
+    <string name="MoneyTransfer_ChoseFund">اختر الصندوق</string>
+    <string name="MoneyTransfer_AmountLapel">المبلغ</string>
+    <string name="MoneyTransfer_Amount_Available">المتاح 0.0</string>
+    <!--_____[DeleteFundConfirm]_____-->
+    <string name="DeleteFundConfirm_Message">هل أنت متأكد من حذف الصندوق؟!</string>
+
+    <!--_______________[ReportsScreen]_______________-->
+    <string name="ReportsScreen_Identifier">التقارير</string>
+    <string name="Reports_FundSelection">الصندوق</string>
+    <string name="Reports_ZoneSelection">الفترة</string>
+    <string name="Reports_DateSelection">YYYY-MM</string>
+    <string name="Reports_Income_Identifier">الإيرادات</string>
+    <string name="Reports_Card_expensesDate">YYYY-MM-DD</string>
+    <string name="NoReports_Page1">لاتوجد تقارير في هذه الفترة</string>
+    <string name="NoReports_Page2">يمكنك تغيير الفترة أو الصندوق لمشاهدة نتائج مختلفة</string>
+    <!--_____[EditExpense]_____-->
+    <string name="SaveExpenseEdit_Bttn">حفظ التعديلات</string>
+    <string name="DeleteExpense_Bttn">حذف</string>
+    <string name="CancelExpenseEdit_Bttn">إلغاء</string>
+
+    <!--_______________[SettingsScreen]_______________-->
+    <string name="SettingsScreen_Identifier">الإعدادات</string>
 </resources>

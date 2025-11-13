@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.viewmodels
+package com.axoncodelabs.cashbox.ui.screens.expenses
 /* Temporarily paused to test Hilt build
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel

@@ -1,6 +1,5 @@
 package com.axoncodelabs.cashbox.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -12,15 +11,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = MyColors.Purple80,
+    secondary = MyColors.PurpleGrey80,
+    tertiary = MyColors.Pink80,
+    onPrimary = MyColors.Black,
+    onSecondary = MyColors.Black
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    primary = MyColors.DarkSkyBlue,
+    secondary = MyColors.DarkGray,
+    tertiary = MyColors.MidGreen,
+    onPrimary = MyColors.White,
+    onSecondary = MyColors.White
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
