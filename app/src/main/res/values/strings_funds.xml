@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--_____[MainScreen]_____-->
+    <string name="FundsScreen_Identifier">الصناديق</string>
+    <string name="Funds_Total">مجموع الصناديق</string>
+    <!--_____[AddDeposit]_____-->
+    <string name="AddDeposit_FundNameLapel">اسم الصندوق</string>
+    <string name="AddDeposit_AddAmount">أضف رصيد</string>
+    <string name="AddDeposit_Amount_Hint">المبلغ.. 0.0</string>
+    <string name="AddDeposit_Description_Hint">وصف عملية الشحن</string>
+    <string name="AddDeposit_Date">تاريخ المعاملة</string>
+    <!--_____[MoneyTransfer]_____-->
+    <string name="MoneyTransfer_From">تحويل من صندوق</string>
+    <string name="MoneyTransfer_To">تحويل إلى صندوق</string>
+    <string name="MoneyTransfer_AmountLapel">المبلغ</string>
+    <string name="MoneyTransfer_Amount_Available">المتاح 0.0</string>
+    <!--_____[DeleteFundConfirm]_____-->
+    <string name="DeleteFundConfirm_Message">هل أنت متأكد من حذف الصندوق؟!</string>
+</resources>

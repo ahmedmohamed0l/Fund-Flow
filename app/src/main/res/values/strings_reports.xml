@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--_____[MainScreen]_____-->
+    <string name="ReportsScreen_Identifier">التقارير</string>
+    <string name="Reports_FundSelection">الصندوق</string>
+    <string name="Reports_ZoneSelection">الفترة</string>
+    <string name="Reports_DateSelection">YYYY-MM</string>
+    <string name="Reports_Income_Identifier">الإيرادات</string>
+    <string name="Reports_Card_expensesDate">YYYY-MM-DD</string>
+    <string name="NoReports_Page1">لاتوجد تقارير في هذه الفترة</string>
+    <string name="NoReports_Page2">يمكنك تغيير الفترة أو الصندوق لمشاهدة نتائج مختلفة</string>
+</resources>

@@ -10,22 +10,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.axoncodelabs.cashbox.R
 
 /*
-* Usage of this file:
-* Ic_Name(
+Usage of this file:
+Ic_Name(
                 size = dp(30),
                 color = MyColors.LightRed,
                 modifier = Modifier.clickable { })
-* */
+*/
 
 object MyIcons {
 
     @Composable
     fun AddExpense_Description(
         modifier: Modifier = Modifier,
-        size: Dp = dp(48),
+        size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         /** [1f] = No transparency, [0f] = Fully transparent **/
@@ -45,7 +46,7 @@ object MyIcons {
     @Composable
     fun Arrow(
         modifier: Modifier = Modifier,
-        size: Dp = dp(48),
+        size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         /** [1f] = No transparency, [0f] = Fully transparent **/
@@ -65,7 +66,7 @@ object MyIcons {
     @Composable
     fun Expenses_AddBtn(
         modifier: Modifier = Modifier,
-        size: Dp = dp(48),
+        size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         alphaValue: Float = 1f,
@@ -84,7 +85,7 @@ object MyIcons {
     @Composable
     fun Funds_AddFund(
         modifier: Modifier = Modifier,
-        size: Dp = dp(48),
+        size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         alphaValue: Float = 1f,
@@ -103,7 +104,7 @@ object MyIcons {
     @Composable
     fun Funds_AddMoney(
         modifier: Modifier = Modifier,
-        size: Dp = dp(48),
+        size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         alphaValue: Float = 1f,
@@ -122,7 +123,7 @@ object MyIcons {
     @Composable
     fun Funds_DeleteFund(
         modifier: Modifier = Modifier,
-        size: Dp = dp(48),
+        size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         alphaValue: Float = 1f,
@@ -141,7 +142,7 @@ object MyIcons {
     @Composable
     fun Funds_TimeZone(
         modifier: Modifier = Modifier,
-        size: Dp = dp(48),
+        size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         alphaValue: Float = 1f,
@@ -160,7 +161,7 @@ object MyIcons {
     @Composable
     fun Funds_Transfer(
         modifier: Modifier = Modifier,
-        size: Dp = dp(48),
+        size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         alphaValue: Float = 1f,
@@ -179,7 +180,7 @@ object MyIcons {
     @Composable
     fun Nav_Expenses(
         modifier: Modifier = Modifier,
-        size: Dp = dp(48),
+        size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         alphaValue: Float = 1f,
@@ -198,7 +199,7 @@ object MyIcons {
     @Composable
     fun Nav_Expenses_Focused(
         modifier: Modifier = Modifier,
-        size: Dp = dp(48),
+        size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         alphaValue: Float = 1f,
@@ -217,7 +218,7 @@ object MyIcons {
     @Composable
     fun Nav_Funds(
         modifier: Modifier = Modifier,
-        size: Dp = dp(48),
+        size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         alphaValue: Float = 1f,
@@ -236,7 +237,7 @@ object MyIcons {
     @Composable
     fun Nav_Funds_Focused(
         modifier: Modifier = Modifier,
-        size: Dp = dp(48),
+        size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         alphaValue: Float = 1f,
@@ -255,7 +256,7 @@ object MyIcons {
     @Composable
     fun Nav_Settings(
         modifier: Modifier = Modifier,
-        size: Dp = dp(48),
+        size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         alphaValue: Float = 1f,
@@ -274,7 +275,7 @@ object MyIcons {
     @Composable
     fun Nav_Settings_Focused(
         modifier: Modifier = Modifier,
-        size: Dp = dp(48),
+        size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         alphaValue: Float = 1f,
@@ -293,7 +294,7 @@ object MyIcons {
     @Composable
     fun Nav_Reports(
         modifier: Modifier = Modifier,
-        size: Dp = dp(48),
+        size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         alphaValue: Float = 1f,
@@ -312,7 +313,7 @@ object MyIcons {
     @Composable
     fun Nav_Reports_Focused(
         modifier: Modifier = Modifier,
-        size: Dp = dp(48),
+        size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         alphaValue: Float = 1f,

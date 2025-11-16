@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--_____[MainScreen]_____-->
+    <string name="SettingsScreen_Identifier">الإعدادات</string>
+</resources>
