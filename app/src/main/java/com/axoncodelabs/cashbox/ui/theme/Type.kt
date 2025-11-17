@@ -17,10 +17,12 @@ val SegoeUi = FontFamily(
     Font(R.font.segoe_ui_bold_italic, FontWeight.Bold, FontStyle.Italic)
 )
 
+val MainFont = SegoeUi
+
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(
-        fontFamily = SegoeUi,
+        fontFamily = MainFont,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,
@@ -50,42 +52,42 @@ object MyFontStyle {
 
     @Composable
     fun small() = TextStyle(
-        fontFamily = SegoeUi,
+        fontFamily = MainFont,
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp
     )
 
     @Composable
     fun smallBold() = TextStyle(
-        fontFamily = SegoeUi,
+        fontFamily = MainFont,
         fontWeight = FontWeight.Bold,
         fontSize = 12.sp
     )
 
     @Composable
     fun medium() = TextStyle(
-        fontFamily = SegoeUi,
+        fontFamily = MainFont,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
     )
 
     @Composable
     fun mediumBold() = TextStyle(
-        fontFamily = SegoeUi,
+        fontFamily = MainFont,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp
     )
 
     @Composable
     fun large() = TextStyle(
-        fontFamily = SegoeUi,
+        fontFamily = MainFont,
         fontWeight = FontWeight.Normal,
         fontSize = 25.sp
     )
 
     @Composable
     fun largeBold() = TextStyle(
-        fontFamily = SegoeUi,
+        fontFamily = MainFont,
         fontWeight = FontWeight.Bold,
         fontSize = 25.sp
     )
