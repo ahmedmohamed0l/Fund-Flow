@@ -1,13 +1,17 @@
 package com.axoncodelabs.cashbox.ui.theme
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.AddCard
+import androidx.compose.material.icons.rounded.KeyboardArrowRight
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -21,10 +25,29 @@ Ic_Name(
                 modifier = Modifier.clickable { })
 */
 
+/*Just for preview icons edits quikly:-
+@Composable
+@Preview(showBackground = true)
+fun PreviewIcon() {
+    Column(
+        modifier = Modifier
+            //.fillMaxSize()
+            .padding(20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        //CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+            MyIcons.Analytics(size = 200.dp,
+                filledState = false
+            )
+        //}
+    }
+}*/
+
 object MyIcons {
 
     @Composable
-    fun AddExpense_Description(
+    fun Calendar(
         modifier: Modifier = Modifier,
         size: Dp = 48.dp,
         angle: Float = 0f,
@@ -32,14 +55,33 @@ object MyIcons {
         /** [1f] = No transparency, [0f] = Fully transparent **/
         alphaValue: Float = 1f,
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_addexpense_description),
-            contentDescription = "AddExpense Description",
+        Icon(
+            painter = painterResource(id = R.drawable.s_ic_calendar),
+            contentDescription = "Date picker",
             modifier = modifier
                 .size(size)
                 .rotate(angle)
                 .alpha(alphaValue),
-            colorFilter = ColorFilter.tint(color)
+            tint = color,
+        )
+    }
+
+    @Composable
+    fun Comment(
+        modifier: Modifier = Modifier,
+        size: Dp = 48.dp,
+        angle: Float = 0f,
+        color: Color = MyColors.Black,
+        alphaValue: Float = 1f,
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.s_ic_comment),
+            contentDescription = "AddExpense description",
+            modifier = modifier
+                .size(size)
+                .rotate(angle)
+                .alpha(alphaValue),
+            tint = color,
         )
     }
 
@@ -49,283 +91,172 @@ object MyIcons {
         size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
-        /** [1f] = No transparency, [0f] = Fully transparent **/
         alphaValue: Float = 1f,
+        autoMirroredState: Boolean,
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_arrow),
-            contentDescription = "Arrow Icon",
+        val mirroredState =
+            if (autoMirroredState) Icons.AutoMirrored.Rounded.KeyboardArrowRight else Icons.Rounded.KeyboardArrowRight
+        Icon(
+            imageVector = mirroredState,
+            contentDescription = "Arrow icon",
             modifier = modifier
                 .size(size)
                 .rotate(angle)
                 .alpha(alphaValue),
-            colorFilter = ColorFilter.tint(color)
+            tint = color
         )
     }
 
     @Composable
-    fun Expenses_AddBtn(
+    fun Plus(
         modifier: Modifier = Modifier,
         size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         alphaValue: Float = 1f,
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_expenses_addbtn),
-            contentDescription = "Float Add Button",
+        Icon(
+            imageVector = Icons.Rounded.Add,
+            contentDescription = "Float add button",
             modifier = modifier
                 .size(size)
                 .rotate(angle)
                 .alpha(alphaValue),
-            colorFilter = ColorFilter.tint(color)
+            tint = color,
         )
     }
 
     @Composable
-    fun Funds_AddFund(
+    fun Add_Card(
         modifier: Modifier = Modifier,
         size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         alphaValue: Float = 1f,
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_funds_add_fund),
-            contentDescription = "Add Fund",
+        Icon(
+            imageVector = Icons.Rounded.AddCard,
+            contentDescription = "Add new fund",
             modifier = modifier
                 .size(size)
                 .rotate(angle)
                 .alpha(alphaValue),
-            colorFilter = ColorFilter.tint(color)
+            tint = color,
         )
     }
 
     @Composable
-    fun Funds_AddMoney(
+    fun Search_Activity(
         modifier: Modifier = Modifier,
         size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         alphaValue: Float = 1f,
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_funds_add_money),
-            contentDescription = "Add Money",
-            modifier = modifier
-                .size(size)
-                .rotate(angle)
-                .alpha(alphaValue),
-            colorFilter = ColorFilter.tint(color)
-        )
-    }
-
-    @Composable
-    fun Funds_DeleteFund(
-        modifier: Modifier = Modifier,
-        size: Dp = 48.dp,
-        angle: Float = 0f,
-        color: Color = MyColors.Black,
-        alphaValue: Float = 1f,
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_funds_delete_fund),
-            contentDescription = "Delete Fund",
-            modifier = modifier
-                .size(size)
-                .rotate(angle)
-                .alpha(alphaValue),
-            colorFilter = ColorFilter.tint(color)
-        )
-    }
-
-    @Composable
-    fun Funds_TimeZone(
-        modifier: Modifier = Modifier,
-        size: Dp = 48.dp,
-        angle: Float = 0f,
-        color: Color = MyColors.Black,
-        alphaValue: Float = 1f,
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_funds_timezone),
+        Icon(
+            painter = painterResource(id = R.drawable.s_ic_search_activity),
             contentDescription = "Time Zone Selection",
             modifier = modifier
                 .size(size)
                 .rotate(angle)
                 .alpha(alphaValue),
-            colorFilter = ColorFilter.tint(color)
+            tint = color,
         )
     }
 
     @Composable
-    fun Funds_Transfer(
+    fun Home_App_Logo(
         modifier: Modifier = Modifier,
         size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         alphaValue: Float = 1f,
+        filledState: Boolean,
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_funds_transfer),
-            contentDescription = "Add Money",
+        val filledState =
+            if (filledState) painterResource(id = R.drawable.s_ic_home_app_logo_filled) else painterResource(
+                id = R.drawable.s_ic_home_app_logo
+            )
+        Icon(
+            painter = filledState,
+            contentDescription = "Nav Expenses",
             modifier = modifier
                 .size(size)
                 .rotate(angle)
                 .alpha(alphaValue),
-            colorFilter = ColorFilter.tint(color)
+            tint = color,
         )
     }
 
     @Composable
-    fun Nav_Expenses(
+    fun Account_Balance_Wallet(
         modifier: Modifier = Modifier,
         size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         alphaValue: Float = 1f,
+        filledState: Boolean,
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_nav_expenses),
+        val filledState =
+            if (filledState) painterResource(id = R.drawable.s_ic_account_balance_wallet_filled) else painterResource(
+                id = R.drawable.s_ic_account_balance_wallet
+            )
+        Icon(
+            painter = filledState,
             contentDescription = "Nav Funds",
             modifier = modifier
                 .size(size)
                 .rotate(angle)
                 .alpha(alphaValue),
-            colorFilter = ColorFilter.tint(color)
+            tint = color,
         )
     }
 
     @Composable
-    fun Nav_Expenses_Focused(
+    fun Settings(
         modifier: Modifier = Modifier,
         size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         alphaValue: Float = 1f,
+        filledState: Boolean,
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_nav_expenses_focused),
-            contentDescription = "Nav Funds",
+        val filledState =
+            if (filledState) painterResource(id = R.drawable.ic_settings_filled) else painterResource(
+                id = R.drawable.ic_settings
+            )
+        Icon(
+            painter = filledState,
+            contentDescription = "Nav Settings",
             modifier = modifier
                 .size(size)
                 .rotate(angle)
                 .alpha(alphaValue),
-            colorFilter = ColorFilter.tint(color)
+            tint = color,
         )
     }
 
     @Composable
-    fun Nav_Funds(
+    fun Analytics(
         modifier: Modifier = Modifier,
         size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         alphaValue: Float = 1f,
+        filledState: Boolean,
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_nav_funds),
-            contentDescription = "Nav Funds",
+        val filledState =
+            if (filledState) painterResource(id = R.drawable.ic_analytics_filled) else painterResource(
+                id = R.drawable.ic_analytics
+            )
+        Icon(
+            painter = filledState,
+            contentDescription = "Nav Reports",
             modifier = modifier
                 .size(size)
                 .rotate(angle)
                 .alpha(alphaValue),
-            colorFilter = ColorFilter.tint(color)
-        )
-    }
-
-    @Composable
-    fun Nav_Funds_Focused(
-        modifier: Modifier = Modifier,
-        size: Dp = 48.dp,
-        angle: Float = 0f,
-        color: Color = MyColors.Black,
-        alphaValue: Float = 1f,
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_nav_funds_focused),
-            contentDescription = "Nav Funds Focused",
-            modifier = modifier
-                .size(size)
-                .rotate(angle)
-                .alpha(alphaValue),
-            colorFilter = ColorFilter.tint(color)
-        )
-    }
-
-    @Composable
-    fun Nav_Settings(
-        modifier: Modifier = Modifier,
-        size: Dp = 48.dp,
-        angle: Float = 0f,
-        color: Color = MyColors.Black,
-        alphaValue: Float = 1f,
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_nav_settings),
-            contentDescription = "Settings Photo Focused",
-            modifier = modifier
-                .size(size)
-                .rotate(angle)
-                .alpha(alphaValue),
-            colorFilter = ColorFilter.tint(color)
-        )
-    }
-
-    @Composable
-    fun Nav_Settings_Focused(
-        modifier: Modifier = Modifier,
-        size: Dp = 48.dp,
-        angle: Float = 0f,
-        color: Color = MyColors.Black,
-        alphaValue: Float = 1f,
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_nav_settings_focused),
-            contentDescription = "Settings Photo Focused",
-            modifier = modifier
-                .size(size)
-                .rotate(angle)
-                .alpha(alphaValue),
-            colorFilter = ColorFilter.tint(color)
-        )
-    }
-
-    @Composable
-    fun Nav_Reports(
-        modifier: Modifier = Modifier,
-        size: Dp = 48.dp,
-        angle: Float = 0f,
-        color: Color = MyColors.Black,
-        alphaValue: Float = 1f,
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_nav_reports),
-            contentDescription = "Settings Photo Focused",
-            modifier = modifier
-                .size(size)
-                .rotate(angle)
-                .alpha(alphaValue),
-            colorFilter = ColorFilter.tint(color)
-        )
-    }
-
-    @Composable
-    fun Nav_Reports_Focused(
-        modifier: Modifier = Modifier,
-        size: Dp = 48.dp,
-        angle: Float = 0f,
-        color: Color = MyColors.Black,
-        alphaValue: Float = 1f,
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_nav_reports_focused),
-            contentDescription = "Settings Photo Focused",
-            modifier = modifier
-                .size(size)
-                .rotate(angle)
-                .alpha(alphaValue),
-            colorFilter = ColorFilter.tint(color)
+            tint = color,
         )
     }
 }
