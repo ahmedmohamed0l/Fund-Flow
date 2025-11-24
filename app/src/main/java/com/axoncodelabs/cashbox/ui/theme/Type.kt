@@ -91,4 +91,11 @@ object MyFontStyle {
         fontWeight = FontWeight.Bold,
         fontSize = 25.sp
     )
+
+    @Composable
+    fun extremeBold() = TextStyle(
+        fontFamily = MainFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 50.sp
+    )
 }

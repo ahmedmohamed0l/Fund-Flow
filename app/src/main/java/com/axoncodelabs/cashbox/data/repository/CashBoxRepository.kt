@@ -42,4 +42,8 @@ interface CashBoxRepository {
         description: String,
         timestamp: Long = System.currentTimeMillis(),
     )
+
+    //Preferences
+    val themeFlow: Flow<String>
+    suspend fun saveTheme(theme: String)
 }

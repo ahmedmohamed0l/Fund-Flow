@@ -1,6 +1,9 @@
 package com.axoncodelabs.cashbox.data.di
 
 import android.app.Application
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
 import com.axoncodelabs.cashbox.data.local.CashBoxDatabase
 import com.axoncodelabs.cashbox.data.local.dao.FundDao
@@ -10,8 +13,12 @@ import com.axoncodelabs.cashbox.data.repository.CashBoxRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import jakarta.inject.Singleton
+import androidx.datastore.preferences.preferencesDataStore
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_preferences")
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -41,5 +48,12 @@ object AppModule {
     fun provideRepository(
         fundDao: FundDao,
         transactionDao: TransactionDao,
-    ): CashBoxRepository = CashBoxRepositoryImpl(fundDao, transactionDao)
+        dataStore: DataStore<Preferences>
+    ): CashBoxRepository = CashBoxRepositoryImpl(fundDao, transactionDao, dataStore)
+
+    @Provides
+    @Singleton
+    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
+        return context.dataStore
+    }
 }

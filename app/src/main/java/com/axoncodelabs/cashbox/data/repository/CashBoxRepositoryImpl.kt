@@ -1,5 +1,9 @@
 package com.axoncodelabs.cashbox.data.repository
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.room.Transaction
 import com.axoncodelabs.cashbox.data.local.dao.FundDao
 import com.axoncodelabs.cashbox.data.local.dao.TransactionDao
@@ -7,12 +11,14 @@ import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionType
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 
 class CashBoxRepositoryImpl @Inject constructor(
     private val fundDao: FundDao,
     private val transactionDao: TransactionDao,
+    private val dataStore: DataStore<Preferences>
 ) : CashBoxRepository {
 
     // Funds
@@ -116,5 +122,15 @@ class CashBoxRepositoryImpl @Inject constructor(
 
         transactionDao.insertTransaction(expenseTransaction)
         transactionDao.insertTransaction(incomeTransaction)
+    }
+
+    //Preferences
+    private object Keys {
+        val THEME_KEY = stringPreferencesKey("theme")
+    }
+    override val themeFlow: Flow<String> = dataStore.data
+        .map { it[Keys.THEME_KEY] ?: "light" }
+    override suspend fun saveTheme(theme: String) {
+        dataStore.edit { it[Keys.THEME_KEY] = theme }
     }
 }

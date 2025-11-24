@@ -9,26 +9,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.axoncodelabs.cashbox.R
-import com.axoncodelabs.cashbox.ui.theme.CashBoxTheme
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 
-@Preview(showBackground = true)
 @Composable
 fun ExpensesScreen() {
-    CashBoxTheme {
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                stringResource(R.string.ExpensesScreen_Identifier),
-                style = MyFontStyle.largeBold(),
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            stringResource(R.string.ExpensesScreen_Identifier),
+            style = MyFontStyle.extremeBold(),
+            color = MaterialTheme.colorScheme.primary
+        )
     }
 }

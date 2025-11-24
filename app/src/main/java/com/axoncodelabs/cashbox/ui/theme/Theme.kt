@@ -1,7 +1,6 @@
 package com.axoncodelabs.cashbox.ui.theme
 
 import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -11,19 +10,35 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = MyColors.Purple80,
-    secondary = MyColors.PurpleGrey80,
-    tertiary = MyColors.Pink80,
-    onPrimary = MyColors.Black,
-    onSecondary = MyColors.Black
+    background = MyColors.SoftBlack,
+    onBackground = MyColors.White,
+
+    primary = MyColors.DeepBlue,
+    onPrimary = MyColors.White,
+
+    secondary = MyColors.DarkGray,
+    onSecondary = MyColors.White,
+
+    tertiary = MyColors.DarkGreen,
+
+    surface = MyColors.LightGray,
+    onSurface = MyColors.SoftBlack
 )
 
 private val LightColorScheme = lightColorScheme(
+    background = MyColors.White,
+    onBackground = MyColors.Black,
+
     primary = MyColors.DarkSkyBlue,
-    secondary = MyColors.DarkGray,
-    tertiary = MyColors.MidGreen,
     onPrimary = MyColors.White,
-    onSecondary = MyColors.White
+
+    secondary = MyColors.Gray,
+    onSecondary = MyColors.White,
+
+    tertiary = MyColors.MidGreen,
+
+    surface = MyColors.SoftBlack,
+    onSurface = MyColors.LightGray
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -38,7 +53,7 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun CashBoxTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = false,
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit,
