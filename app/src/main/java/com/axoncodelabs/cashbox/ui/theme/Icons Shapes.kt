@@ -56,7 +56,7 @@ object MyIcons {
         alphaValue: Float = 1f,
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.s_ic_calendar),
+            painter = painterResource(id = R.drawable.ic_calendar),
             contentDescription = "Date picker",
             modifier = modifier
                 .size(size)
@@ -75,7 +75,7 @@ object MyIcons {
         alphaValue: Float = 1f,
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.s_ic_comment),
+            painter = painterResource(id = R.drawable.ic_comment),
             contentDescription = "AddExpense description",
             modifier = modifier
                 .size(size)
@@ -154,7 +154,7 @@ object MyIcons {
         alphaValue: Float = 1f,
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.s_ic_search_activity),
+            painter = painterResource(id = R.drawable.ic_search_activity),
             contentDescription = "Time Zone Selection",
             modifier = modifier
                 .size(size)
@@ -174,8 +174,8 @@ object MyIcons {
         filledState: Boolean,
     ) {
         val filledState =
-            if (filledState) painterResource(id = R.drawable.s_ic_home_app_logo_filled) else painterResource(
-                id = R.drawable.s_ic_home_app_logo
+            if (filledState) painterResource(id = R.drawable.ic_home_app_logo_filled) else painterResource(
+                id = R.drawable.ic_home_app_logo
             )
         Icon(
             painter = filledState,
@@ -198,8 +198,8 @@ object MyIcons {
         filledState: Boolean,
     ) {
         val filledState =
-            if (filledState) painterResource(id = R.drawable.s_ic_account_balance_wallet_filled) else painterResource(
-                id = R.drawable.s_ic_account_balance_wallet
+            if (filledState) painterResource(id = R.drawable.ic_account_balance_wallet_filled) else painterResource(
+                id = R.drawable.ic_account_balance_wallet
             )
         Icon(
             painter = filledState,

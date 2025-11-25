@@ -8,8 +8,8 @@ sealed class BottomBarScreen(
     object Expenses : BottomBarScreen(
         route = "expenses",
         title = R.string.ExpensesScreen_Identifier,
-        icon = R.drawable.s_ic_home_app_logo,
-        iconFocused = R.drawable.s_ic_home_app_logo_filled
+        icon = R.drawable.ic_home_app_logo,
+        iconFocused = R.drawable.ic_home_app_logo_filled
     )
 
     object Reports : BottomBarScreen(
@@ -22,8 +22,8 @@ sealed class BottomBarScreen(
     object Funds : BottomBarScreen(
         route = "funds",
         title = R.string.FundsScreen_Identifier,
-        icon = R.drawable.s_ic_account_balance_wallet,
-        iconFocused = R.drawable.s_ic_account_balance_wallet_filled
+        icon = R.drawable.ic_account_balance_wallet,
+        iconFocused = R.drawable.ic_account_balance_wallet_filled
     )
 
     object Settings : BottomBarScreen(

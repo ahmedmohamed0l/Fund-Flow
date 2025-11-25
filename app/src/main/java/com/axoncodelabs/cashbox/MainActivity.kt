@@ -46,8 +46,7 @@ fun Root() {
         val viewModel: SettingsViewModel = hiltViewModel()
         val darkMode by viewModel.darkMode.collectAsState()
         if (darkMode == null) {
-            // شاشة انتظار بسيطة لغاية ما DataStore يرد
-            Box(modifier = Modifier.fillMaxSize().background(MyColors.Black))
+            Box(modifier = Modifier.fillMaxSize().background(MyColors.DarkGray))
         } else {
             CashBoxTheme (darkTheme = darkMode == true){
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
