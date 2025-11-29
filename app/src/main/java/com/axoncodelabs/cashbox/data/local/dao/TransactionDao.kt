@@ -44,4 +44,10 @@ interface TransactionDao {
         startDate: Long,
         endDate: Long,
     ): Flow<Double>
+
+    @Query("SELECT * FROM transactions WHERE type = 'EXPENSE' And date BETWEEN :startDate AND :endDate ORDER BY date DESC")
+    fun getExpensesByDate(
+        startDate: Long,
+        endDate: Long,
+    ): Flow<List<TransactionEntity>>
 }

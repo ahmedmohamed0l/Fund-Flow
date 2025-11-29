@@ -9,21 +9,10 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
-private val DarkColorScheme = darkColorScheme(
-    background = MyColors.SoftBlack,
-    onBackground = MyColors.White,
-
-    primary = MyColors.DeepBlue,
-    onPrimary = MyColors.White,
-
-    secondary = MyColors.DarkGray,
-    onSecondary = MyColors.White,
-
-    tertiary = MyColors.DarkGreen,
-
-    surface = MyColors.LightGray,
-    onSurface = MyColors.SoftBlack
-)
+sealed class Theme(val value: String) {
+    object Light : Theme("light")
+    object Dark : Theme("dark")
+}
 
 private val LightColorScheme = lightColorScheme(
     background = MyColors.White,
@@ -32,7 +21,7 @@ private val LightColorScheme = lightColorScheme(
     primary = MyColors.DarkSkyBlue,
     onPrimary = MyColors.White,
 
-    secondary = MyColors.Gray,
+    secondary = MyColors.LightGray,
     onSecondary = MyColors.White,
 
     tertiary = MyColors.MidGreen,
@@ -49,6 +38,22 @@ private val LightColorScheme = lightColorScheme(
     onBackground = Color(0xFF1C1B1F),
     onSurface = Color(0xFF1C1B1F),
     */
+)
+
+private val DarkColorScheme = darkColorScheme(
+    background = MyColors.SoftBlack,
+    onBackground = MyColors.White,
+
+    primary = MyColors.DeepBlue,
+    onPrimary = MyColors.White,
+
+    secondary = MyColors.LightBlack,
+    onSecondary = MyColors.White,
+
+    tertiary = MyColors.DarkGreen,
+
+    surface = MyColors.LightGray,
+    onSurface = MyColors.SoftBlack
 )
 
 @Composable

@@ -20,7 +20,7 @@ import com.axoncodelabs.cashbox.R
 /*
 Usage of this file:
 Ic_Name(
-                size = dp(30),
+                size = 30.dp,
                 color = MyColors.LightRed,
                 modifier = Modifier.clickable { })
 */

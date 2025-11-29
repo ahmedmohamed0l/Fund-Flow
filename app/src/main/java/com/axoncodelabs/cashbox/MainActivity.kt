@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -21,7 +20,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.ui.navigation.BottomNav
 import com.axoncodelabs.cashbox.ui.screens.settings.SettingsViewModel
 import com.axoncodelabs.cashbox.ui.theme.CashBoxTheme
-import com.axoncodelabs.cashbox.ui.theme.MyColors
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -44,11 +42,10 @@ fun Root() {
         LocalLayoutDirection provides LayoutDirection.Rtl
     ) {
         val viewModel: SettingsViewModel = hiltViewModel()
-        val darkMode by viewModel.darkMode.collectAsState()
-        if (darkMode == null) {
-            Box(modifier = Modifier.fillMaxSize().background(MyColors.DarkGray))
-        } else {
-            CashBoxTheme (darkTheme = darkMode == true){
+        val state by viewModel.state.collectAsState()
+
+        state.darkMode?.let { dark ->
+            CashBoxTheme(darkTheme = dark) {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
                         BottomNav()

@@ -10,6 +10,7 @@ import com.axoncodelabs.cashbox.data.local.dao.TransactionDao
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionType
+import com.axoncodelabs.cashbox.ui.theme.Theme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -18,8 +19,12 @@ import javax.inject.Inject
 class CashBoxRepositoryImpl @Inject constructor(
     private val fundDao: FundDao,
     private val transactionDao: TransactionDao,
-    private val dataStore: DataStore<Preferences>
+    private val dataStore: DataStore<Preferences>,
 ) : CashBoxRepository {
+
+    private object Keys {
+        val THEME_KEY = stringPreferencesKey("theme")
+    }
 
     // Funds
     override suspend fun insertFund(fund: FundEntity) {
@@ -88,6 +93,12 @@ class CashBoxRepositoryImpl @Inject constructor(
         return transactionDao.getTransactionsByType(fundId, type, startDate, endDate)
     }
 
+    override fun getExpensesByDate(
+        startDate: Long, endDate: Long,
+    ): Flow<List<TransactionEntity>> {
+        return transactionDao.getExpensesByDate(startDate, endDate)
+    }
+
     // Funds Transfer
     @Transaction
     override suspend fun transferBetweenFunds(
@@ -125,12 +136,14 @@ class CashBoxRepositoryImpl @Inject constructor(
     }
 
     //Preferences
-    private object Keys {
-        val THEME_KEY = stringPreferencesKey("theme")
+    override val themeFlow: Flow<Theme> = dataStore.data.map {
+        when (it[Keys.THEME_KEY]) {
+            "dark" -> Theme.Dark
+            else -> Theme.Light
+        }
     }
-    override val themeFlow: Flow<String> = dataStore.data
-        .map { it[Keys.THEME_KEY] ?: "light" }
-    override suspend fun saveTheme(theme: String) {
-        dataStore.edit { it[Keys.THEME_KEY] = theme }
+
+    override suspend fun saveTheme(theme: Theme) {
+        dataStore.edit { it[Keys.THEME_KEY] = theme.value }
     }
 }

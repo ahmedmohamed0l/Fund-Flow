@@ -13,8 +13,8 @@ object MyColors {
 
     val CyanOff = Color(0xFF5B7C96)
     val LightSkyBlue = Color(0xFFEBF6FA)
-    val DarkSkyBlue = Color(0xFF0F68B5)
-    val DeepBlue = Color(0xFF0A335A)
+    val DarkSkyBlue = Color(0xFF0B67B1)
+    val DeepBlue = Color(0xFF0F3D78)
     val LightGreen = Color(0xFF35CD2C)
     val MidGreen = Color(0xFF358F2C)
     val DarkGreen = Color(0xFF1F5F1A)

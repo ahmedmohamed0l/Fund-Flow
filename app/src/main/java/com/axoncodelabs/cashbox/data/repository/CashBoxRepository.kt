@@ -3,6 +3,7 @@ package com.axoncodelabs.cashbox.data.repository
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionType
+import com.axoncodelabs.cashbox.ui.theme.Theme
 import kotlinx.coroutines.flow.Flow
 
 interface CashBoxRepository {
@@ -34,6 +35,11 @@ interface CashBoxRepository {
         endDate: Long,
     ): Flow<Double>
 
+    fun getExpensesByDate(
+        startDate: Long,
+        endDate: Long,
+    ): Flow<List<TransactionEntity>>
+
     // Funds Transfer
     suspend fun transferBetweenFunds(
         fromFundId: Int,
@@ -44,6 +50,6 @@ interface CashBoxRepository {
     )
 
     //Preferences
-    val themeFlow: Flow<String>
-    suspend fun saveTheme(theme: String)
+    val themeFlow: Flow<Theme>
+    suspend fun saveTheme(theme: Theme)
 }
