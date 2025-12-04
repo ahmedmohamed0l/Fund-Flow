@@ -55,3 +55,27 @@ fun Root() {
         }
     }
 }
+
+/*/**--------------------[ Preview ]--------------------**/
+@Preview(showBackground = true)
+@Composable
+private fun Preview() {
+    CompositionLocalProvider(
+        LocalLayoutDirection provides LayoutDirection.Rtl
+    ) {
+        val darkMode = false
+        CashBoxTheme(
+            darkTheme = darkMode
+        ) {
+            AddFundSheetRoot(
+                name = "",
+                amount = "",
+                description = "",
+                onNameChange = {},
+                onAmountChange = {},
+                onDescriptionChange = {},
+                onSaveClick = {}
+            )
+        }
+    }
+}*/

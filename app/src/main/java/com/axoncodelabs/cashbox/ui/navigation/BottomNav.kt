@@ -1,6 +1,5 @@
 package com.axoncodelabs.cashbox.ui.navigation
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,11 +35,9 @@ import androidx.navigation.compose.rememberNavController
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun BottomNav() {
     val navController = rememberNavController()
-
     Scaffold(bottomBar = { BottomBar(navController = navController) }) {
         BottomNavGraph(navController = navController)
     }
@@ -58,7 +55,10 @@ private fun BottomBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    Column {
+    Column(
+        modifier = Modifier
+            .clip(CircleShape)
+    ) {
 
         HorizontalDivider(
             modifier = Modifier

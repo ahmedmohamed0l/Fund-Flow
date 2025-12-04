@@ -1,9 +1,0 @@
-<resources>
-    <string name="app_name" translatable="false">Cash Box</string>
-
-    <!--_____[ForMultipleScreen]_____-->
-    <string name="Save_Bttn">حفظ</string>
-    <string name="Delete_Bttn">حذف</string>
-    <string name="Cancel_Bttn">إلغاء</string>
-    <string name="ChoseFund">اختر الصندوق</string>
-</resources>

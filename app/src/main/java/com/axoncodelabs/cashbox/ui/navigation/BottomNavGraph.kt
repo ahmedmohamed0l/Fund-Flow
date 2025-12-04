@@ -12,7 +12,7 @@ import com.axoncodelabs.cashbox.ui.screens.settings.SettingsScreen
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
     NavHost(
-        navController = navController, startDestination = BottomBarScreen.Expenses.route
+        navController = navController, startDestination = BottomBarScreen.Funds.route
     ) {
         composable(route = BottomBarScreen.Expenses.route) {
             ExpensesScreen()

@@ -40,6 +40,12 @@ interface CashBoxRepository {
         endDate: Long,
     ): Flow<List<TransactionEntity>>
 
+    // داخل interface CashBoxRepository
+    fun getFundIncomeSumFlow(fundId: Int, startDate: Long, endDate: Long): Flow<Double>
+    fun getFundExpenseSumFlow(fundId: Int, startDate: Long, endDate: Long): Flow<Double>
+    fun getComputedFundBalanceFlow(fundId: Int, startDate: Long, endDate: Long): Flow<Double>
+
+
     // Funds Transfer
     suspend fun transferBetweenFunds(
         fromFundId: Int,

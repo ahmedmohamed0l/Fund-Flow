@@ -1,5 +1,11 @@
 package com.axoncodelabs.cashbox.ui.screens.reports
 
+import androidx.compose.runtime.Composable
+
+@Composable
+fun ReportsScreen() {
+}
+/*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,28 +17,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
+import com.axoncodelabs.cashbox.ui.components.EditExpenseDialog
 import com.axoncodelabs.cashbox.ui.components.MyTopAppBar
+import com.axoncodelabs.cashbox.ui.components.ReportCard
 
 @Composable
-fun ReportsScreen(viewModel: ReportsViewModel = hiltViewModel()) {
-    ReportsScreenRoot()
-}
+fun ReportScreen(viewModel: ReportViewModel = hiltViewModel()) {
+    val state = viewModel.state.value
 
-@Composable
-private fun ReportsScreenRoot() {
-    Scaffold(
-        topBar = {
-            MyTopAppBar(title = stringResource(id = R.string.ReportsScreen_Identifier))
+    Column(modifier = Modifier.fillMaxSize()) {
+        state.dailyExpenses.forEach { daily ->
+            ReportCard(
+                dailyExpense = daily,
+                isExpanded = state.expandedDays.contains(daily.date),
+                onToggle = { viewModel.onEvent(ReportScreenEvent.ToggleDayCard(daily.date)) },
+                onSelectExpense = { viewModel.onEvent(ReportScreenEvent.SelectExpense(it)) }
+            )
         }
-    ) { inner ->
-        Column(
-            modifier = Modifier
-                .padding(inner)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
 
+        state.selectedExpense?.let { expense ->
+            if(state.showEditDialog) {
+                EditExpenseDialog(
+                    expense = expense,
+                    onDismiss = { viewModel.onEvent(ReportScreenEvent.DismissDialog) },
+                    onSave = { updated ->
+                        viewModel.onEvent(ReportScreenEvent.DismissDialog)
+                        viewModelScope.launch { viewModel.repository.updateTransaction(updated) }
+                    }
+                )
+            }
         }
     }
-}
+}*/

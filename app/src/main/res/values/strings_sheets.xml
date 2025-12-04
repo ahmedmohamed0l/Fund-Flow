@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Sheet_Fund_From">تحويل من صندوق</string>
+    <string name="Sheet_Fund_To">تحويل إلى صندوق</string>
+
+    <string name="Sheet_FundName">اسم الصندوق</string>
+    <string name="Sheet_FundNameError">مينفعش تسيب اسم الصندوق فاضي</string>
+    <string name="Sheet_FundAmountError">مينفعش تكون قيمة الصندوق سالبة</string>
+
+    <string name="Sheet_Amount_Lapel">المبلغ</string>
+    <string name="Sheet_Amount_Hint">المبلغ.. 0.0</string>
+
+    <string name="Sheet_AmountAvailable">المتاح 0.0</string>
+
+    <string name="Sheet_DescriptionLapel">الوصف مثال: مواصلات، ايجار…</string>
+    <string name="Sheet_Description_Hint">وصف العملية</string>
+
+    <string name="Sheet_TransactionDateSelector">تاريخ المعاملة</string>
+
+    <string name="Sheet_AddTransaction_Bttn">إضافة</string>
+    <string name="Sheet_Save_Bttn">حفظ</string>
+    <string name="Sheet_EditExpense_Bttn">حفظ التعديلات</string>
+</resources>

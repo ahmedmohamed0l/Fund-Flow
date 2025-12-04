@@ -2,26 +2,21 @@ package com.axoncodelabs.cashbox.ui.screens.funds
 
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 
+sealed class FundsSheet {
+    object None : FundsSheet()
+    object AddFund : FundsSheet()
+    data class FundOptions(val fund: FundEntity) : FundsSheet()
+    data class AddAmount(val fund: FundEntity) : FundsSheet()
+    data class Transfer(val fund: FundEntity) : FundsSheet()
+}
+
+sealed class FundsPopup {
+    data class Open(val fund: FundEntity) : FundsPopup()
+    object Close : FundsPopup()
+}
+
 data class FundsState(
+    val currentSheet: FundsSheet = FundsSheet.None,
+    val popupState: FundsPopup = FundsPopup.Close,
     val funds: List<FundEntity> = emptyList(),
-    val isLoading: Boolean = false,
-    val error: String? = null,
-
-    // Bottom sheet state
-    val isAddEditSheetOpen: Boolean = false,
-    val isTransferSheetOpen: Boolean = false,
-    val editingFundId: Int? = null, // null -> add new, else edit
-
-    // inputs for sheet
-    val sheetNameInput: String = "",
-    val sheetAmountInput: String = "", // use String for TextField binding, parse to Long when saving
-    val sheetDescriptionInput: String = "",
-
-    // for transfer
-    val transferFromId: Int? = null,
-    val transferToId: Int? = null,
-    val transferAmountInput: String = "",
-
-    // sorting
-    val sortByDateDesc: Boolean = true,
 )

@@ -4,7 +4,9 @@ import androidx.compose.ui.graphics.Color
 
 object MyColors {
     val White = Color(0xFFFFFFFF)
-    val LightGray = Color(0xFFCFCFCF)
+    val WhiteSmoke = Color(0xFFF5F5F5)
+    val LightGray = Color(0xFFDCDCDC)
+    val MidLightGray = Color(0xFFADADAD)
     val Gray = Color(0xFF8A8A8A)
     val DarkGray = Color(0xFF5F5F5F)
     val LightBlack = Color(0xFF1E1F22)
@@ -16,11 +18,11 @@ object MyColors {
     val DarkSkyBlue = Color(0xFF0B67B1)
     val DeepBlue = Color(0xFF0F3D78)
     val LightGreen = Color(0xFF35CD2C)
-    val MidGreen = Color(0xFF358F2C)
-    val DarkGreen = Color(0xFF1F5F1A)
+    val MidGreen = Color(0xFF00A000)
+    val DarkGreen = Color(0xFF005F00)
     val LightOnRed = Color(0xFFF5E5E5)
     val LightRed = Color(0xFFCD2C2C)
-    val MidRed = Color(0xFF8F2C2C)
-    val DarkRed = Color(0xFF5A1A1A)
+    val MidRed = Color(0xFFA00000)
+    val DarkRed = Color(0xFF5F0000)
     val LightOrange = Color(0xFFFFA500)
 }

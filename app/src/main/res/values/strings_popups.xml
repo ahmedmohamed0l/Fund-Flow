@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Popups_DeleteFundConfirm_Message">هل أنت متأكد من حذف الصندوق</string>
+    <string name="Popups_DeleteTransactionConfirm_Message">هل أنت متأكد من حذف المعاملة</string>
+
+    <string name="Popups_Delete_Bttn">حذف</string>
+    <string name="Popups_Cancel_Bttn">إلغاء</string>
+</resources>

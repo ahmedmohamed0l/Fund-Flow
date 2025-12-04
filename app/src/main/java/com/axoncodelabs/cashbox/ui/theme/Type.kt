@@ -10,19 +10,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.axoncodelabs.cashbox.R
 
-val SegoeUi = FontFamily(
+private val SegoeUi = FontFamily(
     Font(R.font.segoe_ui, FontWeight.Normal),
     Font(R.font.segoe_ui_bold, FontWeight.Bold),
     Font(R.font.segoe_ui_italic, FontWeight.Normal, FontStyle.Italic),
     Font(R.font.segoe_ui_bold_italic, FontWeight.Bold, FontStyle.Italic)
 )
+private val Tajawal = FontFamily(
+    Font(R.font.tajawal_medium, FontWeight.Normal),
+    Font(R.font.tajawal_bold, FontWeight.Bold),
+    Font(R.font.segoe_ui_italic, FontWeight.Normal, FontStyle.Italic),
+    Font(R.font.segoe_ui_bold_italic, FontWeight.Bold, FontStyle.Italic)
+)
 
-val MainFont = SegoeUi
+private val mainFont = Tajawal
 
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(
-        fontFamily = MainFont,
+        fontFamily = mainFont,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,
@@ -52,49 +58,49 @@ object MyFontStyle {
 
     @Composable
     fun small() = TextStyle(
-        fontFamily = MainFont,
+        fontFamily = mainFont,
         fontWeight = FontWeight.Normal,
-        fontSize = 12.sp
+        fontSize = 14.sp
     )
 
     @Composable
     fun smallBold() = TextStyle(
-        fontFamily = MainFont,
+        fontFamily = mainFont,
         fontWeight = FontWeight.Bold,
-        fontSize = 12.sp
+        fontSize = 14.sp
     )
 
     @Composable
     fun medium() = TextStyle(
-        fontFamily = MainFont,
+        fontFamily = mainFont,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
     )
 
     @Composable
     fun mediumBold() = TextStyle(
-        fontFamily = MainFont,
+        fontFamily = mainFont,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp
     )
 
     @Composable
     fun large() = TextStyle(
-        fontFamily = MainFont,
+        fontFamily = mainFont,
         fontWeight = FontWeight.Normal,
-        fontSize = 25.sp
+        fontSize = 20.sp
     )
 
     @Composable
     fun largeBold() = TextStyle(
-        fontFamily = MainFont,
+        fontFamily = mainFont,
         fontWeight = FontWeight.Bold,
-        fontSize = 25.sp
+        fontSize = 20.sp
     )
 
     @Composable
     fun extremeBold() = TextStyle(
-        fontFamily = MainFont,
+        fontFamily = mainFont,
         fontWeight = FontWeight.Bold,
         fontSize = 50.sp
     )

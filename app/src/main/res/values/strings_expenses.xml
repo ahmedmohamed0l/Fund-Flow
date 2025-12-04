@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--_____[MainScreen]_____-->
     <string name="ExpensesScreen_Identifier">المصروفات</string>
-    <string name="NoExpensesPage_Title">ابدأ في إضافة مصروفاتك اليومية من الزر الأخضر لتتمكن من مشاهدتها لاحقاً</string>
-    <string name="NoExpensesPage_Description">ولا تنسي أن تكتب كل المصروفات حتي لو كانت صغيرة مثل المواصلات، وجبة الافطار، مصروفات المنزل، مصروف الأولاد</string>
-    <!--_____[AddExpense]_____-->
-    <string name="AddExpenseValue_Hint">أكتب المبلغ المصروف</string>
-    <string name="AddExpenseDescription_Hint">الوصف مثال: (المواصلات او الايجار او إلخ..)</string>
-    <string name="AddExpense_Bttn">إضافة المصروف</string>
-    <!--_____[EditExpense]_____-->
-    <string name="SaveExpenseEdit_Bttn">حفظ التعديلات</string>
+
+    <string name="ExpensesScreen_DateSelect">مصروفات يوم </string>
+
+    <string name="ExpensesScreen_NoExpensesPage_Title">ابدأ في إضافة مصروفاتك اليومية لتتمكن من مشاهدتها لاحقاً</string>
+    <string name="ExpensesScreen_NoExpensesPage_Description">ولا تنسي أن تكتب كل المصروفات حتي لو كانت صغيرة مثل المواصلات، وجبة الافطار، مصروفات المنزل، مصروف الأولاد…</string>
+
+    <string name="ExpensesScreen_AddExpenses_Butt">أضف مصروفات</string>
 </resources>

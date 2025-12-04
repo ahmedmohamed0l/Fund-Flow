@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
 import com.axoncodelabs.cashbox.data.local.CashBoxDatabase
 import com.axoncodelabs.cashbox.data.local.dao.FundDao
@@ -16,7 +17,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import jakarta.inject.Singleton
-import androidx.datastore.preferences.preferencesDataStore
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_preferences")
 
@@ -48,7 +48,7 @@ object AppModule {
     fun provideRepository(
         fundDao: FundDao,
         transactionDao: TransactionDao,
-        dataStore: DataStore<Preferences>
+        dataStore: DataStore<Preferences>,
     ): CashBoxRepository = CashBoxRepositoryImpl(fundDao, transactionDao, dataStore)
 
     @Provides

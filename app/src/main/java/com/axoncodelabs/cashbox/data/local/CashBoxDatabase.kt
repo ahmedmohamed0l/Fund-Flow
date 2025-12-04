@@ -1,8 +1,6 @@
 package com.axoncodelabs.cashbox.data.local
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.axoncodelabs.cashbox.data.local.dao.FundDao
 import com.axoncodelabs.cashbox.data.local.dao.TransactionDao

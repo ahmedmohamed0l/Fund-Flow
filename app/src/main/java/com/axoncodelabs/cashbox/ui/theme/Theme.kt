@@ -1,5 +1,6 @@
 package com.axoncodelabs.cashbox.ui.theme
 
+import android.app.Activity
 import android.os.Build
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -7,7 +8,9 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.view.WindowInsetsControllerCompat
 
 sealed class Theme(val value: String) {
     object Light : Theme("light")
@@ -15,19 +18,26 @@ sealed class Theme(val value: String) {
 }
 
 private val LightColorScheme = lightColorScheme(
-    background = MyColors.White,
+    background = MyColors.WhiteSmoke,
     onBackground = MyColors.Black,
+    onPrimaryFixed = MyColors.White,
 
     primary = MyColors.DarkSkyBlue,
     onPrimary = MyColors.White,
 
-    secondary = MyColors.LightGray,
-    onSecondary = MyColors.White,
-
-    tertiary = MyColors.MidGreen,
+    secondary = MyColors.WhiteSmoke,
+    onSecondary = MyColors.Gray,
 
     surface = MyColors.SoftBlack,
-    onSurface = MyColors.LightGray
+    onSurface = MyColors.WhiteSmoke,
+
+    tertiary = MyColors.LightGray,
+    onTertiary = MyColors.SoftBlack,
+
+    error = MyColors.DarkRed,
+    inversePrimary = MyColors.DarkGreen,
+
+    outline = MyColors.MidLightGray
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -43,17 +53,24 @@ private val LightColorScheme = lightColorScheme(
 private val DarkColorScheme = darkColorScheme(
     background = MyColors.SoftBlack,
     onBackground = MyColors.White,
+    onPrimaryFixed = MyColors.Black,
 
     primary = MyColors.DeepBlue,
     onPrimary = MyColors.White,
 
     secondary = MyColors.LightBlack,
-    onSecondary = MyColors.White,
+    onSecondary = MyColors.WhiteSmoke,
 
-    tertiary = MyColors.DarkGreen,
+    surface = MyColors.WhiteSmoke,
+    onSurface = MyColors.SoftBlack,
 
-    surface = MyColors.LightGray,
-    onSurface = MyColors.SoftBlack
+    tertiary = MyColors.LightBlack,
+    onTertiary = MyColors.WhiteSmoke,
+
+    error = MyColors.MidRed,
+    inversePrimary = MyColors.MidGreen,
+
+    outline = MyColors.Gray
 )
 
 @Composable
@@ -72,7 +89,14 @@ fun CashBoxTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
+    val activity = LocalContext.current as Activity
+    SideEffect {
+        val window = activity.window
+        val insetsController = WindowInsetsControllerCompat(window, window.decorView)
 
+        // لو Dark mode → خليه Light icons
+        insetsController.isAppearanceLightStatusBars = !darkTheme
+    }
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
