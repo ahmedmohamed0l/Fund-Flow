@@ -25,6 +25,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
+import com.axoncodelabs.cashbox.ui.theme.MyIcons
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,15 +72,22 @@ fun FundSelectionBttn(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() }
                 ) { viewModel.showFunds = true }
-                .padding(vertical = 15.dp, horizontal = 15.dp)
+                .padding(horizontal = 15.dp)
         ) {
             Text(
-                modifier = Modifier.align(Alignment.CenterStart),
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .padding(vertical = 15.dp),
                 text = fund?.name ?: stringResource(R.string.Sheet_FundSelection),
                 style = MyFontStyle.medium(),
                 color = fund?.let { textColor } ?: finalBorderColor,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
+            )
+            MyIcons.Arrow(
+                autoMirroredState = false,
+                modifier = Modifier.align(Alignment.CenterEnd),
+                size = 25.dp, color = finalBorderColor, angle = 180f
             )
         }
         if (isUnSelected) {

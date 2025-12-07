@@ -1,5 +1,6 @@
 package com.axoncodelabs.cashbox.ui.screens.funds
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -27,7 +28,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -99,6 +103,7 @@ fun FundsScreen(
                     )
                 }
             }
+
             is FundsSheet.Transfer -> {
                 ModalBottomSheet(
                     onDismissRequest = { viewModel.onEvent(FundsEvent.CloseSheet) },
@@ -196,89 +201,104 @@ private fun FundItem(
             .clip(MyRoundedCornerShape.medium)
             .background(MaterialTheme.colorScheme.tertiary)
             .height(160.dp)
-            .padding(20.dp)
-            .padding(vertical = 10.dp)
     ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.background),
+            modifier = modifier
+                .matchParentSize()
+                .alpha(0.6f),
+        )
         Box(
             modifier = modifier
-                .fillMaxWidth()
-                .align(Alignment.TopCenter)
+                .fillMaxSize()
+                .clip(MyRoundedCornerShape.medium)
+                .padding(20.dp)
+                .padding(vertical = 10.dp)
         ) {
             Row(
-                modifier = modifier.align(Alignment.CenterStart),
+                modifier = modifier
+                    .fillMaxWidth()
+                    .align(Alignment.TopCenter),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                MyIcons.Settings(
-                    filledState = false,
-                    size = 25.dp,
-                    color = MaterialTheme.colorScheme.primary,
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    MyIcons.Settings(
+                        filledState = false,
+                        size = 25.dp,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = modifier.clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) {
+                            onEvent(FundsEvent.SheetDisplayed(FundsSheet.FundOptions(fund)))
+                        })
+                    Spacer(modifier = modifier.width(15.dp))
+                    Text(
+                        text = fund.name,
+                        color = MaterialTheme.colorScheme.onTertiary,
+                        style = MyFontStyle.medium()
+                    )
+                }
+                Text(
+                    text = doubleFormat(fund.balance),
+                    color = MaterialTheme.colorScheme.onTertiary,
+                    style = MyFontStyle.large()
+                )
+            }
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = stringResource(R.string.FundsScreen_AddBalance_Bttn),
+                    color = MaterialTheme.colorScheme.inversePrimary,
+                    style = MyFontStyle.small(),
                     modifier = modifier.clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
                     ) {
-                        onEvent(FundsEvent.SheetDisplayed(FundsSheet.FundOptions(fund)))
+                        onEvent(
+                            FundsEvent.SheetDisplayed(FundsSheet.AddAmount(fund))
+                        )
                     })
-                Spacer(modifier = modifier.width(15.dp))
                 Text(
-                    text = fund.name,
+                    text = stringResource(R.string.FundsScreen_FundsTransfer_Bttn),
                     color = MaterialTheme.colorScheme.onTertiary,
-                    style = MyFontStyle.medium()
-                )
-            }
-            Text(
-                text = doubleFormat(fund.balance),
-                color = MaterialTheme.colorScheme.onTertiary,
-                style = MyFontStyle.large(),
-                modifier = modifier.align(Alignment.CenterEnd)
-            )
-        }
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-        ) {
-            Text(
-                text = stringResource(R.string.FundsScreen_AddBalance_Bttn),
-                color = MaterialTheme.colorScheme.inversePrimary,
-                style = MyFontStyle.small(),
-                modifier = modifier.clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) {
-                    onEvent(
-                        FundsEvent.SheetDisplayed(FundsSheet.AddAmount(fund))
-                    )
-                })
-            Text(
-                text = stringResource(R.string.FundsScreen_FundsTransfer_Bttn),
-                color = MaterialTheme.colorScheme.onTertiary,
-                style = MyFontStyle.small(),
-                modifier = modifier.clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) {
-                    onEvent(
-                        FundsEvent.SheetDisplayed(
-                            FundsSheet.Transfer(
-                                fund
+                    style = MyFontStyle.small(),
+                    modifier = modifier.clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) {
+                        onEvent(
+                            FundsEvent.SheetDisplayed(
+                                FundsSheet.Transfer(
+                                    fund
+                                )
                             )
                         )
-                    )
-                })
-            Text(
-                text = stringResource(R.string.FundsScreen_DeleteFunds_Bttn),
-                color = MaterialTheme.colorScheme.error,
-                style = MyFontStyle.small(),
-                modifier = modifier.clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) {
-                    onEvent(
-                        FundsEvent.PopupDisplay(FundsPopup.Open(fund))
-                    )
-                })
+                    })
+                Text(
+                    text = stringResource(R.string.FundsScreen_DeleteFunds_Bttn),
+                    color = MaterialTheme.colorScheme.error,
+                    style = MyFontStyle.small(),
+                    modifier = modifier.clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) {
+                        onEvent(
+                            FundsEvent.PopupDisplay(FundsPopup.Open(fund))
+                        )
+                    })
+            }
         }
     }
 }

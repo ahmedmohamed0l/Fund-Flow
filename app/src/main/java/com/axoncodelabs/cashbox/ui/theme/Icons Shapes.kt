@@ -3,8 +3,6 @@ package com.axoncodelabs.cashbox.ui.theme
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.AddCard
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -67,7 +65,7 @@ object MyIcons {
     }
 
     @Composable
-    fun Comment(
+    fun Description(
         modifier: Modifier = Modifier,
         size: Dp = 48.dp,
         angle: Float = 0f,
@@ -105,67 +103,7 @@ object MyIcons {
     }
 
     @Composable
-    fun Arrow(
-        modifier: Modifier = Modifier,
-        size: Dp = 48.dp,
-        angle: Float = 0f,
-        color: Color = MyColors.Black,
-        alphaValue: Float = 1f,
-        autoMirroredState: Boolean,
-    ) {
-        val mirroredState =
-            if (autoMirroredState) Icons.AutoMirrored.Rounded.KeyboardArrowRight else Icons.Rounded.KeyboardArrowRight
-        Icon(
-            imageVector = mirroredState,
-            contentDescription = "Arrow icon",
-            modifier = modifier
-                .size(size)
-                .rotate(angle)
-                .alpha(alphaValue),
-            tint = color
-        )
-    }
-
-    @Composable
-    fun Plus(
-        modifier: Modifier = Modifier,
-        size: Dp = 48.dp,
-        angle: Float = 0f,
-        color: Color = MyColors.Black,
-        alphaValue: Float = 1f,
-    ) {
-        Icon(
-            imageVector = Icons.Rounded.Add,
-            contentDescription = "Float add button",
-            modifier = modifier
-                .size(size)
-                .rotate(angle)
-                .alpha(alphaValue),
-            tint = color,
-        )
-    }
-
-    @Composable
-    fun Add_Card(
-        modifier: Modifier = Modifier,
-        size: Dp = 48.dp,
-        angle: Float = 0f,
-        color: Color = MyColors.Black,
-        alphaValue: Float = 1f,
-    ) {
-        Icon(
-            imageVector = Icons.Rounded.AddCard,
-            contentDescription = "Add new fund",
-            modifier = modifier
-                .size(size)
-                .rotate(angle)
-                .alpha(alphaValue),
-            tint = color,
-        )
-    }
-
-    @Composable
-    fun Search_Activity(
+    fun Time_Zone(
         modifier: Modifier = Modifier,
         size: Dp = 48.dp,
         angle: Float = 0f,
@@ -175,54 +113,6 @@ object MyIcons {
         Icon(
             painter = painterResource(id = R.drawable.ic_search_activity),
             contentDescription = "Time Zone Selection",
-            modifier = modifier
-                .size(size)
-                .rotate(angle)
-                .alpha(alphaValue),
-            tint = color,
-        )
-    }
-
-    @Composable
-    fun Home_App_Logo(
-        modifier: Modifier = Modifier,
-        size: Dp = 48.dp,
-        angle: Float = 0f,
-        color: Color = MyColors.Black,
-        alphaValue: Float = 1f,
-        filledState: Boolean,
-    ) {
-        val filledState =
-            if (filledState) painterResource(id = R.drawable.ic_home_app_logo_filled) else painterResource(
-                id = R.drawable.ic_home_app_logo
-            )
-        Icon(
-            painter = filledState,
-            contentDescription = "Nav Expenses",
-            modifier = modifier
-                .size(size)
-                .rotate(angle)
-                .alpha(alphaValue),
-            tint = color,
-        )
-    }
-
-    @Composable
-    fun Account_Balance_Wallet(
-        modifier: Modifier = Modifier,
-        size: Dp = 48.dp,
-        angle: Float = 0f,
-        color: Color = MyColors.Black,
-        alphaValue: Float = 1f,
-        filledState: Boolean,
-    ) {
-        val filledState =
-            if (filledState) painterResource(id = R.drawable.ic_account_balance_wallet_filled) else painterResource(
-                id = R.drawable.ic_account_balance_wallet
-            )
-        Icon(
-            painter = filledState,
-            contentDescription = "Nav Funds",
             modifier = modifier
                 .size(size)
                 .rotate(angle)
@@ -256,26 +146,24 @@ object MyIcons {
     }
 
     @Composable
-    fun Analytics(
+    fun Arrow(
         modifier: Modifier = Modifier,
         size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
         alphaValue: Float = 1f,
-        filledState: Boolean,
+        autoMirroredState: Boolean,
     ) {
-        val filledState =
-            if (filledState) painterResource(id = R.drawable.ic_analytics_filled) else painterResource(
-                id = R.drawable.ic_analytics
-            )
+        val mirroredState =
+            if (autoMirroredState) Icons.AutoMirrored.Rounded.KeyboardArrowRight else Icons.Rounded.KeyboardArrowRight
         Icon(
-            painter = filledState,
-            contentDescription = "Nav Reports",
+            imageVector = mirroredState,
+            contentDescription = "Arrow icon",
             modifier = modifier
                 .size(size)
                 .rotate(angle)
                 .alpha(alphaValue),
-            tint = color,
+            tint = color
         )
     }
 }

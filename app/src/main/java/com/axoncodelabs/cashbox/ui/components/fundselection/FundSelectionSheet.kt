@@ -56,7 +56,7 @@ fun FundSelectionSheet(
                         modifier = Modifier
                             .padding(vertical = 5.dp)
                             .clip(MyRoundedCornerShape.large),
-                        thickness = (0.5).dp,
+                        thickness = 1.dp,
                         color = MaterialTheme.colorScheme.outline
                     )
                 }
