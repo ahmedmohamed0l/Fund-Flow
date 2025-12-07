@@ -34,7 +34,7 @@ private val LightColorScheme = lightColorScheme(
     tertiary = MyColors.LightGray,
     onTertiary = MyColors.SoftBlack,
 
-    error = MyColors.DarkRed,
+    error = MyColors.LightRed,
     inversePrimary = MyColors.DarkGreen,
 
     outline = MyColors.MidLightGray

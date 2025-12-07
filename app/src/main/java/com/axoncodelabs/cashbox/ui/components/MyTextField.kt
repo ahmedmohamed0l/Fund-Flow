@@ -11,8 +11,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
@@ -54,7 +59,7 @@ fun MyLabel(
 fun MyRoundedLabel(
     lapel: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colorScheme.onSecondary,
+    textColor: Color = MaterialTheme.colorScheme.primary,
     borderColor: Color = MaterialTheme.colorScheme.outline,
 ) {
     Box(
@@ -76,13 +81,13 @@ fun MyRoundedLabel(
 
 @Composable
 fun MyTextField(
+    modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
     hintText: String,
     keyboardType: KeyboardType,
     singleLine: Boolean,
     maxLines: Int? = null,
-    modifier: Modifier = Modifier,
     borderColor: Color = MaterialTheme.colorScheme.outline,
     hintTextColor: Color = MaterialTheme.colorScheme.outline,
     isError: Boolean = false,
@@ -91,7 +96,7 @@ fun MyTextField(
     val actualMaxLines = if (singleLine) 1 else maxLines ?: 5
     val finalBorderColor = if (isError) MaterialTheme.colorScheme.error else borderColor
     val finalValueColor =
-        if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSecondary
+        if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onBackground
     val finalHintColor = if (isError) MaterialTheme.colorScheme.error else hintTextColor
 
     Column() {
@@ -122,6 +127,99 @@ fun MyTextField(
         if (isError) {
             Text(
                 text = errorMsg,
+                color = MaterialTheme.colorScheme.error,
+                style = MyFontStyle.small(),
+                modifier = Modifier.padding(start = 10.dp, top = 10.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun MyNumField(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    hintText: String,
+    singleLine: Boolean,
+    maxLines: Int? = null,
+    borderColor: Color = MaterialTheme.colorScheme.outline,
+    hintTextColor: Color = MaterialTheme.colorScheme.outline,
+    isEmptyValue: Boolean = false,
+    emptyValueMsg: String = "",
+    wrongValueMsg: String = "",
+) {
+    var showWrongValue by remember { mutableStateOf(false) }
+    var isFocused by remember { mutableStateOf(false) }
+
+    val actualMaxLines = if (singleLine) 1 else maxLines ?: 5
+    val finalBorderColor = when {
+        isEmptyValue -> MaterialTheme.colorScheme.error
+        showWrongValue -> MaterialTheme.colorScheme.error
+        else -> borderColor
+    }
+    val finalValueColor =
+        if (isEmptyValue || showWrongValue) MaterialTheme.colorScheme.error
+        else MaterialTheme.colorScheme.onBackground
+    val finalHintColor =
+        if (isEmptyValue || showWrongValue) MaterialTheme.colorScheme.error
+        else hintTextColor
+    Column {
+        BasicTextField(
+            modifier = modifier
+                .fillMaxWidth()
+                .border(1.dp, finalBorderColor, RoundedCornerShape(10.dp))
+                .padding(vertical = 15.dp, horizontal = 15.dp)
+                .onFocusChanged { focusState ->
+                    isFocused = focusState.isFocused
+                    if (isFocused) {
+                        val parts = value.split(".")
+                        showWrongValue = parts.getOrNull(1)?.length?.let { it > 2 } ?: false
+                    } else {
+                        showWrongValue = false
+                    }
+                },
+            value = value,
+            onValueChange = { newStr ->
+                // Allow only digits and one dot
+                val filtered = newStr.filter { it.isDigit() || it == '.' }
+                val dotCount = filtered.count { it == '.' }
+                if (dotCount <= 1) {
+                    val parts = filtered.split(".")
+                    if (isFocused) {
+                        showWrongValue = parts.getOrNull(1)?.length?.let { it > 2 } ?: false
+                    }
+                    onValueChange(filtered)
+                }
+            },
+            textStyle = MyFontStyle.medium().copy(color = finalValueColor),
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            maxLines = actualMaxLines,
+            singleLine = singleLine,
+            decorationBox = { innerTextField ->
+                if (value.isEmpty()) {
+                    Text(
+                        text = hintText,
+                        style = MyFontStyle.medium(),
+                        color = finalHintColor,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                innerTextField()
+            }
+        )
+        if (isEmptyValue) {
+            Text(
+                text = emptyValueMsg,
+                color = MaterialTheme.colorScheme.error,
+                style = MyFontStyle.small(),
+                modifier = Modifier.padding(start = 10.dp, top = 10.dp)
+            )
+        }
+        if (showWrongValue) {
+            Text(
+                text = wrongValueMsg,
                 color = MaterialTheme.colorScheme.error,
                 style = MyFontStyle.small(),
                 modifier = Modifier.padding(start = 10.dp, top = 10.dp)

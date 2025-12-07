@@ -37,8 +37,6 @@ class AddAmountVM @Inject constructor(
         private set
     var isAmountEmpty by mutableStateOf(false)
         private set
-    var isAmountNegative by mutableStateOf(false)
-        private set
     var selectedDate by mutableStateOf(System.currentTimeMillis())
         private set
 
@@ -50,7 +48,6 @@ class AddAmountVM @Inject constructor(
             is AddAmountEvent.OnAmountChange -> {
                 amount = event.amount
                 isAmountEmpty = false
-                isAmountNegative = false
             }
 
             is AddAmountEvent.OnDescriptionChange -> {
@@ -66,10 +63,6 @@ class AddAmountVM @Inject constructor(
                     val amountDouble = amount.toDoubleOrNull()
                     if (amount.isBlank() || amountDouble == null) {
                         isAmountEmpty = true
-                        return@launch
-                    }
-                    if (amountDouble < 0) {
-                        isAmountNegative = true
                         return@launch
                     }
                     fund?.let {

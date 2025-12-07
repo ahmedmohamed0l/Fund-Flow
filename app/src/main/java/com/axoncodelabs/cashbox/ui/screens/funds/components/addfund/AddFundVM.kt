@@ -27,7 +27,7 @@ class AddFundVM @Inject constructor(
         private set
     var isNameEmpty by mutableStateOf(false)
         private set
-    var isAmountNegative by mutableStateOf(false)
+    var isAmountEmpty by mutableStateOf(false)
         private set
 
     private val _uiEvent = Channel<UiEvent>()
@@ -42,7 +42,7 @@ class AddFundVM @Inject constructor(
 
             is AddFundEvent.OnAmountChange -> {
                 amount = event.amount
-                isAmountNegative = false
+                isAmountEmpty = false
             }
 
             is AddFundEvent.OnDescriptionChange -> {
@@ -62,10 +62,6 @@ class AddFundVM @Inject constructor(
                         )
                         Log.d("AddFundVM", "hi im VM Snake")
                         */
-                        return@launch
-                    }
-                    if (amountDouble < 0) {
-                        isAmountNegative = true
                         return@launch
                     }
                     repository.insertFund(

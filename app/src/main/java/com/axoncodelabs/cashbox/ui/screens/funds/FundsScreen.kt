@@ -3,6 +3,7 @@ package com.axoncodelabs.cashbox.ui.screens.funds
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,12 +36,13 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.ui.components.MyTopAppBar
-import com.axoncodelabs.cashbox.ui.components.deletepopup.DeleteFundConfirm
 import com.axoncodelabs.cashbox.ui.screens.funds.components.addamount.AddAmountSheet
 import com.axoncodelabs.cashbox.ui.screens.funds.components.addfund.AddFundSheet
+import com.axoncodelabs.cashbox.ui.screens.funds.components.deletepopup.DeleteFundConfirm
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
+import com.axoncodelabs.cashbox.ui.theme.formatAmount
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -120,7 +123,7 @@ fun FundsScreen(
             modifier = Modifier
                 .padding(inner)
                 .fillMaxSize()
-                .padding(25.dp),
+                .padding(29.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Box(
@@ -140,7 +143,7 @@ fun FundsScreen(
                         .padding(start = 20.dp)
                 )
                 Text(
-                    text = fundsTotalBalance.value.toString(),
+                    text = formatAmount(fundsTotalBalance.value),
                     style = MyFontStyle.large(),
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier
@@ -154,6 +157,7 @@ fun FundsScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(bottom = 30.dp)
                     .clip(MyRoundedCornerShape.medium)
             ) {
                 items(funds.value) { fund ->
@@ -192,10 +196,13 @@ private fun FundItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 MyIcons.Settings(
-                    filledState = true,
+                    filledState = false,
                     size = 25.dp,
                     color = MaterialTheme.colorScheme.primary,
-                    modifier = modifier.clickable {
+                    modifier = modifier.clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) {
                         onEvent(FundsEvent.SheetDisplayed(FundsSheet.FundOptions(fund)))
                     })
                 Spacer(modifier = modifier.width(15.dp))
@@ -206,7 +213,7 @@ private fun FundItem(
                 )
             }
             Text(
-                text = fund.balance.toString(),
+                text = formatAmount(fund.balance),
                 color = MaterialTheme.colorScheme.onTertiary,
                 style = MyFontStyle.large(),
                 modifier = modifier.align(Alignment.CenterEnd)
@@ -223,7 +230,10 @@ private fun FundItem(
                 text = stringResource(R.string.FundsScreen_AddBalance_Bttn),
                 color = MaterialTheme.colorScheme.inversePrimary,
                 style = MyFontStyle.small(),
-                modifier = modifier.clickable {
+                modifier = modifier.clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) {
                     onEvent(
                         FundsEvent.SheetDisplayed(FundsSheet.AddAmount(fund))
                     )
@@ -232,7 +242,10 @@ private fun FundItem(
                 text = stringResource(R.string.FundsScreen_FundsTransfer_Bttn),
                 color = MaterialTheme.colorScheme.onTertiary,
                 style = MyFontStyle.small(),
-                modifier = modifier.clickable {
+                modifier = modifier.clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) {
                     onEvent(
                         FundsEvent.SheetDisplayed(
                             FundsSheet.Transfer(
@@ -245,7 +258,10 @@ private fun FundItem(
                 text = stringResource(R.string.FundsScreen_DeleteFunds_Bttn),
                 color = MaterialTheme.colorScheme.error,
                 style = MyFontStyle.small(),
-                modifier = modifier.clickable {
+                modifier = modifier.clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) {
                     onEvent(
                         FundsEvent.PopupDisplay(FundsPopup.Open(fund))
                     )

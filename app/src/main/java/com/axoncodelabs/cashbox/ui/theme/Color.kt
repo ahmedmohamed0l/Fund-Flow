@@ -20,7 +20,6 @@ object MyColors {
     val LightGreen = Color(0xFF35CD2C)
     val MidGreen = Color(0xFF00A000)
     val DarkGreen = Color(0xFF005F00)
-    val LightOnRed = Color(0xFFF5E5E5)
     val LightRed = Color(0xFFCD2C2C)
     val MidRed = Color(0xFFA00000)
     val DarkRed = Color(0xFF5F0000)

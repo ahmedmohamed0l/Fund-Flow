@@ -20,6 +20,7 @@ import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.ui.components.DateSelection
 import com.axoncodelabs.cashbox.ui.components.MyBotton
 import com.axoncodelabs.cashbox.ui.components.MyLabel
+import com.axoncodelabs.cashbox.ui.components.MyNumField
 import com.axoncodelabs.cashbox.ui.components.MyRoundedLabel
 import com.axoncodelabs.cashbox.ui.components.MyTextField
 import com.axoncodelabs.cashbox.ui.screens.UiEvent
@@ -52,10 +53,10 @@ fun AddAmountSheet(
         description = viewModel.description,
         onAmountChange = { viewModel.onEvent(AddAmountEvent.OnAmountChange(it)) },
         onDescriptionChange = { viewModel.onEvent(AddAmountEvent.OnDescriptionChange(it)) },
-        onSaveClick = { viewModel.onEvent(AddAmountEvent.OnSaveClick) },
-        isAmountNegative = viewModel.isAmountNegative,
         selectedDate = viewModel.selectedDate,
         onDateChange = { viewModel.onEvent(AddAmountEvent.OnDateChange(it)) },
+        onSaveClick = { viewModel.onEvent(AddAmountEvent.OnSaveClick) },
+        isAmountEmpty = viewModel.isAmountEmpty
     )
 }
 
@@ -66,10 +67,10 @@ private fun AddAmountSheetRoot(
     description: String,
     onAmountChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
-    onSaveClick: () -> Unit,
-    isAmountNegative: Boolean,
     selectedDate: Long,
     onDateChange: (Long) -> Unit,
+    onSaveClick: () -> Unit,
+    isAmountEmpty: Boolean,
 ) {
     Column(
         modifier = Modifier
@@ -87,14 +88,14 @@ private fun AddAmountSheetRoot(
 
         MyLabel(stringResource(R.string.Sheet_Amount_Lapel))
         Spacer(modifier = Modifier.height(10.dp))
-        MyTextField(
+        MyNumField(
             value = amount,
             onValueChange = onAmountChange,
             hintText = stringResource(R.string.Sheet_Amount_Hint),
-            keyboardType = KeyboardType.Number,
             singleLine = true,
-            isError = isAmountNegative,
-            errorMsg = stringResource(R.string.Sheet_FundAmountError)
+            isEmptyValue = isAmountEmpty,
+            emptyValueMsg = stringResource(R.string.Sheet_AddFundAmountError),
+            wrongValueMsg = stringResource(R.string.Sheet_FundAmountError),
         )
 
         Spacer(modifier = Modifier.height(20.dp))

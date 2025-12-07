@@ -18,6 +18,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.ui.components.MyBotton
 import com.axoncodelabs.cashbox.ui.components.MyLabel
+import com.axoncodelabs.cashbox.ui.components.MyNumField
 import com.axoncodelabs.cashbox.ui.components.MyTextField
 import com.axoncodelabs.cashbox.ui.screens.UiEvent
 
@@ -57,7 +58,7 @@ fun AddFundSheet(
         onDescriptionChange = { viewModel.onEvent(AddFundEvent.OnDescriptionChange(it)) },
         onSaveClick = { viewModel.onEvent(AddFundEvent.OnSaveClick) },
         isNameEmpty = viewModel.isNameEmpty,
-        isAmountNegative = viewModel.isAmountNegative
+        isAmountEmpty = viewModel.isAmountEmpty
     )
 }
 
@@ -71,7 +72,7 @@ private fun AddFundSheetRoot(
     onDescriptionChange: (String) -> Unit,
     onSaveClick: () -> Unit,
     isNameEmpty: Boolean,
-    isAmountNegative: Boolean,
+    isAmountEmpty: Boolean,
 ) {
     Column(
         modifier = Modifier
@@ -95,14 +96,14 @@ private fun AddFundSheetRoot(
 
         MyLabel(stringResource(R.string.Sheet_Amount_Lapel))
         Spacer(modifier = Modifier.height(10.dp))
-        MyTextField(
+        MyNumField(
             value = amount,
             onValueChange = onAmountChange,
             hintText = stringResource(R.string.Sheet_Amount_Hint),
-            keyboardType = KeyboardType.Number,
             singleLine = true,
-            isError = isAmountNegative,
-            errorMsg = stringResource(R.string.Sheet_FundAmountError)
+            isEmptyValue = isAmountEmpty,
+            emptyValueMsg = stringResource(R.string.Sheet_AddFundAmountError),
+            wrongValueMsg = stringResource(R.string.Sheet_FundAmountError),
         )
 
         Spacer(modifier = Modifier.height(20.dp))

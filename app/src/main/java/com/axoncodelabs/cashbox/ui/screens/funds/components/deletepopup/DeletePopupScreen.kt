@@ -1,7 +1,8 @@
-package com.axoncodelabs.cashbox.ui.components.deletepopup
+package com.axoncodelabs.cashbox.ui.screens.funds.components.deletepopup
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -67,16 +69,20 @@ fun DeleteFundConfirm(
                 text = stringResource(id = R.string.Popups_Delete_Bttn),
                 color = MaterialTheme.colorScheme.error,
                 style = MyFontStyle.small(),
-                modifier = Modifier
-                    .clickable { viewModel.onEvent(DeletePopupEvent.OnDeleteClick) }
-            )
+                modifier = Modifier.clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }) {
+                    viewModel.onEvent(
+                        DeletePopupEvent.OnDeleteClick
+                    )
+                })
             Text(
                 text = stringResource(id = R.string.Popups_Cancel_Bttn),
                 color = MaterialTheme.colorScheme.primary,
                 style = MyFontStyle.small(),
-                modifier = Modifier
-                    .clickable { onCancel() }
-            )
+                modifier = Modifier.clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }) { onCancel() })
         }
     }
 }

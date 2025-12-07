@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.components.deletepopup
+package com.axoncodelabs.cashbox.ui.screens.funds.components.deletepopup
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

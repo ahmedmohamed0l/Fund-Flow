@@ -9,6 +9,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.axoncodelabs.cashbox.R
+import java.text.DecimalFormat
 
 private val SegoeUi = FontFamily(
     Font(R.font.segoe_ui, FontWeight.Normal),
@@ -53,6 +54,11 @@ val Typography = Typography(
 )
 
 //-------------------[Font Styles]-------------------
+
+fun formatAmount(amount: Double): String {
+    val formatter = DecimalFormat("#,##0.##")
+    return formatter.format(amount)
+}
 
 object MyFontStyle {
 
