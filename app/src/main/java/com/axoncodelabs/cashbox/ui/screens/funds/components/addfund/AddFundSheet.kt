@@ -43,7 +43,10 @@ fun AddFundSheet(
                     Log.d("AddFundVM", "SHOW SNACKBAR TRIGGERED!!! name = ${context.getString(event.message)}")
                 }
                 */
-                is UiEvent.CloseSheet -> onClose()
+                is UiEvent.CloseSheet -> {
+                    viewModel.clearAddFundData()
+                    onClose()
+                }
                 else -> Unit
             }
         }

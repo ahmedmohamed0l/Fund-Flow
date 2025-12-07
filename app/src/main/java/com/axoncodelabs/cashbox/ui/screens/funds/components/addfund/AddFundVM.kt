@@ -71,13 +71,21 @@ class AddFundVM @Inject constructor(
                             description = description
                         )
                     )
-                    name = ""
-                    amount = ""
-                    description = ""
+
+                    clearAddFundData()
+
                     sendUiEvent(UiEvent.CloseSheet)
                 }
             }
         }
+    }
+
+    fun clearAddFundData() {
+        name = ""
+        amount = ""
+        description = ""
+        isNameEmpty = false
+        isAmountEmpty = false
     }
 
     private fun sendUiEvent(event: UiEvent) {

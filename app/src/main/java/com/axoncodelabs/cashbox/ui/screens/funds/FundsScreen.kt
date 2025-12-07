@@ -39,10 +39,11 @@ import com.axoncodelabs.cashbox.ui.components.MyTopAppBar
 import com.axoncodelabs.cashbox.ui.screens.funds.components.addamount.AddAmountSheet
 import com.axoncodelabs.cashbox.ui.screens.funds.components.addfund.AddFundSheet
 import com.axoncodelabs.cashbox.ui.screens.funds.components.deletepopup.DeleteFundConfirm
+import com.axoncodelabs.cashbox.ui.screens.funds.components.transfer.TransferSheet
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
-import com.axoncodelabs.cashbox.ui.theme.formatAmount
+import com.axoncodelabs.cashbox.ui.theme.doubleFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -98,6 +99,18 @@ fun FundsScreen(
                     )
                 }
             }
+            is FundsSheet.Transfer -> {
+                ModalBottomSheet(
+                    onDismissRequest = { viewModel.onEvent(FundsEvent.CloseSheet) },
+                    containerColor = MaterialTheme.colorScheme.background,
+                    sheetState = sheetState
+                ) {
+                    TransferSheet(
+                        fromFund = sheet.fund,
+                        onClose = { viewModel.onEvent(FundsEvent.CloseSheet) }
+                    )
+                }
+            }
 
             FundsSheet.None -> Unit
             else -> Unit
@@ -143,7 +156,7 @@ fun FundsScreen(
                         .padding(start = 20.dp)
                 )
                 Text(
-                    text = formatAmount(fundsTotalBalance.value),
+                    text = doubleFormat(fundsTotalBalance.value),
                     style = MyFontStyle.large(),
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier
@@ -213,7 +226,7 @@ private fun FundItem(
                 )
             }
             Text(
-                text = formatAmount(fund.balance),
+                text = doubleFormat(fund.balance),
                 color = MaterialTheme.colorScheme.onTertiary,
                 style = MyFontStyle.large(),
                 modifier = modifier.align(Alignment.CenterEnd)

@@ -55,9 +55,9 @@ val Typography = Typography(
 
 //-------------------[Font Styles]-------------------
 
-fun formatAmount(amount: Double): String {
+fun doubleFormat(double: Double): String {
     val formatter = DecimalFormat("#,##0.##")
-    return formatter.format(amount)
+    return formatter.format(double)
 }
 
 object MyFontStyle {

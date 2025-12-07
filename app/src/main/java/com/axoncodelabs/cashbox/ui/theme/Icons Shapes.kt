@@ -86,6 +86,25 @@ object MyIcons {
     }
 
     @Composable
+    fun CreditCard(
+        modifier: Modifier = Modifier,
+        size: Dp = 48.dp,
+        angle: Float = 0f,
+        color: Color = MyColors.Black,
+        alphaValue: Float = 1f,
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_credit_card),
+            contentDescription = "Fund Selection",
+            modifier = modifier
+                .size(size)
+                .rotate(angle)
+                .alpha(alphaValue),
+            tint = color,
+        )
+    }
+
+    @Composable
     fun Arrow(
         modifier: Modifier = Modifier,
         size: Dp = 48.dp,

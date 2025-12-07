@@ -1,6 +1,7 @@
 package com.axoncodelabs.cashbox.ui.screens.funds.components.addamount
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -24,6 +25,7 @@ class AddAmountVM @Inject constructor(
     fun initFund(fund: FundEntity) {
         this.fund = fund
         name = fund.name
+        clearAddAmountData()
     }
 
     var fund by mutableStateOf<FundEntity?>(null)
@@ -37,7 +39,7 @@ class AddAmountVM @Inject constructor(
         private set
     var isAmountEmpty by mutableStateOf(false)
         private set
-    var selectedDate by mutableStateOf(System.currentTimeMillis())
+    var selectedDate by mutableLongStateOf(System.currentTimeMillis())
         private set
 
     private val _uiEvent = Channel<UiEvent>()
@@ -76,12 +78,20 @@ class AddAmountVM @Inject constructor(
                             )
                         )
                     }
-                    amount = ""
-                    description = ""
+
+                    clearAddAmountData()
+
                     sendUiEvent(UiEvent.CloseSheet)
                 }
             }
         }
+    }
+
+    fun clearAddAmountData() {
+        amount = ""
+        description = ""
+        isAmountEmpty = false
+        selectedDate = System.currentTimeMillis()
     }
 
     private fun sendUiEvent(event: UiEvent) {

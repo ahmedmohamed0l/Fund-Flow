@@ -1,7 +1,9 @@
-package com.axoncodelabs.cashbox.ui.screens.funds.components.addamount
+package com.axoncodelabs.cashbox.ui.screens.funds.components.transfer
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,49 +25,61 @@ import com.axoncodelabs.cashbox.ui.components.MyLabel
 import com.axoncodelabs.cashbox.ui.components.MyNumField
 import com.axoncodelabs.cashbox.ui.components.MyRoundedLabel
 import com.axoncodelabs.cashbox.ui.components.MyTextField
+import com.axoncodelabs.cashbox.ui.components.fundselection.FundSelectionBttn
 import com.axoncodelabs.cashbox.ui.screens.UiEvent
+import com.axoncodelabs.cashbox.ui.theme.doubleFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
 @Composable
-fun AddAmountSheet(
-    fund: FundEntity,
-    viewModel: AddAmountVM = hiltViewModel(),
+fun TransferSheet(
+    fromFund: FundEntity,
+    viewModel: TransferVM = hiltViewModel(),
     onClose: () -> Unit,
 ) {
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
             when (event) {
                 is UiEvent.CloseSheet -> {
-                    viewModel.clearAddAmountData()
+                    viewModel.clearTransferData()
                     onClose()
                 }
+
                 else -> Unit
             }
         }
     }
-    LaunchedEffect(key1 = fund.id) {
-        viewModel.initFund(fund)
+    LaunchedEffect(key1 = fromFund.id) {
+        viewModel.initTransaction(fromFund)
     }
 
-    AddAmountSheetRoot(
-        name = viewModel.name,
+    TransferSheetRoot(
+        fromFund = fromFund,
+        fromName = viewModel.fromName,
+        availableBalance = viewModel.availableBalance,
+        isAvailableNegative = viewModel.isAvailableNegative,
         amount = viewModel.amount,
         description = viewModel.description,
-        onAmountChange = { viewModel.onEvent(AddAmountEvent.OnAmountChange(it)) },
-        onDescriptionChange = { viewModel.onEvent(AddAmountEvent.OnDescriptionChange(it)) },
+        onAmountChange = { viewModel.onEvent(TransferEvent.OnAmountChange(it)) },
+        onDescriptionChange = { viewModel.onEvent(TransferEvent.OnDescriptionChange(it)) },
         selectedDate = viewModel.selectedDate,
-        onDateChange = { viewModel.onEvent(AddAmountEvent.OnDateChange(it)) },
-        onSaveClick = { viewModel.onEvent(AddAmountEvent.OnSaveClick) },
-        isAmountEmpty = viewModel.isAmountEmpty
+        onDateChange = { viewModel.onEvent(TransferEvent.OnDateChange(it)) },
+        onSaveClick = { viewModel.onEvent(TransferEvent.OnSaveClick) },
+        isAmountEmpty = viewModel.isAmountEmpty,
+        toFund = viewModel.toFund,
+        onToFundSelected = { viewModel.onEvent(TransferEvent.OnToFundSelected(it)) },
+        isNoFundSelected = viewModel.isNoFundSelected
     )
 }
 
 @Composable
-private fun AddAmountSheetRoot(
-    name: String,
+private fun TransferSheetRoot(
+    fromFund: FundEntity,
+    fromName: String,
+    availableBalance: Double,
+    isAvailableNegative: Boolean,
     amount: String,
     description: String,
     onAmountChange: (String) -> Unit,
@@ -74,6 +88,9 @@ private fun AddAmountSheetRoot(
     onDateChange: (Long) -> Unit,
     onSaveClick: () -> Unit,
     isAmountEmpty: Boolean,
+    toFund: FundEntity?,
+    onToFundSelected: (FundEntity) -> Unit,
+    isNoFundSelected: Boolean,
 ) {
     Column(
         modifier = Modifier
@@ -81,15 +98,41 @@ private fun AddAmountSheetRoot(
             .background(MaterialTheme.colorScheme.background)
             .padding(25.dp), horizontalAlignment = Alignment.Start
     ) {
-        MyLabel(stringResource(R.string.Sheet_FundName))
+        MyLabel(stringResource(R.string.Sheet_Fund_From_Name))
         Spacer(modifier = Modifier.height(10.dp))
         MyRoundedLabel(
-            lapel = name
+            lapel = fromName,
+            textColor = MaterialTheme.colorScheme.onBackground
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        MyLabel(stringResource(R.string.Sheet_Amount_Lapel))
+        MyLabel(stringResource(R.string.Sheet_Fund_To_Name))
+        Spacer(modifier = Modifier.height(10.dp))
+        FundSelectionBttn(
+            fund = toFund,
+            fromFundId = fromFund.id,
+            onFundSelected = onToFundSelected,
+            isUnSelected = isNoFundSelected,
+            unSelectedErrorMsg = stringResource(R.string.Sheet_NoFundSelected)
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            MyLabel(stringResource(R.string.Sheet_Amount_Lapel))
+            MyLabel(
+                (stringResource(R.string.Sheet_FundFromBalance) + " " + doubleFormat(
+                    availableBalance
+                )),
+                textColor = if (isAvailableNegative) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.inversePrimary
+            )
+        }
         Spacer(modifier = Modifier.height(10.dp))
         MyNumField(
             value = amount,

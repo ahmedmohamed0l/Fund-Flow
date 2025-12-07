@@ -182,13 +182,18 @@ fun MyNumField(
             value = value,
             onValueChange = { newStr ->
                 // Allow only digits and one dot
-                val filtered = newStr.filter { it.isDigit() || it == '.' }
+                var filtered = newStr.filter { it.isDigit() || it == '.' }
                 val dotCount = filtered.count { it == '.' }
                 if (dotCount <= 1) {
                     val parts = filtered.split(".")
+                    if (parts.size > 1 && parts[1].length > 2) {
+                        filtered = parts[0] + "." + parts[1].take(2)
+                    }
+
                     if (isFocused) {
                         showWrongValue = parts.getOrNull(1)?.length?.let { it > 2 } ?: false
                     }
+
                     onValueChange(filtered)
                 }
             },
