@@ -14,7 +14,7 @@ interface FundDao {
     suspend fun getFundByName(name: String): FundEntity?
 
     @Insert
-    suspend fun insertFund(fund: FundEntity)
+    suspend fun insertFund(fund: FundEntity): Long
 
     @Update
     suspend fun updateFund(fund: FundEntity)

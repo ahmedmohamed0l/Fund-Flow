@@ -6,10 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionType
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
+import com.axoncodelabs.cashbox.data.util.StringProvider
 import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -20,6 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddAmountVM @Inject constructor(
     private val repository: CashBoxRepository,
+    private val stringProvider: StringProvider,
 ) : ViewModel() {
 
     var fund by mutableStateOf<FundEntity?>(null)
@@ -70,6 +73,12 @@ class AddAmountVM @Inject constructor(
                         isAmountEmpty = true
                         return@launch
                     }
+
+                    if (description.isBlank()) {
+                        description =
+                            (stringProvider.getString(R.string.Sheet_AddFundDescription) + "" + name)
+                    }
+
                     fund?.let {
                         repository.insertTransaction(
                             TransactionEntity(

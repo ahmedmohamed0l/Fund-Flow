@@ -10,6 +10,7 @@ import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
 import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,6 +27,7 @@ class DeletePopupVM @Inject constructor(
     }
 
     private val _fundsEvent = Channel<FundsEvent>()
+    val fundsEvent = _fundsEvent.receiveAsFlow()
 
     fun onEvent(event: DeletePopupEvent) {
         when (event) {

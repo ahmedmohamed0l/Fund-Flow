@@ -53,8 +53,7 @@ fun AddFundSheet(
         onAmountChange = { viewModel.onEvent(AddFundEvent.OnAmountChange(it)) },
         onDescriptionChange = { viewModel.onEvent(AddFundEvent.OnDescriptionChange(it)) },
         onSaveClick = { viewModel.onEvent(AddFundEvent.OnSaveClick) },
-        isNameEmpty = viewModel.isNameEmpty,
-        isAmountEmpty = viewModel.isAmountEmpty
+        isNameEmpty = viewModel.isNameEmpty
     )
 }
 
@@ -68,7 +67,6 @@ private fun AddFundSheetRoot(
     onDescriptionChange: (String) -> Unit,
     onSaveClick: () -> Unit,
     isNameEmpty: Boolean,
-    isAmountEmpty: Boolean,
 ) {
     Column(
         modifier = Modifier
@@ -99,8 +97,6 @@ private fun AddFundSheetRoot(
             onValueChange = onAmountChange,
             hintText = stringResource(R.string.Sheet_Amount_Hint),
             singleLine = true,
-            isEmptyValue = isAmountEmpty,
-            emptyValueMsg = stringResource(R.string.Sheet_AddFundAmountError),
             wrongValueMsg = stringResource(R.string.Sheet_FundAmountError),
         )
 

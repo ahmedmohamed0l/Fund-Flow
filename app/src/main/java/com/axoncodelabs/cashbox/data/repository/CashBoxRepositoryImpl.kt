@@ -29,8 +29,8 @@ class CashBoxRepositoryImpl @Inject constructor(
     }
 
     // Funds
-    override suspend fun insertFund(fund: FundEntity) {
-        fundDao.insertFund(fund)
+    override suspend fun insertFund(fund: FundEntity): Long {
+        return fundDao.insertFund(fund)
     }
 
     override suspend fun updateFund(fund: FundEntity) {

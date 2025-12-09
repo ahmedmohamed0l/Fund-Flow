@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
+import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
 
@@ -33,6 +34,14 @@ fun DeleteFundConfirm(
     viewModel: DeletePopupVM = hiltViewModel(),
     onCancel: () -> Unit,
 ) {
+    LaunchedEffect(key1 = true) {
+        viewModel.fundsEvent.collect { event ->
+            when (event) {
+                is FundsEvent.ClosePopup -> onCancel()
+                else -> Unit
+            }
+        }
+    }
     LaunchedEffect(key1 = fund.id) {
         viewModel.initData(fund)
     }
@@ -63,10 +72,9 @@ fun DeleteFundConfirm(
                 modifier = Modifier.clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() }) {
-                    viewModel.onEvent(
-                        DeletePopupEvent.OnDeleteClick
-                    )
-                })
+                    viewModel.onEvent(DeletePopupEvent.OnDeleteClick)
+                }
+            )
             Text(
                 text = stringResource(id = R.string.Popups_Cancel_Bttn),
                 color = MaterialTheme.colorScheme.primary,

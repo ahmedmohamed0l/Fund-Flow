@@ -11,6 +11,8 @@ import com.axoncodelabs.cashbox.data.local.dao.FundDao
 import com.axoncodelabs.cashbox.data.local.dao.TransactionDao
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepositoryImpl
+import com.axoncodelabs.cashbox.data.util.StringProvider
+import com.axoncodelabs.cashbox.data.util.StringProviderImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -56,4 +58,10 @@ object AppModule {
     fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
         return context.dataStore
     }
+
+    @Provides
+    @Singleton
+    fun provideStringProvider(
+        @ApplicationContext context: Context,
+    ): StringProvider = StringProviderImpl(context)
 }

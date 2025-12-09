@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface CashBoxRepository {
     // Funds
-    suspend fun insertFund(fund: FundEntity)
+    suspend fun insertFund(fund: FundEntity): Long
     suspend fun updateFund(fund: FundEntity)
     suspend fun deleteFund(fund: FundEntity)
     suspend fun deleteAllFundTransactions(fundId: Int)

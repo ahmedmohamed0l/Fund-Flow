@@ -6,6 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
+import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
+import com.axoncodelabs.cashbox.data.local.entity.TransactionType
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
 import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,8 +29,6 @@ class AddFundVM @Inject constructor(
         private set
     var isNameEmpty by mutableStateOf(false)
         private set
-    var isAmountEmpty by mutableStateOf(false)
-        private set
 
     fun initData() {
         //Clear old
@@ -47,7 +47,6 @@ class AddFundVM @Inject constructor(
 
             is AddFundEvent.OnAmountChange -> {
                 amount = event.amount
-                isAmountEmpty = false
             }
 
             is AddFundEvent.OnDescriptionChange -> {
@@ -56,7 +55,7 @@ class AddFundVM @Inject constructor(
 
             is AddFundEvent.OnSaveClick -> {
                 viewModelScope.launch {
-                    val amountDouble = amount.toDoubleOrNull() ?: 0.0
+                    val initialAmount = amount.toDoubleOrNull() ?: 0.0
                     if (name.isBlank()) {
                         isNameEmpty = true
                         /*Disable ShowSnackbar
@@ -69,11 +68,20 @@ class AddFundVM @Inject constructor(
                         */
                         return@launch
                     }
-                    repository.insertFund(
-                        FundEntity(
-                            name = name,
-                            balance = amountDouble,
-                            description = description
+
+                    val newFund = FundEntity(
+                        name = name,
+                        balance = 0.0,
+                        description = description
+                    )
+
+                    val fundId = repository.insertFund(newFund).toInt()
+                    repository.insertTransaction(
+                        TransactionEntity(
+                            fundId = fundId,
+                            amount = initialAmount,
+                            description = "القيمة الأولية للصندوق",
+                            type = TransactionType.INCOME
                         )
                     )
 
@@ -88,7 +96,6 @@ class AddFundVM @Inject constructor(
         amount = ""
         description = ""
         isNameEmpty = false
-        isAmountEmpty = false
     }
 
     private fun sendFundsEvent(event: FundsEvent) {
