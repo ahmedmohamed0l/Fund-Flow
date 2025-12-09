@@ -22,17 +22,11 @@ class AddAmountVM @Inject constructor(
     private val repository: CashBoxRepository,
 ) : ViewModel() {
 
-    fun initFund(fund: FundEntity) {
-        this.fund = fund
-        name = fund.name
-        clearAddAmountData()
-    }
-
     var fund by mutableStateOf<FundEntity?>(null)
         private set
-
     var name by mutableStateOf("")
         private set
+
     var amount by mutableStateOf("")
         private set
     var description by mutableStateOf("")
@@ -41,6 +35,12 @@ class AddAmountVM @Inject constructor(
         private set
     var selectedDate by mutableLongStateOf(System.currentTimeMillis())
         private set
+
+    fun initFund(fund: FundEntity) {
+        this.fund = fund
+        name = fund.name
+        clearAddAmountData()
+    }
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()

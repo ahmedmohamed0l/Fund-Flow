@@ -41,8 +41,7 @@ fun FundSelectionSheet(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(20.dp)
-            .clip(MyRoundedCornerShape.medium),
+            .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
@@ -69,10 +68,9 @@ fun FundSelectionSheet(
 private fun FundItem(
     fund: FundEntity,
     onSelect: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .height(50.dp)
             .padding(10.dp)
@@ -90,7 +88,7 @@ private fun FundItem(
                 size = 25.dp,
                 color = MaterialTheme.colorScheme.outline,
             )
-            Spacer(modifier = modifier.width(7.dp))
+            Spacer(modifier = Modifier.width(7.dp))
             Text(
                 text = fund.name,
                 color = MaterialTheme.colorScheme.onTertiary,

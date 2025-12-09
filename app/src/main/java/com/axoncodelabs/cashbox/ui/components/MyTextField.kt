@@ -84,7 +84,7 @@ fun MyTextField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
-    hintText: String,
+    hintText: String = "",
     keyboardType: KeyboardType,
     singleLine: Boolean,
     maxLines: Int? = null,

@@ -43,6 +43,7 @@ import com.axoncodelabs.cashbox.ui.components.MyTopAppBar
 import com.axoncodelabs.cashbox.ui.screens.funds.components.addamount.AddAmountSheet
 import com.axoncodelabs.cashbox.ui.screens.funds.components.addfund.AddFundSheet
 import com.axoncodelabs.cashbox.ui.screens.funds.components.deletepopup.DeleteFundConfirm
+import com.axoncodelabs.cashbox.ui.screens.funds.components.fundoptions.FundOptionsSheet
 import com.axoncodelabs.cashbox.ui.screens.funds.components.transfer.TransferSheet
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
@@ -117,8 +118,20 @@ fun FundsScreen(
                 }
             }
 
+            is FundsSheet.FundOptions -> {
+                ModalBottomSheet(
+                    onDismissRequest = { viewModel.onEvent(FundsEvent.CloseSheet) },
+                    containerColor = MaterialTheme.colorScheme.background,
+                    sheetState = sheetState
+                ) {
+                    FundOptionsSheet(
+                        fund = sheet.fund,
+                        onClose = { viewModel.onEvent(FundsEvent.CloseSheet) }
+                    )
+                }
+            }
+
             FundsSheet.None -> Unit
-            else -> Unit
         }
 
         when (popup) {
