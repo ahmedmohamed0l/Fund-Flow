@@ -10,7 +10,7 @@ import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionType
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
-import com.axoncodelabs.cashbox.ui.screens.UiEvent
+import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -36,14 +36,17 @@ class AddAmountVM @Inject constructor(
     var selectedDate by mutableLongStateOf(System.currentTimeMillis())
         private set
 
-    fun initFund(fund: FundEntity) {
+    fun initData(fund: FundEntity) {
+        //Set new
         this.fund = fund
         name = fund.name
-        clearAddAmountData()
+
+        //Clear old
+        clearSheetData()
     }
 
-    private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
+    private val _fundsEvent = Channel<FundsEvent>()
+    val fundsEvent = _fundsEvent.receiveAsFlow()
 
     fun onEvent(event: AddAmountEvent) {
         when (event) {
@@ -79,24 +82,22 @@ class AddAmountVM @Inject constructor(
                         )
                     }
 
-                    clearAddAmountData()
-
-                    sendUiEvent(UiEvent.CloseSheet)
+                    sendFundsEvent(FundsEvent.CloseSheet)
                 }
             }
         }
     }
 
-    fun clearAddAmountData() {
+    fun clearSheetData() {
         amount = ""
         description = ""
         isAmountEmpty = false
         selectedDate = System.currentTimeMillis()
     }
 
-    private fun sendUiEvent(event: UiEvent) {
+    private fun sendFundsEvent(event: FundsEvent) {
         viewModelScope.launch {
-            _uiEvent.send(event)
+            _fundsEvent.send(event)
         }
     }
 }

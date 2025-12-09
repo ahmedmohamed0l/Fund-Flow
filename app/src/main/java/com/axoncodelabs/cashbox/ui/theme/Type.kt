@@ -1,7 +1,6 @@
 package com.axoncodelabs.cashbox.ui.theme
 
 import androidx.compose.material3.Typography
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -20,8 +19,6 @@ private val SegoeUi = FontFamily(
 private val Tajawal = FontFamily(
     Font(R.font.tajawal_medium, FontWeight.Normal),
     Font(R.font.tajawal_bold, FontWeight.Bold),
-    Font(R.font.segoe_ui_italic, FontWeight.Normal, FontStyle.Italic),
-    Font(R.font.segoe_ui_bold_italic, FontWeight.Bold, FontStyle.Italic)
 )
 
 private val mainFont = Tajawal
@@ -62,49 +59,42 @@ fun doubleFormat(double: Double): String {
 
 object MyFontStyle {
 
-    @Composable
     fun small() = TextStyle(
         fontFamily = mainFont,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp
     )
 
-    @Composable
     fun smallBold() = TextStyle(
         fontFamily = mainFont,
         fontWeight = FontWeight.Bold,
         fontSize = 14.sp
     )
 
-    @Composable
     fun medium() = TextStyle(
         fontFamily = mainFont,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
     )
 
-    @Composable
     fun mediumBold() = TextStyle(
         fontFamily = mainFont,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp
     )
 
-    @Composable
     fun large() = TextStyle(
         fontFamily = mainFont,
         fontWeight = FontWeight.Normal,
         fontSize = 20.sp
     )
 
-    @Composable
     fun largeBold() = TextStyle(
         fontFamily = mainFont,
         fontWeight = FontWeight.Bold,
         fontSize = 20.sp
     )
 
-    @Composable
     fun extremeBold() = TextStyle(
         fontFamily = mainFont,
         fontWeight = FontWeight.Bold,

@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
-import com.axoncodelabs.cashbox.ui.screens.UiEvent
+import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.channels.Channel
@@ -61,12 +61,12 @@ class TransferVM @Inject constructor(
         this.fromFund = fundFrom
         fromName = fundFrom.name
         fromBalance = fundFrom.balance
-        clearTransferData()
+        clearSheetData()
     }
 
 
-    private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
+    private val _fundsEvent = Channel<FundsEvent>()
+    val fundsEvent = _fundsEvent.receiveAsFlow()
 
     fun onEvent(event: TransferEvent) {
         when (event) {
@@ -112,15 +112,13 @@ class TransferVM @Inject constructor(
                         timestamp = selectedDate
                     )
 
-                    clearTransferData()
-
-                    sendUiEvent(UiEvent.CloseSheet)
+                    sendFundsEvent(FundsEvent.CloseSheet)
                 }
             }
         }
     }
 
-    fun clearTransferData() {
+    fun clearSheetData() {
         toFund = null
         toName = ""
         isNoFundSelected = false
@@ -131,9 +129,9 @@ class TransferVM @Inject constructor(
         updateAvailableBalance()
     }
 
-    private fun sendUiEvent(event: UiEvent) {
+    private fun sendFundsEvent(event: FundsEvent) {
         viewModelScope.launch {
-            _uiEvent.send(event)
+            _fundsEvent.send(event)
         }
     }
 }

@@ -13,6 +13,7 @@ import com.axoncodelabs.cashbox.data.local.entity.TransactionType
 import com.axoncodelabs.cashbox.ui.theme.Theme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -38,6 +39,22 @@ class CashBoxRepositoryImpl @Inject constructor(
 
     override suspend fun deleteFund(fund: FundEntity) {
         fundDao.deleteFund(fund)
+    }
+
+    override suspend fun deleteAllFundTransactions(fundId: Int) {
+        val fund = fundDao.getFundById(fundId)
+            ?: throw IllegalArgumentException("Fund with id $fundId not found")
+
+        val transactions = transactionDao.getTransactionsByFundId(fundId).first()
+
+        var correctedBalance = fund.balance
+        transactions.forEach { t ->
+            correctedBalance -= (signForType(t.type) * t.amount)
+        }
+
+        fundDao.updateFund(fund.copy(balance = correctedBalance))
+
+        transactionDao.deleteTransactionsByFundId(fundId)
     }
 
     override fun getAllFunds(): Flow<List<FundEntity>> {

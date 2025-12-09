@@ -26,7 +26,7 @@ import com.axoncodelabs.cashbox.ui.components.MyNumField
 import com.axoncodelabs.cashbox.ui.components.MyRoundedLabel
 import com.axoncodelabs.cashbox.ui.components.MyTextField
 import com.axoncodelabs.cashbox.ui.components.fundselection.FundSelectionBttn
-import com.axoncodelabs.cashbox.ui.screens.UiEvent
+import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
 import com.axoncodelabs.cashbox.ui.theme.doubleFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -40,10 +40,10 @@ fun TransferSheet(
     onClose: () -> Unit,
 ) {
     LaunchedEffect(key1 = true) {
-        viewModel.uiEvent.collect { event ->
+        viewModel.fundsEvent.collect { event ->
             when (event) {
-                is UiEvent.CloseSheet -> {
-                    viewModel.clearTransferData()
+                is FundsEvent.CloseSheet -> {
+                    viewModel.clearSheetData()
                     onClose()
                 }
 
@@ -101,6 +101,7 @@ private fun TransferSheetRoot(
         MyLabel(stringResource(R.string.Sheet_Fund_From_Name))
         Spacer(modifier = Modifier.height(10.dp))
         MyRoundedLabel(
+            modifier = Modifier.fillMaxWidth(),
             lapel = fromName,
             textColor = MaterialTheme.colorScheme.onBackground
         )
@@ -135,6 +136,7 @@ private fun TransferSheetRoot(
         }
         Spacer(modifier = Modifier.height(10.dp))
         MyNumField(
+            modifier = Modifier.fillMaxWidth(),
             value = amount,
             onValueChange = onAmountChange,
             hintText = stringResource(R.string.Sheet_Amount_Hint),
@@ -149,6 +151,7 @@ private fun TransferSheetRoot(
         MyLabel(stringResource(R.string.Sheet_DescriptionLapel))
         Spacer(modifier = Modifier.height(10.dp))
         MyTextField(
+            modifier = Modifier.fillMaxWidth(),
             value = description,
             onValueChange = onDescriptionChange,
             hintText = stringResource(R.string.Sheet_Description_Hint),

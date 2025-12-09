@@ -3,7 +3,6 @@ package com.axoncodelabs.cashbox.ui.components
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -64,7 +63,6 @@ fun MyRoundedLabel(
 ) {
     Box(
         modifier = modifier
-            .fillMaxWidth()
             .border(1.dp, borderColor, RoundedCornerShape(10.dp))
             .padding(vertical = 15.dp, horizontal = 15.dp),
     ) {
@@ -102,7 +100,6 @@ fun MyTextField(
     Column() {
         BasicTextField(
             modifier = modifier
-                .fillMaxWidth()
                 .border(1.dp, finalBorderColor, RoundedCornerShape(10.dp))
                 .padding(vertical = 15.dp, horizontal = 15.dp),
             value = value,
@@ -167,7 +164,6 @@ fun MyNumField(
     Column {
         BasicTextField(
             modifier = modifier
-                .fillMaxWidth()
                 .border(1.dp, finalBorderColor, RoundedCornerShape(10.dp))
                 .padding(vertical = 15.dp, horizontal = 15.dp)
                 .onFocusChanged { focusState ->

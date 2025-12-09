@@ -11,6 +11,7 @@ interface CashBoxRepository {
     suspend fun insertFund(fund: FundEntity)
     suspend fun updateFund(fund: FundEntity)
     suspend fun deleteFund(fund: FundEntity)
+    suspend fun deleteAllFundTransactions(fundId: Int)
     fun getAllFunds(): Flow<List<FundEntity>>
     suspend fun getFundById(id: Int): FundEntity?
     fun getTotalBalance(): Flow<Double>

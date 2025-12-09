@@ -7,10 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
-import com.axoncodelabs.cashbox.ui.screens.UiEvent
+import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,15 +17,15 @@ import javax.inject.Inject
 class DeletePopupVM @Inject constructor(
     private val repository: CashBoxRepository,
 ) : ViewModel() {
-    fun initFund(fund: FundEntity) {
-        this.fund = fund
-    }
-
     var fund by mutableStateOf<FundEntity?>(null)
         private set
 
-    private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
+    fun initData(fund: FundEntity) {
+        //Set new
+        this.fund = fund
+    }
+
+    private val _fundsEvent = Channel<FundsEvent>()
 
     fun onEvent(event: DeletePopupEvent) {
         when (event) {
@@ -35,19 +34,19 @@ class DeletePopupVM @Inject constructor(
                     fund?.let {
                         repository.deleteFund(it)
                     }
-                    sendUiEvent(UiEvent.ClosePopup)
+                    sendFundsEvent(FundsEvent.ClosePopup)
                 }
             }
 
             is DeletePopupEvent.OnCancelClick -> {
-                sendUiEvent(UiEvent.ClosePopup)
+                sendFundsEvent(FundsEvent.ClosePopup)
             }
         }
     }
 
-    private fun sendUiEvent(event: UiEvent) {
+    private fun sendFundsEvent(event: FundsEvent) {
         viewModelScope.launch {
-            _uiEvent.send(event)
+            _fundsEvent.send(event)
         }
     }
 }

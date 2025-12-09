@@ -11,7 +11,7 @@ sealed class FundsSheet {
 }
 
 sealed class FundsPopup {
-    data class Open(val fund: FundEntity) : FundsPopup()
+    data class DeleteFund(val fund: FundEntity) : FundsPopup()
     object Close : FundsPopup()
 }
 

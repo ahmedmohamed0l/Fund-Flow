@@ -23,7 +23,7 @@ import com.axoncodelabs.cashbox.ui.components.MyLabel
 import com.axoncodelabs.cashbox.ui.components.MyNumField
 import com.axoncodelabs.cashbox.ui.components.MyRoundedLabel
 import com.axoncodelabs.cashbox.ui.components.MyTextField
-import com.axoncodelabs.cashbox.ui.screens.UiEvent
+import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -35,19 +35,20 @@ fun AddAmountSheet(
     viewModel: AddAmountVM = hiltViewModel(),
     onClose: () -> Unit,
 ) {
+    LaunchedEffect(key1 = fund.id) {
+        viewModel.initData(fund)
+    }
     LaunchedEffect(key1 = true) {
-        viewModel.uiEvent.collect { event ->
+        viewModel.fundsEvent.collect { event ->
             when (event) {
-                is UiEvent.CloseSheet -> {
-                    viewModel.clearAddAmountData()
+                is FundsEvent.CloseSheet -> {
+                    viewModel.clearSheetData()
                     onClose()
                 }
+
                 else -> Unit
             }
         }
-    }
-    LaunchedEffect(key1 = fund.id) {
-        viewModel.initFund(fund)
     }
 
     AddAmountSheetRoot(
@@ -84,6 +85,7 @@ private fun AddAmountSheetRoot(
         MyLabel(stringResource(R.string.Sheet_FundName))
         Spacer(modifier = Modifier.height(10.dp))
         MyRoundedLabel(
+            modifier = Modifier.fillMaxWidth(),
             lapel = name
         )
 
@@ -92,6 +94,7 @@ private fun AddAmountSheetRoot(
         MyLabel(stringResource(R.string.Sheet_Amount_Lapel))
         Spacer(modifier = Modifier.height(10.dp))
         MyNumField(
+            modifier = Modifier.fillMaxWidth(),
             value = amount,
             onValueChange = onAmountChange,
             hintText = stringResource(R.string.Sheet_Amount_Hint),
@@ -106,6 +109,7 @@ private fun AddAmountSheetRoot(
         MyLabel(stringResource(R.string.Sheet_DescriptionLapel))
         Spacer(modifier = Modifier.height(10.dp))
         MyTextField(
+            modifier = Modifier.fillMaxWidth(),
             value = description,
             onValueChange = onDescriptionChange,
             hintText = stringResource(R.string.Sheet_Description_Hint),
@@ -122,8 +126,7 @@ private fun AddAmountSheetRoot(
                 cal.add(Calendar.DAY_OF_MONTH, -1)
                 onDateChange(cal.timeInMillis)
             },
-            date = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
-                .format(Date(selectedDate)),
+            date = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date(selectedDate)),
             onDateIncrease = {
                 val cal = Calendar.getInstance().apply { timeInMillis = selectedDate }
                 cal.add(Calendar.DAY_OF_MONTH, 1)
@@ -133,8 +136,7 @@ private fun AddAmountSheetRoot(
         Spacer(modifier = Modifier.height(15.dp))
 
         MyBotton(
-            text = stringResource(R.string.Sheet_AddTransaction_Bttn),
-            onClick = onSaveClick
+            text = stringResource(R.string.Sheet_AddTransaction_Bttn), onClick = onSaveClick
         )
     }
 }

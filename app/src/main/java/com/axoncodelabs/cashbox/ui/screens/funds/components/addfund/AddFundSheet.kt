@@ -20,7 +20,7 @@ import com.axoncodelabs.cashbox.ui.components.MyBotton
 import com.axoncodelabs.cashbox.ui.components.MyLabel
 import com.axoncodelabs.cashbox.ui.components.MyNumField
 import com.axoncodelabs.cashbox.ui.components.MyTextField
-import com.axoncodelabs.cashbox.ui.screens.UiEvent
+import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
 
 @Composable
 fun AddFundSheet(
@@ -32,21 +32,14 @@ fun AddFundSheet(
     /*Disable ShowSnackbar
     val context = LocalContext.current*/
     LaunchedEffect(key1 = true) {
-        viewModel.uiEvent.collect { event ->
+        viewModel.initData()
+        viewModel.fundsEvent.collect { event ->
             when (event) {
-                /*Disable ShowSnackbar
-                is UiEvent.ShowSnackbar -> {
-                    snackbarHostState.showSnackbar(
-                        message = context.getString(event.message),
-                        actionLabel = event.action
-                    )
-                    Log.d("AddFundVM", "SHOW SNACKBAR TRIGGERED!!! name = ${context.getString(event.message)}")
-                }
-                */
-                is UiEvent.CloseSheet -> {
-                    viewModel.clearAddFundData()
+                is FundsEvent.CloseSheet -> {
+                    viewModel.clearSheetData()
                     onClose()
                 }
+
                 else -> Unit
             }
         }
@@ -86,6 +79,7 @@ private fun AddFundSheetRoot(
         MyLabel(stringResource(R.string.Sheet_FundName))
         Spacer(modifier = Modifier.height(10.dp))
         MyTextField(
+            modifier = Modifier.fillMaxWidth(),
             value = name,
             onValueChange = onNameChange,
             hintText = stringResource(R.string.Sheet_FundName),
@@ -100,6 +94,7 @@ private fun AddFundSheetRoot(
         MyLabel(stringResource(R.string.Sheet_Amount_Lapel))
         Spacer(modifier = Modifier.height(10.dp))
         MyNumField(
+            modifier = Modifier.fillMaxWidth(),
             value = amount,
             onValueChange = onAmountChange,
             hintText = stringResource(R.string.Sheet_Amount_Hint),
@@ -114,6 +109,7 @@ private fun AddFundSheetRoot(
         MyLabel(stringResource(R.string.Sheet_DescriptionLapel))
         Spacer(modifier = Modifier.height(10.dp))
         MyTextField(
+            modifier = Modifier.fillMaxWidth(),
             value = description,
             onValueChange = onDescriptionChange,
             hintText = stringResource(R.string.Sheet_Description_Hint),

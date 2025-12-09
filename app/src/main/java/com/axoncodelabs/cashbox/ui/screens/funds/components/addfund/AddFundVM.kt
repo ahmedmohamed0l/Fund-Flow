@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
-import com.axoncodelabs.cashbox.ui.screens.UiEvent
+import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -30,8 +30,13 @@ class AddFundVM @Inject constructor(
     var isAmountEmpty by mutableStateOf(false)
         private set
 
-    private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
+    fun initData() {
+        //Clear old
+        clearSheetData()
+    }
+
+    private val _fundsEvent = Channel<FundsEvent>()
+    val fundsEvent = _fundsEvent.receiveAsFlow()
 
     fun onEvent(event: AddFundEvent) {
         when (event) {
@@ -72,15 +77,13 @@ class AddFundVM @Inject constructor(
                         )
                     )
 
-                    clearAddFundData()
-
-                    sendUiEvent(UiEvent.CloseSheet)
+                    sendFundsEvent(FundsEvent.CloseSheet)
                 }
             }
         }
     }
 
-    fun clearAddFundData() {
+    fun clearSheetData() {
         name = ""
         amount = ""
         description = ""
@@ -88,9 +91,9 @@ class AddFundVM @Inject constructor(
         isAmountEmpty = false
     }
 
-    private fun sendUiEvent(event: UiEvent) {
+    private fun sendFundsEvent(event: FundsEvent) {
         viewModelScope.launch {
-            _uiEvent.send(event)
+            _fundsEvent.send(event)
         }
     }
 }

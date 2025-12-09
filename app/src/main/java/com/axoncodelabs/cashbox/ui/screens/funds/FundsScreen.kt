@@ -135,7 +135,7 @@ fun FundsScreen(
         }
 
         when (popup) {
-            is FundsPopup.Open -> {
+            is FundsPopup.DeleteFund -> {
                 Dialog(
                     onDismissRequest = { viewModel.onEvent(FundsEvent.ClosePopup) }
                 ) {
@@ -308,7 +308,7 @@ private fun FundItem(
                         interactionSource = remember { MutableInteractionSource() }
                     ) {
                         onEvent(
-                            FundsEvent.PopupDisplay(FundsPopup.Open(fund))
+                            FundsEvent.PopupDisplay(FundsPopup.DeleteFund(fund))
                         )
                     })
             }

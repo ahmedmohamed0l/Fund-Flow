@@ -2,6 +2,7 @@ package com.axoncodelabs.cashbox.ui.theme
 
 import android.app.Activity
 import android.os.Build
+import androidx.activity.compose.LocalActivity
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -89,12 +90,11 @@ fun CashBoxTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
-    val activity = LocalContext.current as Activity
+    val activity = LocalActivity.current as Activity
     SideEffect {
         val window = activity.window
         val insetsController = WindowInsetsControllerCompat(window, window.decorView)
 
-        // لو Dark mode → خليه Light icons
         insetsController.isAppearanceLightStatusBars = !darkTheme
     }
     MaterialTheme(
