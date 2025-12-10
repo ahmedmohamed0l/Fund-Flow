@@ -40,7 +40,7 @@ class FundsViewModel @Inject constructor(
 
             FundsEvent.CloseSheet -> {
                 _state.update {
-                    it.copy(currentSheet = FundsSheet.None)
+                    it.copy(currentSheet = FundsSheets.None)
                 }
             }
 

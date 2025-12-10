@@ -69,7 +69,7 @@ class AddAmountVM @Inject constructor(
             is AddAmountEvent.OnSaveClick -> {
                 viewModelScope.launch {
                     val amountDouble = amount.toDoubleOrNull()
-                    if (amount.isBlank() || amountDouble == null) {
+                    if (amount.isBlank() || amountDouble == null || amountDouble < 0) {
                         isAmountEmpty = true
                         return@launch
                     }

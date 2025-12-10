@@ -71,8 +71,7 @@ class AddFundVM @Inject constructor(
 
                     val newFund = FundEntity(
                         name = name,
-                        balance = 0.0,
-                        description = description
+                        balance = 0.0
                     )
 
                     val fundId = repository.insertFund(newFund).toInt()
@@ -80,7 +79,7 @@ class AddFundVM @Inject constructor(
                         TransactionEntity(
                             fundId = fundId,
                             amount = initialAmount,
-                            description = "القيمة الأولية للصندوق",
+                            description = description.ifBlank { "القيمة الأولية للصندوق" },
                             type = TransactionType.INCOME
                         )
                     )

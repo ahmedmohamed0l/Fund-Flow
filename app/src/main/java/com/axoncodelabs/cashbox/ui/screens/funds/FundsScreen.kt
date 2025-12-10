@@ -82,10 +82,10 @@ fun FundsScreen(
                 title = stringResource(id = R.string.FundsScreen_Identifier),
                 showAction = true,
                 actionIcon = painterResource(id = R.drawable.ic_add_card),
-                onActionClick = { viewModel.onEvent(FundsEvent.SheetDisplayed(FundsSheet.AddFund)) })
+                onActionClick = { viewModel.onEvent(FundsEvent.SheetDisplayed(FundsSheets.AddFund)) })
         }) { inner ->
         when (sheet) {
-            is FundsSheet.AddFund -> {
+            is FundsSheets.AddFund -> {
                 ModalBottomSheet(
                     onDismissRequest = { viewModel.onEvent(FundsEvent.CloseSheet) },
                     containerColor = MaterialTheme.colorScheme.background,
@@ -99,7 +99,7 @@ fun FundsScreen(
                 }
             }
 
-            is FundsSheet.AddAmount -> {
+            is FundsSheets.AddAmount -> {
                 ModalBottomSheet(
                     onDismissRequest = { viewModel.onEvent(FundsEvent.CloseSheet) },
                     containerColor = MaterialTheme.colorScheme.background,
@@ -114,7 +114,7 @@ fun FundsScreen(
                 }
             }
 
-            is FundsSheet.Transfer -> {
+            is FundsSheets.Transfer -> {
                 ModalBottomSheet(
                     onDismissRequest = { viewModel.onEvent(FundsEvent.CloseSheet) },
                     containerColor = MaterialTheme.colorScheme.background,
@@ -129,7 +129,7 @@ fun FundsScreen(
                 }
             }
 
-            is FundsSheet.FundOptions -> {
+            is FundsSheets.FundOptions -> {
                 ModalBottomSheet(
                     onDismissRequest = { viewModel.onEvent(FundsEvent.CloseSheet) },
                     containerColor = MaterialTheme.colorScheme.background,
@@ -144,7 +144,7 @@ fun FundsScreen(
                 }
             }
 
-            FundsSheet.None -> Unit
+            FundsSheets.None -> Unit
         }
 
         when (popup) {
@@ -275,7 +275,7 @@ private fun FundItem(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() }
                         ) {
-                            onEvent(FundsEvent.SheetDisplayed(FundsSheet.FundOptions(fund)))
+                            onEvent(FundsEvent.SheetDisplayed(FundsSheets.FundOptions(fund)))
                         })
                     Spacer(modifier = modifier.width(15.dp))
 
@@ -319,7 +319,7 @@ private fun FundItem(
                         interactionSource = remember { MutableInteractionSource() }
                     ) {
                         onEvent(
-                            FundsEvent.SheetDisplayed(FundsSheet.AddAmount(fund))
+                            FundsEvent.SheetDisplayed(FundsSheets.AddAmount(fund))
                         )
                     })
                 Text(
@@ -332,7 +332,7 @@ private fun FundItem(
                     ) {
                         onEvent(
                             FundsEvent.SheetDisplayed(
-                                FundsSheet.Transfer(
+                                FundsSheets.Transfer(
                                     fund
                                 )
                             )
