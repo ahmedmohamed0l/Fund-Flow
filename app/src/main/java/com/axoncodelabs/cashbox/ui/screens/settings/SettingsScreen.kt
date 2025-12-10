@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -21,9 +23,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Nightlight
+import androidx.compose.material.icons.rounded.VisibilityOff
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,6 +45,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.ui.components.MyTopAppBar
+import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
+import com.axoncodelabs.cashbox.ui.theme.MyIcons
+import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
 
 
 @Composable
@@ -45,14 +55,20 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsState()
     SettingsScreenRoot(
         darkMode = state.darkMode == true,
-        onClick = { viewModel.onEvent(SettingsEvent.ToggleTheme(it)) }
+        onThemeSwitcherClick = {
+            viewModel.onEvent(SettingsEvent.ToggleTheme(it))
+        },
+        isHideData = state.isHideData ?: false,
+        onHideDataClick = { viewModel.onEvent(SettingsEvent.ToggleHideData(it)) }
     )
 }
 
 @Composable
 private fun SettingsScreenRoot(
     darkMode: Boolean,
-    onClick: (Boolean) -> Unit,
+    onThemeSwitcherClick: (Boolean) -> Unit,
+    isHideData: Boolean,
+    onHideDataClick: (Boolean) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -62,14 +78,74 @@ private fun SettingsScreenRoot(
         Column(
             modifier = Modifier
                 .padding(inner)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(horizontal = 30.dp)
+                .padding(top = 10.dp, bottom = 29.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
         ) {
-            ThemeSwitcher(
-                darkMode = darkMode,
-                onClick = onClick
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    MyIcons.ThemeIcon(size = 25.dp, color = MaterialTheme.colorScheme.onBackground)
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = stringResource(R.string.SettingsScreen_ChangeTheme),
+                        color = MaterialTheme.colorScheme.onSecondary,
+                        style = MyFontStyle.medium(),
+                    )
+                }
+                ThemeSwitcher(
+                    darkMode = darkMode,
+                    onThemeSwitcherClick = onThemeSwitcherClick
+                )
+
+            }
+            HorizontalDivider(
+                modifier = Modifier
+                    .padding(vertical = 5.dp)
+                    .clip(MyRoundedCornerShape.large),
+                thickness = 1.dp,
+                color = MaterialTheme.colorScheme.onSecondary
             )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Rounded.VisibilityOff,
+                        contentDescription = "",
+                        modifier = Modifier.size(25.dp),
+                        tint = MaterialTheme.colorScheme.onBackground
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = stringResource(R.string.SettingsScreen_HideData),
+                        color = MaterialTheme.colorScheme.onSecondary,
+                        style = MyFontStyle.medium(),
+                    )
+                }
+                Switch(
+                    checked = isHideData,
+                    onCheckedChange = { onHideDataClick(it) },
+                    modifier = Modifier.width(70.dp),
+                    colors = SwitchDefaults.colors(
+                        uncheckedTrackColor = MaterialTheme.colorScheme.background,
+                        uncheckedBorderColor = MaterialTheme.colorScheme.outline,
+                        uncheckedThumbColor = MaterialTheme.colorScheme.outline,
+                    )
+                )
+
+            }
+
         }
     }
 }
@@ -78,8 +154,8 @@ private fun SettingsScreenRoot(
 @Composable
 fun ThemeSwitcher(
     darkMode: Boolean,
-    size: Dp = 50.dp,
-    onClick: (Boolean) -> Unit,
+    size: Dp = 35.dp,
+    onThemeSwitcherClick: (Boolean) -> Unit,
     color1: Color = MaterialTheme.colorScheme.primary,
     color2: Color = MaterialTheme.colorScheme.secondary,
 ) {
@@ -96,23 +172,23 @@ fun ThemeSwitcher(
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
-            ) { onClick(!darkMode) }
-            .background(color2)
+            ) { onThemeSwitcherClick(!darkMode) }
+            .background(color1)
     ) {
         Box(
             modifier = Modifier
                 .size(size)
                 .offset(x = offset)
-                .padding(all = 5.dp)
+                .padding(all = 3.dp)
                 .clip(shape = CircleShape)
-                .background(color1)
+                .background(color2)
         ) {}
         Row(
             modifier = Modifier
                 .border(
                     border = BorderStroke(
                         width = 1.dp,
-                        color = color1
+                        color = color2
                     ),
                     shape = CircleShape
                 )
@@ -125,8 +201,8 @@ fun ThemeSwitcher(
                     modifier = Modifier.size(size / 3),
                     imageVector = Icons.Default.Nightlight,
                     contentDescription = "Theme Icon",
-                    tint = if (darkMode) color2
-                    else color1
+                    tint = if (darkMode) color1
+                    else color2
                 )
             }
             Box(
@@ -137,8 +213,8 @@ fun ThemeSwitcher(
                     modifier = Modifier.size(size / 3),
                     imageVector = Icons.Default.LightMode,
                     contentDescription = "Theme Icon",
-                    tint = if (darkMode) color1
-                    else color2
+                    tint = if (darkMode) color2
+                    else color1
                 )
             }
         }

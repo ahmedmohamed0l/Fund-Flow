@@ -59,7 +59,7 @@ private val DarkColorScheme = darkColorScheme(
     primary = MyColors.DeepBlue,
     onPrimary = MyColors.White,
 
-    secondary = MyColors.LightBlack,
+    secondary = MyColors.SoftBlack,
     onSecondary = MyColors.WhiteSmoke,
 
     surface = MyColors.WhiteSmoke,

@@ -24,6 +24,13 @@ class SettingsViewModel @Inject constructor(
             repository.themeFlow.collect { theme ->
                 _state.value = _state.value.copy(darkMode = theme is Theme.Dark)
             }
+
+        }
+
+        viewModelScope.launch {
+            repository.hideDataFlow.collect { isHideData ->
+                _state.value = _state.value.copy(isHideData = isHideData)
+            }
         }
     }
 
@@ -34,6 +41,12 @@ class SettingsViewModel @Inject constructor(
                     repository.saveTheme(
                         if (event.isDark) Theme.Dark else Theme.Light
                     )
+                }
+            }
+
+            is SettingsEvent.ToggleHideData -> {
+                viewModelScope.launch {
+                    repository.saveHideData(event.isHideData)
                 }
             }
         }

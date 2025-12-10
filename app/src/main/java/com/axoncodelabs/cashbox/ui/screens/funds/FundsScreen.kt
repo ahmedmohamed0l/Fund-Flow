@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,11 +30,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -49,6 +52,7 @@ import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
 import com.axoncodelabs.cashbox.ui.theme.doubleFormat
+import com.axoncodelabs.cashbox.ui.theme.hideDataMask
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,6 +68,9 @@ fun FundsScreen(
 
     val popup = state.value.popupState
 
+    //Hide Data
+    val isHideData = state.value.isHideData!!
+    val hideBlurState = if (isHideData) (1.5).dp else 0.dp
 
     /*Disable ShowSnackbar
     val snackbarHostState = remember { SnackbarHostState() }*/
@@ -99,6 +106,8 @@ fun FundsScreen(
                     sheetState = sheetState
                 ) {
                     AddAmountSheet(
+                        hideBlurState = hideBlurState,
+                        isHideData = isHideData,
                         fund = sheet.fund,
                         onClose = { viewModel.onEvent(FundsEvent.CloseSheet) }
                     )
@@ -112,6 +121,8 @@ fun FundsScreen(
                     sheetState = sheetState
                 ) {
                     TransferSheet(
+                        hideBlurState = hideBlurState,
+                        isHideData = isHideData,
                         fromFund = sheet.fund,
                         onClose = { viewModel.onEvent(FundsEvent.CloseSheet) }
                     )
@@ -125,6 +136,8 @@ fun FundsScreen(
                     sheetState = sheetState
                 ) {
                     FundOptionsSheet(
+                        hideBlurState = hideBlurState,
+                        isHideData = isHideData,
                         fund = sheet.fund,
                         onClose = { viewModel.onEvent(FundsEvent.CloseSheet) }
                     )
@@ -173,14 +186,22 @@ fun FundsScreen(
                         .align(Alignment.CenterStart)
                         .padding(start = 20.dp)
                 )
-                Text(
-                    text = doubleFormat(fundsTotalBalance.value),
-                    style = MyFontStyle.large(),
-                    color = MaterialTheme.colorScheme.onBackground,
+                Box(
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
                         .padding(end = 20.dp)
-                )
+                        .wrapContentSize()
+                        .blur(hideBlurState)
+                ) {
+                    Text(
+                        text = hideDataMask(
+                            isHideData,
+                            text = (doubleFormat(fundsTotalBalance.value))
+                        ),
+                        style = MyFontStyle.large(),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -193,7 +214,10 @@ fun FundsScreen(
             ) {
                 items(funds.value) { fund ->
                     FundItem(
-                        fund = fund, onEvent = viewModel::onEvent
+                        hideBlurState = hideBlurState,
+                        isHideData = isHideData,
+                        fund = fund,
+                        onEvent = viewModel::onEvent
                     )
                 }
             }
@@ -203,6 +227,8 @@ fun FundsScreen(
 
 @Composable
 private fun FundItem(
+    hideBlurState: Dp,
+    isHideData: Boolean?,
     fund: FundEntity,
     onEvent: (FundsEvent) -> Unit,
     modifier: Modifier = Modifier,
@@ -252,17 +278,30 @@ private fun FundItem(
                             onEvent(FundsEvent.SheetDisplayed(FundsSheet.FundOptions(fund)))
                         })
                     Spacer(modifier = modifier.width(15.dp))
+
+                    Box(
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .blur(hideBlurState)
+                    ) {
+                        Text(
+                            text = hideDataMask(isHideData, text = (fund.name)),
+                            color = MaterialTheme.colorScheme.onTertiary,
+                            style = MyFontStyle.medium()
+                        )
+                    }
+                }
+                Box(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .blur(hideBlurState)
+                ) {
                     Text(
-                        text = fund.name,
+                        text = hideDataMask(isHideData, text = (doubleFormat(fund.balance))),
                         color = MaterialTheme.colorScheme.onTertiary,
-                        style = MyFontStyle.medium()
+                        style = MyFontStyle.large()
                     )
                 }
-                Text(
-                    text = doubleFormat(fund.balance),
-                    color = MaterialTheme.colorScheme.onTertiary,
-                    style = MyFontStyle.large()
-                )
             }
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,

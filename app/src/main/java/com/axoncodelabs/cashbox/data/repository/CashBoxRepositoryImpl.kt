@@ -2,6 +2,7 @@ package com.axoncodelabs.cashbox.data.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.room.Transaction
@@ -23,10 +24,6 @@ class CashBoxRepositoryImpl @Inject constructor(
     private val transactionDao: TransactionDao,
     private val dataStore: DataStore<Preferences>,
 ) : CashBoxRepository {
-
-    private object Keys {
-        val THEME_KEY = stringPreferencesKey("theme")
-    }
 
     // Funds
     override suspend fun insertFund(fund: FundEntity): Long {
@@ -228,7 +225,18 @@ class CashBoxRepositoryImpl @Inject constructor(
         insertTransaction(incomeTransaction)
     }
 
-    //Preferences
+    //-----------------[ Preferences ]-----------------
+
+    //......( Keys )......
+
+    private object Keys {
+        val THEME_KEY = stringPreferencesKey("theme")
+        val HIDE_KEY = booleanPreferencesKey("is_hide")
+    }
+
+
+    //......( Read Flow Impl )......
+
     override val themeFlow: Flow<Theme> = dataStore.data.map {
         when (it[Keys.THEME_KEY]) {
             "dark" -> Theme.Dark
@@ -236,7 +244,18 @@ class CashBoxRepositoryImpl @Inject constructor(
         }
     }
 
+    override val hideDataFlow: Flow<Boolean> = dataStore.data.map {
+        it[Keys.HIDE_KEY] ?: false
+    }
+
+
+    //......( Save Impl )......
+
     override suspend fun saveTheme(theme: Theme) {
         dataStore.edit { it[Keys.THEME_KEY] = theme.value }
+    }
+
+    override suspend fun saveHideData(isHide: Boolean) {
+        dataStore.edit { it[Keys.HIDE_KEY] = isHide }
     }
 }

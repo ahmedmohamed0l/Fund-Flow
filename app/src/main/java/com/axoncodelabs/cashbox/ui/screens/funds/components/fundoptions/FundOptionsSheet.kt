@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Edit
@@ -23,9 +24,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -35,9 +38,12 @@ import com.axoncodelabs.cashbox.ui.components.MyTextField
 import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
+import com.axoncodelabs.cashbox.ui.theme.hideDataMask
 
 @Composable
 fun FundOptionsSheet(
+    hideBlurState: Dp,
+    isHideData: Boolean?,
     fund: FundEntity,
     viewModel: FundOptionsVM = hiltViewModel(),
     onClose: () -> Unit,
@@ -73,6 +79,8 @@ fun FundOptionsSheet(
     }
 
     FundOptionsSheetRoot(
+        hideBlurState = hideBlurState,
+        isHideData = isHideData,
         name = viewModel.name,
         isEditMode = viewModel.isEditMode,
         onEditFundClick = { viewModel.onEvent(FundOptionsEvent.OnEditFundClick) },
@@ -86,6 +94,8 @@ fun FundOptionsSheet(
 
 @Composable
 private fun FundOptionsSheetRoot(
+    hideBlurState: Dp,
+    isHideData: Boolean?,
     name: String,
     isEditMode: Boolean,
     onEditFundClick: () -> Unit,
@@ -108,17 +118,22 @@ private fun FundOptionsSheetRoot(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             if (isEditMode) {
-                MyTextField(
+                Box(
                     modifier = Modifier
                         .width(300.dp)
-                        .padding(end = 10.dp),
-                    value = name,
-                    onValueChange = onNameChange,
-                    keyboardType = KeyboardType.Text,
-                    singleLine = true,
-                    isError = isNameEmpty,
-                    errorMsg = stringResource(R.string.Sheet_FundNameError)
-                )
+                        .padding(end = 10.dp)
+                        .wrapContentSize()
+                        .blur(hideBlurState)
+                ) {
+                    MyTextField(
+                        value = hideDataMask(isHideData, text = (name)),
+                        onValueChange = onNameChange,
+                        keyboardType = KeyboardType.Text,
+                        singleLine = true,
+                        isError = isNameEmpty,
+                        errorMsg = stringResource(R.string.Sheet_FundNameError)
+                    )
+                }
 
                 Box(
                     contentAlignment = Alignment.Center,
@@ -139,12 +154,18 @@ private fun FundOptionsSheetRoot(
                     )
                 }
             } else {
-                Text(
-                    text = name,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MyFontStyle.medium(),
-                    modifier = Modifier.padding(vertical = 15.dp)
-                )
+                Box(
+                    modifier = Modifier
+                        .padding(vertical = 15.dp)
+                        .wrapContentSize()
+                        .blur(hideBlurState)
+                ) {
+                    Text(
+                        text = hideDataMask(isHideData, text = (name)),
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MyFontStyle.medium(),
+                    )
+                }
 
                 Box(
                     contentAlignment = Alignment.Center,

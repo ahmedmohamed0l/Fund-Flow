@@ -1,6 +1,7 @@
 package com.axoncodelabs.cashbox.ui.screens.funds.components.addamount
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,8 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
@@ -24,6 +27,7 @@ import com.axoncodelabs.cashbox.ui.components.MyNumField
 import com.axoncodelabs.cashbox.ui.components.MyRoundedLabel
 import com.axoncodelabs.cashbox.ui.components.MyTextField
 import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
+import com.axoncodelabs.cashbox.ui.theme.hideDataMask
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -31,6 +35,8 @@ import java.util.Locale
 
 @Composable
 fun AddAmountSheet(
+    hideBlurState: Dp,
+    isHideData: Boolean?,
     fund: FundEntity,
     viewModel: AddAmountVM = hiltViewModel(),
     onClose: () -> Unit,
@@ -52,6 +58,8 @@ fun AddAmountSheet(
     }
 
     AddAmountSheetRoot(
+        hideBlurState = hideBlurState,
+        isHideData = isHideData,
         name = viewModel.name,
         amount = viewModel.amount,
         description = viewModel.description,
@@ -66,6 +74,8 @@ fun AddAmountSheet(
 
 @Composable
 private fun AddAmountSheetRoot(
+    hideBlurState: Dp,
+    isHideData: Boolean?,
     name: String,
     amount: String,
     description: String,
@@ -84,11 +94,16 @@ private fun AddAmountSheetRoot(
     ) {
         MyLabel(stringResource(R.string.Sheet_FundName))
         Spacer(modifier = Modifier.height(10.dp))
-        MyRoundedLabel(
-            modifier = Modifier.fillMaxWidth(),
-            lapel = name
-        )
-
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .blur(hideBlurState)
+        ) {
+            MyRoundedLabel(
+                modifier = Modifier.fillMaxWidth(),
+                lapel = hideDataMask(isHideData, text = (name))
+            )
+        }
         Spacer(modifier = Modifier.height(20.dp))
 
         MyLabel(stringResource(R.string.Sheet_Amount_Lapel))

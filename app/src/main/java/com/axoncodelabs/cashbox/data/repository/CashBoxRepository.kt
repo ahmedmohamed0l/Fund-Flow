@@ -56,7 +56,13 @@ interface CashBoxRepository {
         timestamp: Long = System.currentTimeMillis(),
     )
 
-    //Preferences
+    //-----------------[ Preferences ]-----------------
+
+    //......( Read Flow )......
     val themeFlow: Flow<Theme>
+    val hideDataFlow: Flow<Boolean>
+
+    //......( Save )......
     suspend fun saveTheme(theme: Theme)
+    suspend fun saveHideData(isHide: Boolean)
 }
