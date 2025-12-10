@@ -23,15 +23,16 @@ interface TransactionDao {
     @Query("SELECT * FROM transactions WHERE id = :id")
     suspend fun getTransactionById(id: Int): TransactionEntity?
 
-    //  Delete Transactions By FundId
+    //-----------------[ Delete Transactions By FundId ]-----------------
     @Query("SELECT * FROM transactions WHERE fundId = :fundId")
     fun getTransactionsByFundId(fundId: Int): Flow<List<TransactionEntity>>
 
     @Query("DELETE FROM transactions WHERE fundId = :fundId")
     suspend fun deleteTransactionsByFundId(fundId: Int)
+    //-------------------------------------------------------------------
 
-    @Query("SELECT * FROM transactions WHERE date BETWEEN :startDate AND :endDate ORDER BY date DESC")
-    fun getTransactionsByDate(
+    @Query("SELECT * FROM transactions WHERE type = 'EXPENSE' And date BETWEEN :startDate AND :endDate ORDER BY date DESC")
+    fun getExpensesByDate(
         startDate: Long,
         endDate: Long,
     ): Flow<List<TransactionEntity>>
@@ -51,10 +52,4 @@ interface TransactionDao {
         startDate: Long,
         endDate: Long,
     ): Flow<Double>
-
-    @Query("SELECT * FROM transactions WHERE type = 'EXPENSE' And date BETWEEN :startDate AND :endDate ORDER BY date DESC")
-    fun getExpensesByDate(
-        startDate: Long,
-        endDate: Long,
-    ): Flow<List<TransactionEntity>>
 }

@@ -13,7 +13,6 @@ import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionType
 import com.axoncodelabs.cashbox.ui.theme.Theme
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -24,8 +23,18 @@ class CashBoxRepositoryImpl @Inject constructor(
     private val transactionDao: TransactionDao,
     private val dataStore: DataStore<Preferences>,
 ) : CashBoxRepository {
+    //-----------------[ Throw Exception ]-----------------
+    private suspend fun getFundOrThrow(id: Int): FundEntity {
+        return fundDao.getFundById(id)
+            ?: throw IllegalArgumentException("Fund with id $id not found")
+    }
 
-    // Funds
+    private suspend fun getTransactionOrThrow(id: Int): TransactionEntity {
+        return transactionDao.getTransactionById(id)
+            ?: throw IllegalArgumentException("Transaction with id $id not found")
+    }
+
+    //-----------------[ Funds ]-----------------
     override suspend fun insertFund(fund: FundEntity): Long {
         return fundDao.insertFund(fund)
     }
@@ -39,15 +48,12 @@ class CashBoxRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteAllFundTransactions(fundId: Int) {
-        val fund = fundDao.getFundById(fundId)
-            ?: throw IllegalArgumentException("Fund with id $fundId not found")
+        val fund = getFundOrThrow(fundId)
 
         val transactions = transactionDao.getTransactionsByFundId(fundId).first()
 
         var correctedBalance = fund.balance
-        transactions.forEach { t ->
-            correctedBalance -= (signForType(t.type) * t.amount)
-        }
+        transactions.forEach { t -> correctedBalance -= (signForType(t.type) * t.amount) }
 
         fundDao.updateFund(fund.copy(balance = correctedBalance))
 
@@ -73,16 +79,15 @@ class CashBoxRepositoryImpl @Inject constructor(
             TransactionType.EXPENSE -> -1
         }
 
-    // Transactions
+    //-----------------[ Transactions ]-----------------
     @Transaction
     override suspend fun insertTransaction(transaction: TransactionEntity) {
-        val fund = fundDao.getFundById(transaction.fundId)
-            ?: throw IllegalArgumentException("Fund with id ${transaction.fundId} not found")
+        val fund = getFundOrThrow(transaction.fundId)
 
         // delta = +amount for income, -amount for expense
         val delta = signForType(transaction.type) * transaction.amount
 
-        // update cached balance then insert transaction (transactional because of @Transaction)
+        // update cached balance then insert transaction
         fundDao.updateFund(fund.copy(balance = fund.balance + delta))
         transactionDao.insertTransaction(transaction)
     }
@@ -90,22 +95,19 @@ class CashBoxRepositoryImpl @Inject constructor(
     @Transaction
     override suspend fun updateTransaction(transaction: TransactionEntity) {
         // fetch old transaction
-        val old = transactionDao.getTransactionById(transaction.id)
-            ?: throw IllegalArgumentException("Transaction with id ${transaction.id} not found")
+        val old = getTransactionOrThrow(transaction.id)
 
         // if fund didn't change -> single fund adjust by delta
         if (old.fundId == transaction.fundId) {
             val delta = (signForType(transaction.type) * transaction.amount) -
                     (signForType(old.type) * old.amount)
-            val fund = fundDao.getFundById(transaction.fundId)
-                ?: throw IllegalArgumentException("Fund with id ${transaction.fundId} not found")
+            val fund = getFundOrThrow(transaction.fundId)
             fundDao.updateFund(fund.copy(balance = fund.balance + delta))
+
         } else {
             // fund changed: reverse old effect from old fund, apply new effect to new fund
-            val oldFund = fundDao.getFundById(old.fundId)
-                ?: throw IllegalArgumentException("Fund with id ${old.fundId} not found")
-            val newFund = fundDao.getFundById(transaction.fundId)
-                ?: throw IllegalArgumentException("Fund with id ${transaction.fundId} not found")
+            val oldFund = getFundOrThrow(old.fundId)
+            val newFund = getFundOrThrow(transaction.fundId)
 
             val oldEffect = signForType(old.type) * old.amount
             val newEffect = signForType(transaction.type) * transaction.amount
@@ -121,8 +123,7 @@ class CashBoxRepositoryImpl @Inject constructor(
     @Transaction
     override suspend fun deleteTransaction(transaction: TransactionEntity) {
         // reverse effect of this transaction on its fund then delete
-        val fund = fundDao.getFundById(transaction.fundId)
-            ?: throw IllegalArgumentException("Fund with id ${transaction.fundId} not found")
+        val fund = getFundOrThrow(transaction.fundId)
 
         val reverseDelta = -(signForType(transaction.type) * transaction.amount)
         fundDao.updateFund(fund.copy(balance = fund.balance + reverseDelta))
@@ -134,20 +135,10 @@ class CashBoxRepositoryImpl @Inject constructor(
         return transactionDao.getTransactionById(id)
     }
 
-    override fun getTransactionsByDate(
-        startDate: Long,
-        endDate: Long,
+    override fun getExpensesByDate(
+        startDate: Long, endDate: Long,
     ): Flow<List<TransactionEntity>> {
-        return transactionDao.getTransactionsByDate(startDate, endDate)
-    }
-
-    override fun getTransactionsSumByType(
-        fundId: Int,
-        type: TransactionType,
-        startDate: Long,
-        endDate: Long,
-    ): Flow<Double> {
-        return transactionDao.getTransactionsSumByType(fundId, type, startDate, endDate)
+        return transactionDao.getExpensesByDate(startDate, endDate)
     }
 
     override fun getTransactionsByType(
@@ -159,14 +150,20 @@ class CashBoxRepositoryImpl @Inject constructor(
         return transactionDao.getTransactionsByType(fundId, type, startDate, endDate)
     }
 
-    override fun getExpensesByDate(
-        startDate: Long, endDate: Long,
-    ): Flow<List<TransactionEntity>> {
-        return transactionDao.getExpensesByDate(startDate, endDate)
+    override fun getTransactionsSumByType(
+        fundId: Int,
+        type: TransactionType,
+        startDate: Long,
+        endDate: Long,
+    ): Flow<Double> {
+        return transactionDao.getTransactionsSumByType(fundId, type, startDate, endDate)
     }
 
-    // convenience flows: مجموع الإيرادات و مجموع المصروفات و قيمة الصندوق محسوبة من المعاملتين
-    override fun getFundIncomeSumFlow(fundId: Int, startDate: Long, endDate: Long): Flow<Double> {
+    override fun getFundIncomeSumFlow(
+        fundId: Int,
+        startDate: Long,
+        endDate: Long,
+    ): Flow<Double> {
         return transactionDao.getTransactionsSumByType(
             fundId,
             TransactionType.INCOME,
@@ -175,7 +172,11 @@ class CashBoxRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun getFundExpenseSumFlow(fundId: Int, startDate: Long, endDate: Long): Flow<Double> {
+    override fun getFundExpenseSumFlow(
+        fundId: Int,
+        startDate: Long,
+        endDate: Long,
+    ): Flow<Double> {
         return transactionDao.getTransactionsSumByType(
             fundId,
             TransactionType.EXPENSE,
@@ -184,19 +185,7 @@ class CashBoxRepositoryImpl @Inject constructor(
         )
     }
 
-    // computed balance = income - expense (useful لو عايز تعرض حساب ديناميكي بدل الكاش)
-    override fun getComputedFundBalanceFlow(
-        fundId: Int,
-        startDate: Long,
-        endDate: Long,
-    ): Flow<Double> {
-        return combine(
-            getFundIncomeSumFlow(fundId, startDate, endDate),
-            getFundExpenseSumFlow(fundId, startDate, endDate)
-        ) { inc, exp -> inc - exp }
-    }
-
-    // Funds Transfer
+    //-----------------[ Funds Transfer ]-----------------
     @Transaction
     override suspend fun transferBetweenFunds(
         fromFundId: Int,

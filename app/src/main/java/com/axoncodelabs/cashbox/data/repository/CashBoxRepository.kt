@@ -7,7 +7,7 @@ import com.axoncodelabs.cashbox.ui.theme.Theme
 import kotlinx.coroutines.flow.Flow
 
 interface CashBoxRepository {
-    // Funds
+    //-----------------[ Funds ]-----------------
     suspend fun insertFund(fund: FundEntity): Long
     suspend fun updateFund(fund: FundEntity)
     suspend fun deleteFund(fund: FundEntity)
@@ -16,12 +16,17 @@ interface CashBoxRepository {
     suspend fun getFundById(id: Int): FundEntity?
     fun getTotalBalance(): Flow<Double>
 
-    // Transactions
+    //-----------------[ Transactions]-----------------
     suspend fun insertTransaction(transaction: TransactionEntity)
     suspend fun updateTransaction(transaction: TransactionEntity)
     suspend fun deleteTransaction(transaction: TransactionEntity)
     suspend fun getTransactionById(id: Int): TransactionEntity?
-    fun getTransactionsByDate(startDate: Long, endDate: Long): Flow<List<TransactionEntity>>
+
+    fun getExpensesByDate(
+        startDate: Long,
+        endDate: Long,
+    ): Flow<List<TransactionEntity>>
+
     fun getTransactionsByType(
         fundId: Int,
         type: TransactionType,
@@ -36,18 +41,10 @@ interface CashBoxRepository {
         endDate: Long,
     ): Flow<Double>
 
-    fun getExpensesByDate(
-        startDate: Long,
-        endDate: Long,
-    ): Flow<List<TransactionEntity>>
-
-    // داخل interface CashBoxRepository
     fun getFundIncomeSumFlow(fundId: Int, startDate: Long, endDate: Long): Flow<Double>
     fun getFundExpenseSumFlow(fundId: Int, startDate: Long, endDate: Long): Flow<Double>
-    fun getComputedFundBalanceFlow(fundId: Int, startDate: Long, endDate: Long): Flow<Double>
 
-
-    // Funds Transfer
+    //-----------------[ Funds Transfer]-----------------
     suspend fun transferBetweenFunds(
         fromFundId: Int,
         toFundId: Int,
