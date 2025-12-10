@@ -1,6 +1,7 @@
 package com.axoncodelabs.cashbox.ui.theme
 
 import android.app.Activity
+import android.content.Context
 import android.os.Build
 import androidx.activity.compose.LocalActivity
 import androidx.compose.material3.MaterialTheme
@@ -12,6 +13,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowInsetsControllerCompat
+import java.util.Locale
+
+object LocaleHelper {
+    fun setLocale(context: Context, locale: Locale): Context {
+        val config = context.resources.configuration
+        config.setLocale(locale)
+        return context.createConfigurationContext(config)
+    }
+}
 
 sealed class Theme(val value: String) {
     object Light : Theme("light")
