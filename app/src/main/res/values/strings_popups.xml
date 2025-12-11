@@ -4,6 +4,8 @@
     <string name="Popups_DeleteFundTransactionsConfirm_Message">هل أنت متأكد من حذف كل معاملات الصندوق</string>
     <string name="Popups_DeleteTransactionConfirm_Message">هل أنت متأكد من حذف المعاملة</string>
 
+    <string name="Popups_DatePickerConfirm_Bttn">حسناً</string>
     <string name="Popups_Delete_Bttn">حذف</string>
     <string name="Popups_Cancel_Bttn">إلغاء</string>
+
 </resources>
