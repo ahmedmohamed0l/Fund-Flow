@@ -43,11 +43,11 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.ui.components.MyTopAppBar
-import com.axoncodelabs.cashbox.ui.screens.funds.components.addamount.AddAmountSheet
-import com.axoncodelabs.cashbox.ui.screens.funds.components.addfund.AddFundSheet
+import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addamount.AddAmountSheet
+import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addfund.AddFundSheet
 import com.axoncodelabs.cashbox.ui.screens.funds.components.deletepopup.DeleteFundConfirm
-import com.axoncodelabs.cashbox.ui.screens.funds.components.fundoptions.FundOptionsSheet
-import com.axoncodelabs.cashbox.ui.screens.funds.components.transfer.TransferSheet
+import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.fundoptions.FundOptionsSheet
+import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.transfer.TransferSheet
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
@@ -59,31 +59,22 @@ import com.axoncodelabs.cashbox.ui.theme.hideDataMask
 fun FundsScreen(
     viewModel: FundsViewModel = hiltViewModel(),
 ) {
+    //.....( State & ViewModel Setup ).....
     val funds = viewModel.funds.collectAsState(initial = emptyList())
     val fundsTotalBalance = viewModel.fundsTotalBalance.collectAsState(initial = 0.0)
 
     val state = viewModel.state.collectAsState()
     val sheet = state.value.currentSheet
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
     val popup = state.value.popupState
 
-    //Hide Data
     val isHideData = state.value.isHideData!!
     val hideBlurState = if (isHideData) (1.5).dp else 0.dp
 
-    /*Disable ShowSnackbar
-    val snackbarHostState = remember { SnackbarHostState() }*/
-    Scaffold(
-        /*Disable ShowSnackbar
-        snackbarHost = { SnackbarHost(snackbarHostState) },*/
-        topBar = {
-            MyTopAppBar(
-                title = stringResource(id = R.string.FundsScreen_Identifier),
-                showAction = true,
-                actionIcon = painterResource(id = R.drawable.ic_add_card),
-                onActionClick = { viewModel.onEvent(FundsEvent.SheetDisplayed(FundsSheets.AddFund)) })
-        }) { inner ->
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    //.....( Sheets & Popups Handling ).....
+    @Composable
+    fun sheetsHandle() {
         when (sheet) {
             is FundsSheets.AddFund -> {
                 ModalBottomSheet(
@@ -146,7 +137,10 @@ fun FundsScreen(
 
             FundsSheets.None -> Unit
         }
+    }
 
+    @Composable
+    fun popupsHandle() {
         when (popup) {
             is FundsPopup.DeleteFund -> {
                 Dialog(
@@ -161,7 +155,24 @@ fun FundsScreen(
 
             FundsPopup.Close -> Unit
         }
+    }
 
+
+    //.....( Screen Layout ).....
+    /*Disable ShowSnackbar
+    val snackbarHostState = remember { SnackbarHostState() }*/
+    Scaffold(
+        /*Disable ShowSnackbar
+        snackbarHost = { SnackbarHost(snackbarHostState) },*/
+        topBar = {
+            MyTopAppBar(
+                title = stringResource(id = R.string.FundsScreen_Identifier),
+                showAction = true,
+                actionIcon = painterResource(id = R.drawable.ic_add_card),
+                onActionClick = { viewModel.onEvent(FundsEvent.SheetDisplayed(FundsSheets.AddFund)) })
+        }) { inner ->
+        sheetsHandle()
+        popupsHandle()
 
         Column(
             modifier = Modifier

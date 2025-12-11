@@ -1,6 +1,7 @@
-package com.axoncodelabs.cashbox.ui.screens.funds.components.addfund
+package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addamount
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,28 +12,39 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
+import com.axoncodelabs.cashbox.data.local.entity.FundEntity
+import com.axoncodelabs.cashbox.ui.screens.funds.components.DateSelection
 import com.axoncodelabs.cashbox.ui.components.MyBotton
 import com.axoncodelabs.cashbox.ui.components.MyLabel
 import com.axoncodelabs.cashbox.ui.components.MyNumField
+import com.axoncodelabs.cashbox.ui.components.MyRoundedLabel
 import com.axoncodelabs.cashbox.ui.components.MyTextField
 import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
+import com.axoncodelabs.cashbox.ui.theme.hideDataMask
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 @Composable
-fun AddFundSheet(
-    viewModel: AddFundVM = hiltViewModel(),
+fun AddAmountSheet(
+    hideBlurState: Dp,
+    isHideData: Boolean?,
+    fund: FundEntity,
+    viewModel: AddAmountVM = hiltViewModel(),
     onClose: () -> Unit,
-    /*Disable ShowSnackbar
-    snackbarHostState: SnackbarHostState,*/
 ) {
-    /*Disable ShowSnackbar
-    val context = LocalContext.current*/
+    LaunchedEffect(key1 = fund.id) {
+        viewModel.initData(fund)
+    }
     LaunchedEffect(key1 = true) {
-        viewModel.initData()
         viewModel.fundsEvent.collect { event ->
             when (event) {
                 is FundsEvent.CloseSheet -> {
@@ -45,28 +57,34 @@ fun AddFundSheet(
         }
     }
 
-    AddFundSheetRoot(
+    AddAmountSheetRoot(
+        hideBlurState = hideBlurState,
+        isHideData = isHideData,
         name = viewModel.name,
         amount = viewModel.amount,
         description = viewModel.description,
-        onNameChange = { viewModel.onEvent(AddFundEvent.OnNameChange(it)) },
-        onAmountChange = { viewModel.onEvent(AddFundEvent.OnAmountChange(it)) },
-        onDescriptionChange = { viewModel.onEvent(AddFundEvent.OnDescriptionChange(it)) },
-        onSaveClick = { viewModel.onEvent(AddFundEvent.OnSaveClick) },
-        isNameEmpty = viewModel.isNameEmpty
+        onAmountChange = { viewModel.onEvent(AddAmountEvent.OnAmountChange(it)) },
+        onDescriptionChange = { viewModel.onEvent(AddAmountEvent.OnDescriptionChange(it)) },
+        selectedDate = viewModel.selectedDate,
+        onDateChange = { viewModel.onEvent(AddAmountEvent.OnDateChange(it)) },
+        onSaveClick = { viewModel.onEvent(AddAmountEvent.OnSaveClick) },
+        isAmountEmpty = viewModel.isAmountEmpty
     )
 }
 
 @Composable
-private fun AddFundSheetRoot(
+private fun AddAmountSheetRoot(
+    hideBlurState: Dp,
+    isHideData: Boolean?,
     name: String,
     amount: String,
     description: String,
-    onNameChange: (String) -> Unit,
     onAmountChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
+    selectedDate: Long,
+    onDateChange: (Long) -> Unit,
     onSaveClick: () -> Unit,
-    isNameEmpty: Boolean,
+    isAmountEmpty: Boolean,
 ) {
     Column(
         modifier = Modifier
@@ -76,17 +94,16 @@ private fun AddFundSheetRoot(
     ) {
         MyLabel(stringResource(R.string.Sheet_FundName))
         Spacer(modifier = Modifier.height(10.dp))
-        MyTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = name,
-            onValueChange = onNameChange,
-            hintText = stringResource(R.string.Sheet_FundName),
-            keyboardType = KeyboardType.Text,
-            singleLine = true,
-            isError = isNameEmpty,
-            errorMsg = stringResource(R.string.Sheet_FundNameError)
-        )
-
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .blur(hideBlurState)
+        ) {
+            MyRoundedLabel(
+                modifier = Modifier.fillMaxWidth(),
+                lapel = hideDataMask(isHideData, text = (name))
+            )
+        }
         Spacer(modifier = Modifier.height(20.dp))
 
         MyLabel(stringResource(R.string.Sheet_Amount_Lapel))
@@ -97,6 +114,8 @@ private fun AddFundSheetRoot(
             onValueChange = onAmountChange,
             hintText = stringResource(R.string.Sheet_Amount_Hint),
             singleLine = true,
+            isEmptyValue = isAmountEmpty,
+            emptyValueMsg = stringResource(R.string.Sheet_AddFundAmountError),
             wrongValueMsg = stringResource(R.string.Sheet_FundAmountError),
         )
 
@@ -114,11 +133,25 @@ private fun AddFundSheetRoot(
             maxLines = 3
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(15.dp))
+
+        DateSelection(
+            onDateDecrease = {
+                val cal = Calendar.getInstance().apply { timeInMillis = selectedDate }
+                cal.add(Calendar.DAY_OF_MONTH, -1)
+                onDateChange(cal.timeInMillis)
+            },
+            date = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date(selectedDate)),
+            onDateIncrease = {
+                val cal = Calendar.getInstance().apply { timeInMillis = selectedDate }
+                cal.add(Calendar.DAY_OF_MONTH, 1)
+                onDateChange(cal.timeInMillis)
+            },
+        )
+        Spacer(modifier = Modifier.height(15.dp))
 
         MyBotton(
-            text = stringResource(R.string.Sheet_Save_Bttn),
-            onClick = onSaveClick
+            text = stringResource(R.string.Sheet_AddTransaction_Bttn), onClick = onSaveClick
         )
     }
 }

@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.screens.funds.components.transfer
+package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.transfer
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
-import com.axoncodelabs.cashbox.ui.components.DateSelection
+import com.axoncodelabs.cashbox.ui.screens.funds.components.DateSelection
 import com.axoncodelabs.cashbox.ui.components.MyBotton
 import com.axoncodelabs.cashbox.ui.components.MyLabel
 import com.axoncodelabs.cashbox.ui.components.MyNumField

@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.screens.funds.components.addfund
+package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addfund
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

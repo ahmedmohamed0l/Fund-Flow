@@ -52,7 +52,10 @@ import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
 
 @Composable
 fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
+    //.....( State Section ).....
     val state by viewModel.state.collectAsState()
+
+    //.....( Screen Layout ).....
     SettingsScreenRoot(
         darkMode = state.darkMode == true,
         onThemeSwitcherClick = {
@@ -83,28 +86,13 @@ private fun SettingsScreenRoot(
                 .padding(top = 10.dp, bottom = 29.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Row(
+            SwitchTheme(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 10.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    MyIcons.ThemeIcon(size = 25.dp, color = MaterialTheme.colorScheme.onBackground)
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Text(
-                        text = stringResource(R.string.SettingsScreen_ChangeTheme),
-                        color = MaterialTheme.colorScheme.onSecondary,
-                        style = MyFontStyle.medium(),
-                    )
-                }
-                ThemeSwitcher(
-                    darkMode = darkMode,
-                    onThemeSwitcherClick = onThemeSwitcherClick
-                )
-
-            }
+                darkMode = darkMode,
+                onThemeSwitcherClick = onThemeSwitcherClick
+            )
             HorizontalDivider(
                 modifier = Modifier
                     .padding(vertical = 5.dp)
@@ -112,45 +100,84 @@ private fun SettingsScreenRoot(
                 thickness = 1.dp,
                 color = MaterialTheme.colorScheme.onSecondary
             )
-            Row(
+            HideData(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 10.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Rounded.VisibilityOff,
-                        contentDescription = "",
-                        modifier = Modifier.size(25.dp),
-                        tint = MaterialTheme.colorScheme.onBackground
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Text(
-                        text = stringResource(R.string.SettingsScreen_HideData),
-                        color = MaterialTheme.colorScheme.onSecondary,
-                        style = MyFontStyle.medium(),
-                    )
-                }
-                Switch(
-                    checked = isHideData,
-                    onCheckedChange = { onHideDataClick(it) },
-                    modifier = Modifier.width(70.dp),
-                    colors = SwitchDefaults.colors(
-                        uncheckedTrackColor = MaterialTheme.colorScheme.background,
-                        uncheckedBorderColor = MaterialTheme.colorScheme.outline,
-                        uncheckedThumbColor = MaterialTheme.colorScheme.outline,
-                    )
-                )
-
-            }
+                isHideData = isHideData,
+                onHideDataClick = onHideDataClick
+            )
 
         }
     }
 }
 
+/* ------------[ Components ]------------ */
+@Composable
+private fun SwitchTheme(
+    modifier: Modifier = Modifier,
+    darkMode: Boolean,
+    onThemeSwitcherClick: (Boolean) -> Unit
+) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            MyIcons.ThemeIcon(size = 25.dp, color = MaterialTheme.colorScheme.onBackground)
+            Spacer(modifier = modifier.width(10.dp))
+            Text(
+                text = stringResource(R.string.SettingsScreen_ChangeTheme),
+                color = MaterialTheme.colorScheme.onSecondary,
+                style = MyFontStyle.medium(),
+            )
+        }
+        ThemeSwitcher(
+            darkMode = darkMode,
+            onThemeSwitcherClick = onThemeSwitcherClick
+        )
 
+    }
+
+}
+
+@Composable
+private fun HideData(
+    modifier: Modifier = Modifier, isHideData: Boolean,
+    onHideDataClick: (Boolean) -> Unit,
+) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                imageVector = Icons.Rounded.VisibilityOff,
+                contentDescription = "",
+                modifier = modifier.size(25.dp),
+                tint = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = modifier.width(10.dp))
+            Text(
+                text = stringResource(R.string.SettingsScreen_HideData),
+                color = MaterialTheme.colorScheme.onSecondary,
+                style = MyFontStyle.medium(),
+            )
+        }
+        Switch(
+            checked = isHideData,
+            onCheckedChange = { onHideDataClick(it) },
+            modifier = modifier.width(70.dp),
+            colors = SwitchDefaults.colors(
+                uncheckedTrackColor = MaterialTheme.colorScheme.background,
+                uncheckedBorderColor = MaterialTheme.colorScheme.outline,
+                uncheckedThumbColor = MaterialTheme.colorScheme.outline,
+            )
+        )
+    }
+}
+
+/* ------------[ Tiny Composables ]------------ */
 @Composable
 fun ThemeSwitcher(
     darkMode: Boolean,

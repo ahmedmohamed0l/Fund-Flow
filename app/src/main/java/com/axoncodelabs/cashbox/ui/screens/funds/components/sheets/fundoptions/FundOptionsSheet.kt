@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.screens.funds.components.fundoptions
+package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.fundoptions
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

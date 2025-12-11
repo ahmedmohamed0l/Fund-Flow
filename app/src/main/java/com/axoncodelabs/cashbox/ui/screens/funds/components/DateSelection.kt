@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.components
+package com.axoncodelabs.cashbox.ui.screens.funds.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource

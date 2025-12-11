@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.screens.funds.components.transfer
+package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.transfer
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf

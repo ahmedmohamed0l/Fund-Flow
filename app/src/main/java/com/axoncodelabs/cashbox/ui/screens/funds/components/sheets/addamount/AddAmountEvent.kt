@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.screens.funds.components.addamount
+package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addamount
 
 sealed class AddAmountEvent {
     data class OnAmountChange(val amount: String) : AddAmountEvent()

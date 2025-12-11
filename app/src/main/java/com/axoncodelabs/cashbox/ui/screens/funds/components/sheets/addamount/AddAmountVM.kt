@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.screens.funds.components.addamount
+package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addamount
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
