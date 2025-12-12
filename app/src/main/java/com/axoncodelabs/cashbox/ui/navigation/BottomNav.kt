@@ -61,8 +61,8 @@ fun BottomBar(
                 elevation = (3.5).dp,
                 shape = CircleShape,
                 clip = true,
-                ambientColor = MaterialTheme.colorScheme.scrim,
-                spotColor = MaterialTheme.colorScheme.scrim
+                ambientColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f),
+                spotColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f)
             )
             .clip(CircleShape)
             .hazeChild(
@@ -70,13 +70,13 @@ fun BottomBar(
                 shape = CircleShape,
                 style = HazeStyle(
                     tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
-                    blurRadius = 20.dp,
-                    noiseFactor = 0.1f //
+                    blurRadius = 5.dp,
+                    noiseFactor = 0.1f
                 )
             )
             .border(
                 color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
-                width = (0.5).dp,
+                width = 1.dp,
                 shape = CircleShape
             )
             .padding(vertical = 8.dp, horizontal = 8.dp),

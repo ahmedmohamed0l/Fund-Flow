@@ -17,7 +17,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -31,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -52,6 +54,10 @@ import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
 import com.axoncodelabs.cashbox.ui.theme.doubleFormat
 import com.axoncodelabs.cashbox.ui.theme.hideDataMask
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,6 +76,7 @@ fun FundsScreen(
     val hideBlurState = if (isHideData) (1.5).dp else 0.dp
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val hazeState = remember { HazeState() }
 
     //.....( Sheets & Popups Handling ).....
     @Composable
@@ -172,64 +179,88 @@ fun FundsScreen(
             actionIcon = painterResource(id = R.drawable.ic_add_card),
             onActionClick = { viewModel.onEvent(FundsEvent.SheetDisplayed(FundsSheets.AddFund)) }
         )
-        Spacer(modifier = Modifier.height(10.dp))
 
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 15.dp)
-                .height(60.dp)
-                .clip(MyRoundedCornerShape.medium)
-                .border(1.dp, MaterialTheme.colorScheme.primary, MyRoundedCornerShape.medium)
-                .background(MaterialTheme.colorScheme.onPrimaryFixed)
-        ) {
-            Text(
-                stringResource(R.string.FundsScreen_FundsTotal),
-                style = MyFontStyle.medium(),
-                color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .padding(start = 20.dp)
-            )
-            Box(
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(end = 20.dp)
-                    .wrapContentSize()
-                    .blur(hideBlurState)
-            ) {
-                Text(
-                    text = hideDataMask(
-                        isHideData,
-                        text = (doubleFormat(fundsTotalBalance.value))
-                    ),
-                    style = MyFontStyle.large(),
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-        }
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Column(
-            modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .padding(horizontal = 20.dp)
         ) {
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            LazyColumn(
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(MyRoundedCornerShape.medium)
+                    .haze(state = hazeState),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                items(funds.value) { fund ->
-                    FundItem(
-                        hideBlurState = hideBlurState,
-                        isHideData = isHideData,
-                        fund = fund,
-                        onEvent = viewModel::onEvent
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(MyRoundedCornerShape.medium)
+                ) {
+
+                    item { Spacer(modifier = Modifier.height(70.dp)) }
+
+
+                    itemsIndexed(funds.value) { index, fund ->
+                        FundItem(
+                            hideBlurState = hideBlurState,
+                            isHideData = isHideData,
+                            fund = fund,
+                            onEvent = viewModel::onEvent
+                        )
+                        if (index != funds.value.lastIndex) {
+                            Spacer(modifier = Modifier.height(15.dp))
+                        }
+                    }
+
+                    item { Spacer(modifier = Modifier.height(75.dp)) }
+                }
+            }
+
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp)
+                    .padding(top = 10.dp)
+                    .height(50.dp)
+                    .clip(CircleShape)
+                    .hazeChild(
+                        state = hazeState,
+                        shape = CircleShape,
+                        style = HazeStyle(
+                            tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
+                            blurRadius = 10.dp,
+                            noiseFactor = 5f
+                        )
+                    )
+                    .border(
+                        1.dp,
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
+                        CircleShape
+                    )
+            ) {
+                Text(
+                    stringResource(R.string.FundsScreen_FundsTotal),
+                    style = MyFontStyle.medium(),
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .padding(start = 30.dp)
+                )
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(end = 30.dp)
+                        .wrapContentSize()
+                        .blur(hideBlurState)
+                ) {
+                    Text(
+                        text = hideDataMask(
+                            isHideData,
+                            text = (doubleFormat(fundsTotalBalance.value))
+                        ),
+                        style = MyFontStyle.large(),
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
             }
@@ -248,8 +279,19 @@ private fun FundItem(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(bottom = 25.dp)
+            .shadow(
+                elevation = 3.dp,
+                shape = MyRoundedCornerShape.medium,
+                clip = false,
+                ambientColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f),
+                spotColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f)
+            )
             .clip(MyRoundedCornerShape.medium)
+            .border(
+                color = MaterialTheme.colorScheme.outline,
+                width = 1.dp,
+                shape = MyRoundedCornerShape.medium
+            )
             .background(MaterialTheme.colorScheme.secondary)
             .height(160.dp)
     ) {

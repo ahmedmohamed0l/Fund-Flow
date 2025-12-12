@@ -33,7 +33,7 @@ private val LightColorScheme = lightColorScheme(
     onBackground = MyColors.Black,
     onPrimaryFixed = MyColors.White,
     //Shadow
-    scrim = MyColors.SoftBlack,
+    scrim = MyColors.Black,
     //Nav Outline
     outlineVariant = MyColors.White,
 
@@ -71,7 +71,7 @@ private val DarkColorScheme = darkColorScheme(
     onBackground = MyColors.White,
     onPrimaryFixed = MyColors.Black,
     //Shadow
-    scrim = MyColors.DarkGray,
+    scrim = MyColors.Gray,
     //Nav Outline
     outlineVariant = MyColors.DarkGray,
 
