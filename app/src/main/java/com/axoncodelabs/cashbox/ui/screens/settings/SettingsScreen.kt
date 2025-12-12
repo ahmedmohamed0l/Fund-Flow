@@ -61,7 +61,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
         onThemeSwitcherClick = {
             viewModel.onEvent(SettingsEvent.ToggleTheme(it))
         },
-        isHideData = state.isHideData ?: false,
+        isHideData = state.isHideData,
         onHideDataClick = { viewModel.onEvent(SettingsEvent.ToggleHideData(it)) }
     )
 }

@@ -28,22 +28,21 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
+import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.components.MyTextField
+import com.axoncodelabs.cashbox.ui.components.hideDataMask
 import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
-import com.axoncodelabs.cashbox.ui.theme.hideDataMask
 
 @Composable
 fun FundOptionsSheet(
-    hideBlurState: Dp,
-    isHideData: Boolean?,
+    isHideData: Boolean,
     fund: FundEntity,
     viewModel: FundOptionsVM = hiltViewModel(),
     onClose: () -> Unit,
@@ -79,7 +78,6 @@ fun FundOptionsSheet(
     }
 
     FundOptionsSheetRoot(
-        hideBlurState = hideBlurState,
         isHideData = isHideData,
         name = viewModel.name,
         isEditMode = viewModel.isEditMode,
@@ -94,8 +92,7 @@ fun FundOptionsSheet(
 
 @Composable
 private fun FundOptionsSheetRoot(
-    hideBlurState: Dp,
-    isHideData: Boolean?,
+    isHideData: Boolean,
     name: String,
     isEditMode: Boolean,
     onEditFundClick: () -> Unit,
@@ -123,9 +120,10 @@ private fun FundOptionsSheetRoot(
                         .width(300.dp)
                         .padding(end = 10.dp)
                         .wrapContentSize()
-                        .blur(hideBlurState)
+                        .blur(if (isHideData) (1.5).dp else 0.dp)
                 ) {
                     MyTextField(
+                        modifier = Modifier.width(300.dp),
                         value = hideDataMask(isHideData, text = (name)),
                         onValueChange = onNameChange,
                         keyboardType = KeyboardType.Text,
@@ -154,19 +152,13 @@ private fun FundOptionsSheetRoot(
                     )
                 }
             } else {
-                Box(
-                    modifier = Modifier
-                        .padding(vertical = 15.dp)
-                        .wrapContentSize()
-                        .blur(hideBlurState)
-                ) {
-                    Text(
-                        text = hideDataMask(isHideData, text = (name)),
-                        color = MaterialTheme.colorScheme.onBackground,
-                        style = MyFontStyle.medium(),
-                    )
-                }
-
+                HideTextData(
+                    modifier = Modifier.padding(vertical = 15.dp),
+                    isHideData = isHideData,
+                    text = (name),
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MyFontStyle.medium()
+                )
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier

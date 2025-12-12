@@ -10,7 +10,7 @@ sealed class ExpensesSheets {
 }
 
 data class ExpensesState(
-    val isHideData: Boolean? = false,
+    val isHideData: Boolean = false,
     val expenses: List<TransactionEntity> = emptyList(),
 
     //DatePickerData

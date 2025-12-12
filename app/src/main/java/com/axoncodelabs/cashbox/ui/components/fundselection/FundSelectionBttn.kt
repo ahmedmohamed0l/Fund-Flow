@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -18,24 +17,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
+import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
-import com.axoncodelabs.cashbox.ui.theme.hideDataMask
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FundSelectionBttn(
-    hideBlurState: Dp,
-    isHideData: Boolean?,
+    isHideData: Boolean,
     modifier: Modifier = Modifier,
     fund: FundEntity?,
     fromFundId: Int,
@@ -54,7 +49,6 @@ fun FundSelectionBttn(
             containerColor = MaterialTheme.colorScheme.background
         ) {
             FundSelectionSheet(
-                hideBlurState = hideBlurState,
                 isHideData = isHideData,
                 onSelect = {
                     onFundSelected(it)
@@ -82,24 +76,15 @@ fun FundSelectionBttn(
                 ) { viewModel.showFunds = true }
                 .padding(horizontal = 15.dp)
         ) {
-            Box(
+            HideTextData(
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-                    .padding(vertical = 15.dp)
-                    .wrapContentSize()
-                    .blur(hideBlurState)
-            ) {
-                Text(
-                    text = hideDataMask(
-                        isHideData,
-                        text = (fund?.name ?: stringResource(R.string.Sheet_FundSelection))
-                    ),
-                    style = MyFontStyle.medium(),
-                    color = fund?.let { textColor } ?: finalBorderColor,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+                    .padding(vertical = 15.dp),
+                isHideData = isHideData,
+                text = (fund?.name ?: stringResource(R.string.Sheet_FundSelection)),
+                color = fund?.let { textColor } ?: finalBorderColor,
+                style = MyFontStyle.medium()
+            )
             MyIcons.Arrow(
                 autoMirroredState = false,
                 modifier = Modifier.align(Alignment.CenterEnd),

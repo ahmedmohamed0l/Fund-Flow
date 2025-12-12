@@ -3,7 +3,6 @@ package com.axoncodelabs.cashbox.ui.components.fundselection
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,33 +10,28 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
+import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
 import com.axoncodelabs.cashbox.ui.theme.doubleFormat
-import com.axoncodelabs.cashbox.ui.theme.hideDataMask
 
 @Composable
 fun FundSelectionSheet(
-    hideBlurState: Dp,
-    isHideData: Boolean?,
+    isHideData: Boolean,
     onSelect: (FundEntity) -> Unit,
     fromFundId: Int,
     viewModel: FundSelectionVM = hiltViewModel(),
@@ -54,7 +48,6 @@ fun FundSelectionSheet(
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
             items(filteredFunds) { fund ->
                 FundItem(
-                    hideBlurState = hideBlurState,
                     isHideData = isHideData,
                     fund = fund,
                     onSelect = { onSelect(fund) }
@@ -75,8 +68,7 @@ fun FundSelectionSheet(
 
 @Composable
 private fun FundItem(
-    hideBlurState: Dp,
-    isHideData: Boolean?,
+    isHideData: Boolean,
     fund: FundEntity,
     onSelect: () -> Unit,
 ) {
@@ -100,29 +92,19 @@ private fun FundItem(
                 color = MaterialTheme.colorScheme.outline,
             )
             Spacer(modifier = Modifier.width(7.dp))
-            Box(
-                modifier = Modifier
-                    .wrapContentSize()
-                    .blur(hideBlurState)
-            ) {
-                Text(
-                    text = hideDataMask(isHideData, text = (fund.name)),
-                    color = MaterialTheme.colorScheme.onTertiary,
-                    style = MyFontStyle.medium()
-                )
-            }
-        }
-
-        Box(
-            modifier = Modifier
-                .wrapContentSize()
-                .blur(hideBlurState)
-        ) {
-            Text(
-                text = hideDataMask(isHideData, text = (doubleFormat(fund.balance))),
+            HideTextData(
+                isHideData = isHideData,
+                text = (fund.name),
                 color = MaterialTheme.colorScheme.onTertiary,
-                style = MyFontStyle.large()
+                style = MyFontStyle.medium()
             )
         }
+
+        HideTextData(
+            isHideData = isHideData,
+            text = (doubleFormat(fund.balance)),
+            color = MaterialTheme.colorScheme.onTertiary,
+            style = MyFontStyle.large()
+        )
     }
 }

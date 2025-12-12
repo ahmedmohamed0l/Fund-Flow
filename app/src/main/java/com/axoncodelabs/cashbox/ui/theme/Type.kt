@@ -49,13 +49,6 @@ val Typography = Typography(
     )
     */
 )
-fun hideDataMask(isHide: Boolean?, text: String): String {
-    return if (isHide!!) {
-        "x".repeat(text.length)
-    } else {
-        text
-    }
-}
 
 //-------------------[Font Styles]-------------------
 

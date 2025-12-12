@@ -2,28 +2,24 @@ package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.transfer
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
-import com.axoncodelabs.cashbox.ui.screens.funds.components.DateSelection
+import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.components.MyBotton
 import com.axoncodelabs.cashbox.ui.components.MyLabel
 import com.axoncodelabs.cashbox.ui.components.MyNumField
@@ -31,8 +27,9 @@ import com.axoncodelabs.cashbox.ui.components.MyRoundedLabel
 import com.axoncodelabs.cashbox.ui.components.MyTextField
 import com.axoncodelabs.cashbox.ui.components.fundselection.FundSelectionBttn
 import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
+import com.axoncodelabs.cashbox.ui.screens.funds.components.DateSelection
+import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.doubleFormat
-import com.axoncodelabs.cashbox.ui.theme.hideDataMask
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -40,8 +37,7 @@ import java.util.Locale
 
 @Composable
 fun TransferSheet(
-    hideBlurState: Dp,
-    isHideData: Boolean?,
+    isHideData: Boolean,
     fromFund: FundEntity,
     viewModel: TransferVM = hiltViewModel(),
     onClose: () -> Unit,
@@ -63,7 +59,6 @@ fun TransferSheet(
     }
 
     TransferSheetRoot(
-        hideBlurState = hideBlurState,
         isHideData = isHideData,
         fromFund = fromFund,
         fromName = viewModel.fromName,
@@ -85,8 +80,7 @@ fun TransferSheet(
 
 @Composable
 private fun TransferSheetRoot(
-    hideBlurState: Dp,
-    isHideData: Boolean?,
+    isHideData: Boolean,
     fromFund: FundEntity,
     fromName: String,
     availableBalance: Double,
@@ -111,24 +105,19 @@ private fun TransferSheetRoot(
     ) {
         MyLabel(stringResource(R.string.Sheet_Fund_From_Name))
         Spacer(modifier = Modifier.height(10.dp))
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .blur(hideBlurState)
-        ) {
-            MyRoundedLabel(
-                modifier = Modifier.fillMaxWidth(),
-                lapel = hideDataMask(isHideData, text = (fromName)),
-                textColor = MaterialTheme.colorScheme.onBackground
-            )
-        }
+        MyRoundedLabel(
+            modifier = Modifier.fillMaxWidth(),
+            isHideData = isHideData,
+            lapel = fromName,
+            textColor = MaterialTheme.colorScheme.onBackground
+        )
+
 
         Spacer(modifier = Modifier.height(20.dp))
 
         MyLabel(stringResource(R.string.Sheet_Fund_To_Name))
         Spacer(modifier = Modifier.height(10.dp))
         FundSelectionBttn(
-            hideBlurState = hideBlurState,
             isHideData = isHideData,
             fund = toFund,
             fromFundId = fromFund.id,
@@ -146,21 +135,14 @@ private fun TransferSheetRoot(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             MyLabel(stringResource(R.string.Sheet_Amount_Lapel))
-            Box(
-                modifier = Modifier
-                    .wrapContentSize()
-                    .blur(hideBlurState)
-            ) {
-                MyLabel(
-                    lapel = hideDataMask(
-                        isHideData,
-                        text = (stringResource(R.string.Sheet_FundFromBalance) + " " + doubleFormat(
-                            availableBalance
-                        ))
-                    ),
-                    textColor = if (isAvailableNegative) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.inversePrimary
-                )
-            }
+            HideTextData(
+                isHideData = isHideData,
+                text = (stringResource(R.string.Sheet_FundFromBalance) + " " + doubleFormat(
+                    availableBalance
+                )),
+                color = if (isAvailableNegative) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.inversePrimary,
+                style = MyFontStyle.medium()
+            )
         }
         Spacer(modifier = Modifier.height(10.dp))
         MyNumField(

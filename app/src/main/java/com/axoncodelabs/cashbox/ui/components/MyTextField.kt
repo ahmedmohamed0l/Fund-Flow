@@ -58,6 +58,7 @@ fun MyLabel(
 fun MyRoundedLabel(
     lapel: String,
     modifier: Modifier = Modifier,
+    isHideData: Boolean,
     textColor: Color = MaterialTheme.colorScheme.primary,
     borderColor: Color = MaterialTheme.colorScheme.outline,
 ) {
@@ -66,13 +67,12 @@ fun MyRoundedLabel(
             .border(1.dp, borderColor, RoundedCornerShape(10.dp))
             .padding(vertical = 15.dp, horizontal = 15.dp),
     ) {
-        Text(
-            modifier = modifier.align(Alignment.CenterStart),
+        HideTextData(
+            modifier = Modifier.align(Alignment.CenterStart),
+            isHideData = isHideData,
             text = lapel,
-            style = MyFontStyle.medium(),
             color = textColor,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            style = MyFontStyle.medium()
         )
     }
 }

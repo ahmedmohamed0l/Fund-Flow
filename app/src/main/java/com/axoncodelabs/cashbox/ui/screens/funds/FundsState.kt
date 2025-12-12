@@ -19,5 +19,5 @@ data class FundsState(
     val currentSheet: FundsSheets = FundsSheets.None,
     val popupState: FundsPopup = FundsPopup.Close,
     val funds: List<FundEntity> = emptyList(),
-    val isHideData: Boolean? = false,
+    val isHideData: Boolean = false,
 )

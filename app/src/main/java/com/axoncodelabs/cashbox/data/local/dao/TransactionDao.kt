@@ -37,6 +37,12 @@ interface TransactionDao {
         endDate: Long,
     ): Flow<List<TransactionEntity>>
 
+    @Query("SELECT SUM(amount) FROM transactions WHERE type = 'EXPENSE' And date BETWEEN :startDate AND :endDate ORDER BY date DESC")
+    fun getExpensesSumByDate(
+        startDate: Long,
+        endDate: Long,
+    ): Flow<Double>
+
     @Query("SELECT * FROM transactions WHERE fundId = :fundId And type = :type And date BETWEEN :startDate AND :endDate ORDER BY date DESC")
     fun getTransactionsByType(
         fundId: Int,
