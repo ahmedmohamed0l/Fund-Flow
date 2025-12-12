@@ -112,7 +112,7 @@ private fun SettingsScreenRoot(
     }
 }
 
-/* ------------[ Components ]------------ */
+/** --------------------[ Components ]-------------------- **/
 @Composable
 private fun SwitchTheme(
     modifier: Modifier = Modifier,
@@ -177,7 +177,7 @@ private fun HideData(
     }
 }
 
-/* ------------[ Tiny Composables ]------------ */
+/** --------------------[ Tiny Composables ]-------------------- **/
 @Composable
 fun ThemeSwitcher(
     darkMode: Boolean,
