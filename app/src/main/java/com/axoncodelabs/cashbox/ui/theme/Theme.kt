@@ -12,7 +12,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.WindowCompat
 import java.util.Locale
 
 object LocaleHelper {
@@ -32,23 +32,28 @@ private val LightColorScheme = lightColorScheme(
     background = MyColors.WhiteSmoke,
     onBackground = MyColors.Black,
     onPrimaryFixed = MyColors.White,
+    //Shadow
+    scrim = MyColors.SoftBlack,
+    //Nav Outline
+    outlineVariant = MyColors.White,
 
     primary = MyColors.DarkSkyBlue,
     onPrimary = MyColors.White,
 
-    secondary = MyColors.WhiteSmoke,
+    secondary = MyColors.LightGray,
     onSecondary = MyColors.Gray,
 
     surface = MyColors.SoftBlack,
     onSurface = MyColors.WhiteSmoke,
 
-    tertiary = MyColors.LightGray,
+    //tertiary = MyColors.LightGray,
     onTertiary = MyColors.SoftBlack,
 
     error = MyColors.LightRed,
     inversePrimary = MyColors.DarkGreen,
 
     outline = MyColors.MidLightGray
+
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -65,17 +70,21 @@ private val DarkColorScheme = darkColorScheme(
     background = MyColors.SoftBlack,
     onBackground = MyColors.White,
     onPrimaryFixed = MyColors.Black,
+    //Shadow
+    scrim = MyColors.DarkGray,
+    //Nav Outline
+    outlineVariant = MyColors.DarkGray,
 
     primary = MyColors.DeepBlue,
     onPrimary = MyColors.White,
 
-    secondary = MyColors.SoftBlack,
+    secondary = MyColors.LightBlack,
     onSecondary = MyColors.WhiteSmoke,
 
     surface = MyColors.WhiteSmoke,
     onSurface = MyColors.SoftBlack,
 
-    tertiary = MyColors.LightBlack,
+    //tertiary = MyColors.LightBlack,
     onTertiary = MyColors.WhiteSmoke,
 
     error = MyColors.MidRed,
@@ -103,9 +112,10 @@ fun CashBoxTheme(
     val activity = LocalActivity.current as Activity
     SideEffect {
         val window = activity.window
-        val insetsController = WindowInsetsControllerCompat(window, window.decorView)
-
-        insetsController.isAppearanceLightStatusBars = !darkTheme
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            isAppearanceLightStatusBars = !darkTheme
+            isAppearanceLightNavigationBars = !darkTheme
+        }
     }
     MaterialTheme(
         colorScheme = colorScheme,

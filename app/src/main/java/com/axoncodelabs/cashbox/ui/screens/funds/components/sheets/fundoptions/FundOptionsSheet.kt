@@ -139,7 +139,7 @@ private fun FundOptionsSheetRoot(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .clip(MyRoundedCornerShape.medium)
-                        .background(MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f))
+                        .background(MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f))
                         .padding(10.dp)
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
@@ -171,7 +171,7 @@ private fun FundOptionsSheetRoot(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .clip(MyRoundedCornerShape.medium)
-                        .background(MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f))
+                        .background(MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f))
                         .padding(10.dp)
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },

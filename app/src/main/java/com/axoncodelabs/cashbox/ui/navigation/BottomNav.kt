@@ -2,21 +2,19 @@ package com.axoncodelabs.cashbox.ui.navigation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,20 +32,17 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
-import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.hazeChild
 
 @Composable
-fun BottomNav() {
-    val navController = rememberNavController()
-    Scaffold(bottomBar = { BottomBar(navController = navController) }) {
-        BottomNavGraph(navController = navController)
-    }
-}
-
-@Composable
-private fun BottomBar(navController: NavHostController) {
+fun BottomBar(
+    navController: NavHostController,
+    hazeState: HazeState,
+    modifier: Modifier = Modifier
+) {
     val screens = listOf(
         BottomBarScreen.Expenses,
         BottomBarScreen.Reports,
@@ -57,37 +53,42 @@ private fun BottomBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    Column(
-        modifier = Modifier
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 10.dp, vertical = 10.dp)
+            .shadow(
+                elevation = (3.5).dp,
+                shape = CircleShape,
+                clip = true,
+                ambientColor = MaterialTheme.colorScheme.scrim,
+                spotColor = MaterialTheme.colorScheme.scrim
+            )
             .clip(CircleShape)
-    ) {
-
-        HorizontalDivider(
-            modifier = Modifier
-                .padding(start = 10.dp, end = 10.dp, bottom = 5.dp)
-                .clip(MyRoundedCornerShape.large),
-            thickness = 2.dp,
-            color = MaterialTheme.colorScheme.primary
-        )
-
-        Row(
-            modifier = Modifier
-                .padding(horizontal = 10.dp)
-                .padding(bottom = 5.dp)
-                .fillMaxWidth()
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.secondary.copy(alpha = 0.50f))
-                .padding(vertical = 8.dp, horizontal = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            screens.forEach { screen ->
-                AddItem(
-                    screen = screen,
-                    currentDestination = currentDestination,
-                    navController = navController
+            .hazeChild(
+                state = hazeState,
+                shape = CircleShape,
+                style = HazeStyle(
+                    tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
+                    blurRadius = 20.dp,
+                    noiseFactor = 0.1f //
                 )
-            }
+            )
+            .border(
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
+                width = (0.5).dp,
+                shape = CircleShape
+            )
+            .padding(vertical = 8.dp, horizontal = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        screens.forEach { screen ->
+            AddItem(
+                screen = screen,
+                currentDestination = currentDestination,
+                navController = navController
+            )
         }
     }
 }

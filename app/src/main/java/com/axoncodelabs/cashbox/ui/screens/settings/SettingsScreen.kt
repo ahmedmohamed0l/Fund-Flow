@@ -87,9 +87,6 @@ private fun SettingsScreenRoot(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             SwitchTheme(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 10.dp),
                 darkMode = darkMode,
                 onThemeSwitcherClick = onThemeSwitcherClick
             )
@@ -101,9 +98,6 @@ private fun SettingsScreenRoot(
                 color = MaterialTheme.colorScheme.onSecondary
             )
             HideData(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 10.dp),
                 isHideData = isHideData,
                 onHideDataClick = onHideDataClick
             )
@@ -120,6 +114,9 @@ private fun SwitchTheme(
     onThemeSwitcherClick: (Boolean) -> Unit
 ) {
     Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 10.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -147,6 +144,9 @@ private fun HideData(
     onHideDataClick: (Boolean) -> Unit,
 ) {
     Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 10.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -184,7 +184,7 @@ fun ThemeSwitcher(
     size: Dp = 35.dp,
     onThemeSwitcherClick: (Boolean) -> Unit,
     color1: Color = MaterialTheme.colorScheme.primary,
-    color2: Color = MaterialTheme.colorScheme.secondary,
+    color2: Color = MaterialTheme.colorScheme.background,
 ) {
     val offset by animateDpAsState(
         targetValue = if (darkMode) 0.dp else size,

@@ -21,7 +21,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -43,9 +42,9 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.ui.components.MyTopAppBar
+import com.axoncodelabs.cashbox.ui.screens.funds.components.deletepopup.DeleteFundConfirm
 import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addamount.AddAmountSheet
 import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addfund.AddFundSheet
-import com.axoncodelabs.cashbox.ui.screens.funds.components.deletepopup.DeleteFundConfirm
 import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.fundoptions.FundOptionsSheet
 import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.transfer.TransferSheet
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
@@ -159,68 +158,70 @@ fun FundsScreen(
 
 
     //.....( Screen Layout ).....
-    /*Disable ShowSnackbar
-    val snackbarHostState = remember { SnackbarHostState() }*/
-    Scaffold(
-        /*Disable ShowSnackbar
-        snackbarHost = { SnackbarHost(snackbarHostState) },*/
-        topBar = {
-            MyTopAppBar(
-                title = stringResource(id = R.string.FundsScreen_Identifier),
-                showAction = true,
-                actionIcon = painterResource(id = R.drawable.ic_add_card),
-                onActionClick = { viewModel.onEvent(FundsEvent.SheetDisplayed(FundsSheets.AddFund)) })
-        }) { inner ->
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         sheetsHandle()
         popupsHandle()
 
-        Column(
+        MyTopAppBar(
+            title = stringResource(id = R.string.FundsScreen_Identifier),
+            showAction = true,
+            actionIcon = painterResource(id = R.drawable.ic_add_card),
+            onActionClick = { viewModel.onEvent(FundsEvent.SheetDisplayed(FundsSheets.AddFund)) }
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Box(
             modifier = Modifier
-                .padding(inner)
-                .fillMaxSize()
-                .padding(29.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .fillMaxWidth()
+                .padding(horizontal = 15.dp)
+                .height(60.dp)
+                .clip(MyRoundedCornerShape.medium)
+                .border(1.dp, MaterialTheme.colorScheme.primary, MyRoundedCornerShape.medium)
+                .background(MaterialTheme.colorScheme.onPrimaryFixed)
         ) {
+            Text(
+                stringResource(R.string.FundsScreen_FundsTotal),
+                style = MyFontStyle.medium(),
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .padding(start = 20.dp)
+            )
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(60.dp)
-                    .clip(MyRoundedCornerShape.medium)
-                    .border(1.dp, MaterialTheme.colorScheme.primary, MyRoundedCornerShape.medium)
-                    .background(MaterialTheme.colorScheme.onPrimaryFixed)
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 20.dp)
+                    .wrapContentSize()
+                    .blur(hideBlurState)
             ) {
                 Text(
-                    stringResource(R.string.FundsScreen_FundsTotal),
-                    style = MyFontStyle.medium(),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .padding(start = 20.dp)
+                    text = hideDataMask(
+                        isHideData,
+                        text = (doubleFormat(fundsTotalBalance.value))
+                    ),
+                    style = MyFontStyle.large(),
+                    color = MaterialTheme.colorScheme.onBackground
                 )
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .padding(end = 20.dp)
-                        .wrapContentSize()
-                        .blur(hideBlurState)
-                ) {
-                    Text(
-                        text = hideDataMask(
-                            isHideData,
-                            text = (doubleFormat(fundsTotalBalance.value))
-                        ),
-                        style = MyFontStyle.large(),
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                }
             }
+        }
+        Spacer(modifier = Modifier.height(10.dp))
 
-            Spacer(modifier = Modifier.height(20.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+
+            Spacer(modifier = Modifier.height(10.dp))
 
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(bottom = 30.dp)
                     .clip(MyRoundedCornerShape.medium)
             ) {
                 items(funds.value) { fund ->
@@ -249,7 +250,7 @@ private fun FundItem(
             .fillMaxWidth()
             .padding(bottom = 25.dp)
             .clip(MyRoundedCornerShape.medium)
-            .background(MaterialTheme.colorScheme.tertiary)
+            .background(MaterialTheme.colorScheme.secondary)
             .height(160.dp)
     ) {
         Image(
