@@ -14,14 +14,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.axoncodelabs.cashbox.ui.theme.CashBoxTheme
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
 
@@ -38,18 +43,27 @@ fun MyTopAppBar(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp)
-            .padding(top = 10.dp)
-            .clip(MyRoundedCornerShape.large)
-            .background(barColor)
+            .height(60.dp)
     ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(20.dp)
+                .background(barColor)
+        ) {}
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .clip(MyRoundedCornerShape.large)
+                .background(barColor)
+        ) {}
         Text(
             text = title,
             color = onBarColor,
             style = MyFontStyle.mediumBold(),
             modifier = Modifier
                 .align(Alignment.Center)
-                .padding(vertical = 25.dp),
+                .padding(vertical = 20.dp),
             textAlign = TextAlign.Center
         )
         if (showAction && actionIcon != null && onActionClick != null) {
@@ -71,7 +85,7 @@ fun MyTopAppBar(
                         contentDescription = "Action",
                         tint = onBarColor,
 
-                    )
+                        )
                 }
                 VerticalDivider(
                     modifier = Modifier
@@ -83,6 +97,24 @@ fun MyTopAppBar(
                     color = onBarColor.copy(alpha = 0.5f)
                 )
             }
+        }
+    }
+}
+
+/**--------------------[ Preview ]--------------------**/
+@Preview(showBackground = true)
+@Composable
+private fun Preview() {
+    CompositionLocalProvider(
+        LocalLayoutDirection provides LayoutDirection.Rtl
+    ) {
+        val darkMode = false
+        CashBoxTheme(
+            darkTheme = darkMode
+        ) {
+            MyTopAppBar(
+                title = "المصروفات"
+            )
         }
     }
 }

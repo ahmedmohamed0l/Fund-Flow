@@ -1,18 +1,14 @@
 package com.axoncodelabs.cashbox.ui.theme
 
-import android.app.Activity
 import android.content.Context
 import android.os.Build
-import androidx.activity.compose.LocalActivity
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.view.WindowCompat
 import java.util.Locale
 
 object LocaleHelper {
@@ -109,14 +105,14 @@ fun CashBoxTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
-    val activity = LocalActivity.current as Activity
+    /*val activity = LocalActivity.current as Activity
     SideEffect {
         val window = activity.window
         WindowCompat.getInsetsController(window, window.decorView).apply {
             isAppearanceLightStatusBars = !darkTheme
             isAppearanceLightNavigationBars = !darkTheme
         }
-    }
+    }*/
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
