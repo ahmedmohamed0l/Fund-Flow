@@ -6,9 +6,11 @@ import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 @HiltViewModel
 class FundsViewModel @Inject constructor(
@@ -18,15 +20,20 @@ class FundsViewModel @Inject constructor(
     private val _state = MutableStateFlow(FundsState())
     val state = _state.asStateFlow()
 
-    val funds = repository.getAllFunds()
-    val fundsTotalBalance = repository.getTotalBalance()
-
     init {
-        viewModelScope.launch {
-            repository.hideDataFlow.collect { isHideData ->
-                _state.value = _state.value.copy(isHideData = isHideData)
+        combine(
+            repository.getAllFunds(),
+            repository.getTotalBalance(),
+            repository.hideDataFlow
+        ) { funds, totalBalance, isHideData ->
+            _state.update {
+                it.copy(
+                    funds = funds,
+                    fundsTotalBalance = totalBalance,
+                    isHideData = isHideData
+                )
             }
-        }
+        }.launchIn(viewModelScope)
     }
 
     fun onEvent(event: FundsEvent) {

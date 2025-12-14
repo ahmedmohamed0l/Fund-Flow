@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
+import com.axoncodelabs.cashbox.data.util.doubleFormat
 import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.components.MyBotton
 import com.axoncodelabs.cashbox.ui.components.MyLabel
@@ -29,7 +30,6 @@ import com.axoncodelabs.cashbox.ui.components.fundselection.FundSelectionBttn
 import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
 import com.axoncodelabs.cashbox.ui.screens.funds.components.DateSelection
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
-import com.axoncodelabs.cashbox.ui.theme.doubleFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date

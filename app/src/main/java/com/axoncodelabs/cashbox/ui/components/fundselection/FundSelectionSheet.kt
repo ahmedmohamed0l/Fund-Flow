@@ -23,11 +23,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
+import com.axoncodelabs.cashbox.data.util.doubleFormat
 import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
-import com.axoncodelabs.cashbox.ui.theme.doubleFormat
 
 @Composable
 fun FundSelectionSheet(

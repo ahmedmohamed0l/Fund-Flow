@@ -1,7 +1,6 @@
 package com.axoncodelabs.cashbox.ui.screens.funds
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -18,6 +17,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -25,13 +26,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -41,6 +40,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
+import com.axoncodelabs.cashbox.data.util.doubleFormat
 import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.components.MyTopAppBar
 import com.axoncodelabs.cashbox.ui.screens.funds.components.deletepopup.DeleteFundConfirm
@@ -51,7 +51,6 @@ import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.transfer.Tran
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
-import com.axoncodelabs.cashbox.ui.theme.doubleFormat
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.haze
@@ -63,10 +62,11 @@ fun FundsScreen(
     viewModel: FundsViewModel = hiltViewModel(),
 ) {
     //.....( State & ViewModel Setup ).....
-    val funds = viewModel.funds.collectAsState(initial = emptyList())
-    val fundsTotalBalance by viewModel.fundsTotalBalance.collectAsState(initial = 0.0)
-
     val state = viewModel.state.collectAsState()
+
+    val funds = state.value.funds
+    val fundsTotalBalance = state.value.fundsTotalBalance
+
     val sheet = state.value.currentSheet
     val popup = state.value.popupState
 
@@ -190,21 +190,20 @@ fun FundsScreen(
                         .fillMaxSize()
                         .clip(MyRoundedCornerShape.medium)
                 ) {
-
                     item { Spacer(modifier = Modifier.height(70.dp)) }
-
-
-                    itemsIndexed(funds.value) { index, fund ->
+                    itemsIndexed(
+                        items = funds,
+                        key = { _, fund -> fund.id },
+                        contentType = { _, _ -> "FundItem" }) { index, fund ->
                         FundItem(
                             isHideData = isHideData,
                             fund = fund,
                             onEvent = viewModel::onEvent
                         )
-                        if (index != funds.value.lastIndex) {
+                        if (index != funds.lastIndex) {
                             Spacer(modifier = Modifier.height(15.dp))
                         }
                     }
-
                     item { Spacer(modifier = Modifier.height(75.dp)) }
                 }
             }
@@ -261,10 +260,10 @@ private fun FundItem(
     onEvent: (FundsEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(
+    Card(
         modifier = modifier
             .fillMaxWidth()
-            .shadow(
+            /*.shadow(
                 elevation = 3.dp,
                 shape = MyRoundedCornerShape.medium,
                 clip = false,
@@ -277,108 +276,112 @@ private fun FundItem(
                 width = 1.dp,
                 shape = MyRoundedCornerShape.medium
             )
-            .background(MaterialTheme.colorScheme.secondary)
-            .height(160.dp)
+            .background(MaterialTheme.colorScheme.secondary)*/
+            .height(160.dp),
+        shape = MyRoundedCornerShape.medium,
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.background),
-            modifier = modifier
-                .matchParentSize()
-                .alpha(0.6f),
-        )
-        Box(
-            modifier = modifier
-                .fillMaxSize()
-                .clip(MyRoundedCornerShape.medium)
-                .padding(20.dp)
-                .padding(vertical = 10.dp)
-        ) {
-            Row(
+        Box(modifier = Modifier.fillMaxSize()) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.background),
                 modifier = modifier
-                    .fillMaxWidth()
-                    .align(Alignment.TopCenter),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                    .matchParentSize()
+                    .alpha(0.6f),
+            )
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(20.dp)
+                    .padding(vertical = 10.dp)
             ) {
                 Row(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .align(Alignment.TopCenter),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    MyIcons.Settings(
-                        filledState = false,
-                        size = 25.dp,
-                        color = MaterialTheme.colorScheme.primary,
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        MyIcons.Settings(
+                            filledState = false,
+                            size = 25.dp,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = modifier.clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() }
+                            ) {
+                                onEvent(FundsEvent.SheetDisplayed(FundsSheets.FundOptions(fund)))
+                            })
+                        Spacer(modifier = modifier.width(15.dp))
+
+                        HideTextData(
+                            isHideData = isHideData,
+                            text = (fund.name),
+                            color = MaterialTheme.colorScheme.onTertiary,
+                            style = MyFontStyle.medium()
+                        )
+                    }
+                    HideTextData(
+                        isHideData = isHideData,
+                        text = (doubleFormat(fund.balance)),
+                        color = MaterialTheme.colorScheme.onTertiary,
+                        style = MyFontStyle.large()
+                    )
+                }
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = stringResource(R.string.FundsScreen_AddBalance_Bttn),
+                        color = MaterialTheme.colorScheme.inversePrimary,
+                        style = MyFontStyle.small(),
                         modifier = modifier.clickable(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() }
                         ) {
-                            onEvent(FundsEvent.SheetDisplayed(FundsSheets.FundOptions(fund)))
+                            onEvent(
+                                FundsEvent.SheetDisplayed(FundsSheets.AddAmount(fund))
+                            )
                         })
-                    Spacer(modifier = modifier.width(15.dp))
-
-                    HideTextData(
-                        isHideData = isHideData,
-                        text = (fund.name),
+                    Text(
+                        text = stringResource(R.string.FundsScreen_FundsTransfer_Bttn),
                         color = MaterialTheme.colorScheme.onTertiary,
-                        style = MyFontStyle.medium()
-                    )
-                }
-                HideTextData(
-                    isHideData = isHideData,
-                    text = (doubleFormat(fund.balance)),
-                    color = MaterialTheme.colorScheme.onTertiary,
-                    style = MyFontStyle.large()
-                )
-            }
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = stringResource(R.string.FundsScreen_AddBalance_Bttn),
-                    color = MaterialTheme.colorScheme.inversePrimary,
-                    style = MyFontStyle.small(),
-                    modifier = modifier.clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) {
-                        onEvent(
-                            FundsEvent.SheetDisplayed(FundsSheets.AddAmount(fund))
-                        )
-                    })
-                Text(
-                    text = stringResource(R.string.FundsScreen_FundsTransfer_Bttn),
-                    color = MaterialTheme.colorScheme.onTertiary,
-                    style = MyFontStyle.small(),
-                    modifier = modifier.clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) {
-                        onEvent(
-                            FundsEvent.SheetDisplayed(
-                                FundsSheets.Transfer(
-                                    fund
+                        style = MyFontStyle.small(),
+                        modifier = modifier.clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) {
+                            onEvent(
+                                FundsEvent.SheetDisplayed(
+                                    FundsSheets.Transfer(
+                                        fund
+                                    )
                                 )
                             )
-                        )
-                    })
-                Text(
-                    text = stringResource(R.string.FundsScreen_DeleteFunds_Bttn),
-                    color = MaterialTheme.colorScheme.error,
-                    style = MyFontStyle.small(),
-                    modifier = modifier.clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) {
-                        onEvent(
-                            FundsEvent.PopupDisplay(FundsPopup.DeleteFund(fund))
-                        )
-                    })
+                        })
+                    Text(
+                        text = stringResource(R.string.FundsScreen_DeleteFunds_Bttn),
+                        color = MaterialTheme.colorScheme.error,
+                        style = MyFontStyle.small(),
+                        modifier = modifier.clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) {
+                            onEvent(
+                                FundsEvent.PopupDisplay(FundsPopup.DeleteFund(fund))
+                            )
+                        })
+                }
             }
         }
     }

@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -97,7 +98,7 @@ fun MyTextField(
         if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onBackground
     val finalHintColor = if (isError) MaterialTheme.colorScheme.error else hintTextColor
 
-    Column() {
+    Column {
         BasicTextField(
             modifier = modifier
                 .border(1.dp, finalBorderColor, RoundedCornerShape(10.dp))
@@ -105,6 +106,7 @@ fun MyTextField(
             value = value,
             onValueChange = onValueChange,
             textStyle = MyFontStyle.medium().copy(color = finalValueColor),
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = keyboardType),
             maxLines = actualMaxLines,
             singleLine = singleLine,
@@ -194,6 +196,7 @@ fun MyNumField(
                 }
             },
             textStyle = MyFontStyle.medium().copy(color = finalValueColor),
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             maxLines = actualMaxLines,
             singleLine = singleLine,

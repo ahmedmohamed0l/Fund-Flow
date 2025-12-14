@@ -4,18 +4,16 @@ import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.axoncodelabs.cashbox.R
-import java.text.DecimalFormat
 
-private val SegoeUi = FontFamily(
+/*private val SegoeUi = FontFamily(
     Font(R.font.segoe_ui, FontWeight.Normal),
     Font(R.font.segoe_ui_bold, FontWeight.Bold),
     Font(R.font.segoe_ui_italic, FontWeight.Normal, FontStyle.Italic),
     Font(R.font.segoe_ui_bold_italic, FontWeight.Bold, FontStyle.Italic)
-)
+)*/
 private val Tajawal = FontFamily(
     Font(R.font.tajawal_medium, FontWeight.Normal),
     Font(R.font.tajawal_bold, FontWeight.Bold),
@@ -32,30 +30,9 @@ val Typography = Typography(
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     )
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    )
-    */
 )
 
 //-------------------[Font Styles]-------------------
-
-fun doubleFormat(double: Double): String {
-    val formatter = DecimalFormat("#,##0.##")
-    return formatter.format(double)
-}
 
 object MyFontStyle {
 

@@ -1,5 +1,7 @@
 package com.axoncodelabs.cashbox.ui.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,7 +17,10 @@ import com.axoncodelabs.cashbox.ui.screens.settings.SettingsScreen
 fun BottomNavGraph(modifier: Modifier = Modifier, navController: NavHostController) {
     NavHost(
         modifier = modifier.fillMaxSize(),
-        navController = navController, startDestination = BottomBarScreen.Expenses.route
+        navController = navController,
+        startDestination = BottomBarScreen.Expenses.route,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None },
     ) {
         composable(route = BottomBarScreen.Expenses.route) {
             ExpensesScreen()
