@@ -45,7 +45,7 @@ class FundOptionsVM @Inject constructor(
 
     fun onEvent(event: FundOptionsEvent) {
         when (event) {
-            is FundOptionsEvent.OnEditFundClick -> {
+            FundOptionsEvent.OnEditFundClick -> {
                 isEditMode = true
             }
 
@@ -54,7 +54,7 @@ class FundOptionsVM @Inject constructor(
                 isNameEmpty = false
             }
 
-            is FundOptionsEvent.OnSaveClick -> {
+            FundOptionsEvent.OnSaveClick -> {
                 viewModelScope.launch {
                     if (name.isBlank()) {
                         isNameEmpty = true
@@ -72,7 +72,7 @@ class FundOptionsVM @Inject constructor(
             }
 
             //Delete Fund Transactions Popup events
-            is FundOptionsEvent.OnDeleteClick -> {
+            FundOptionsEvent.OnDeleteClick -> {
                 viewModelScope.launch {
                     fund?.let {
                         repository.deleteAllFundTransactions(it.id)
@@ -81,7 +81,7 @@ class FundOptionsVM @Inject constructor(
                 }
             }
 
-            is FundOptionsEvent.OnCancelClick -> {
+            FundOptionsEvent.OnCancelClick -> {
                 sendFundsEvent(FundsEvent.ClosePopup)
             }
         }

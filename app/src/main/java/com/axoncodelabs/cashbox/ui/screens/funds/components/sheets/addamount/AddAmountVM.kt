@@ -66,7 +66,7 @@ class AddAmountVM @Inject constructor(
                 selectedDate = event.newDate
             }
 
-            is AddAmountEvent.OnSaveClick -> {
+            AddAmountEvent.OnSaveClick -> {
                 viewModelScope.launch {
                     val amountDouble = amount.toDoubleOrNull()
                     if (amount.isBlank() || amountDouble == null || amountDouble < 0) {

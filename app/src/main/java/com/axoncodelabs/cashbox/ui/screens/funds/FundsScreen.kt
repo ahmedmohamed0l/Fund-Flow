@@ -79,7 +79,7 @@ fun FundsScreen(
     @Composable
     fun sheetsHandle() {
         when (sheet) {
-            is FundsSheets.AddFund -> {
+            FundsSheets.AddFund -> {
                 ModalBottomSheet(
                     onDismissRequest = { viewModel.onEvent(FundsEvent.CloseSheet) },
                     containerColor = MaterialTheme.colorScheme.background,

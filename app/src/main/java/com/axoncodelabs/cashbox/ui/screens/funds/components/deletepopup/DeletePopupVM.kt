@@ -31,7 +31,7 @@ class DeletePopupVM @Inject constructor(
 
     fun onEvent(event: DeletePopupEvent) {
         when (event) {
-            is DeletePopupEvent.OnDeleteClick -> {
+            DeletePopupEvent.OnDeleteClick -> {
                 viewModelScope.launch {
                     fund?.let {
                         repository.deleteFund(it)
@@ -40,7 +40,7 @@ class DeletePopupVM @Inject constructor(
                 }
             }
 
-            is DeletePopupEvent.OnCancelClick -> {
+            DeletePopupEvent.OnCancelClick -> {
                 sendFundsEvent(FundsEvent.ClosePopup)
             }
         }

@@ -45,7 +45,7 @@ fun TransferSheet(
     LaunchedEffect(key1 = true) {
         viewModel.fundsEvent.collect { event ->
             when (event) {
-                is FundsEvent.CloseSheet -> {
+                FundsEvent.CloseSheet -> {
                     viewModel.clearSheetData()
                     onClose()
                 }

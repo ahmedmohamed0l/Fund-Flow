@@ -93,7 +93,7 @@ class TransferVM @Inject constructor(
                 selectedDate = event.newDate
             }
 
-            is TransferEvent.OnSaveClick -> {
+            TransferEvent.OnSaveClick -> {
                 viewModelScope.launch {
                     val source = fromFund!!
                     val target = toFund ?: run {

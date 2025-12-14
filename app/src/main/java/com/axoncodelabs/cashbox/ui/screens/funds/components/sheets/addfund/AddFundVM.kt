@@ -53,7 +53,7 @@ class AddFundVM @Inject constructor(
                 description = event.description
             }
 
-            is AddFundEvent.OnSaveClick -> {
+            AddFundEvent.OnSaveClick -> {
                 viewModelScope.launch {
                     val initialAmount = amount.toDoubleOrNull() ?: 0.0
                     if (name.isBlank()) {

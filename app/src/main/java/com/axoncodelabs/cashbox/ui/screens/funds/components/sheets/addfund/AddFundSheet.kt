@@ -35,7 +35,7 @@ fun AddFundSheet(
         viewModel.initData()
         viewModel.fundsEvent.collect { event ->
             when (event) {
-                is FundsEvent.CloseSheet -> {
+                FundsEvent.CloseSheet -> {
                     viewModel.clearSheetData()
                     onClose()
                 }

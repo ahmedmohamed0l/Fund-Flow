@@ -37,7 +37,7 @@ fun DeleteFundConfirm(
     LaunchedEffect(key1 = true) {
         viewModel.fundsEvent.collect { event ->
             when (event) {
-                is FundsEvent.ClosePopup -> onCancel()
+                FundsEvent.ClosePopup -> onCancel()
                 else -> Unit
             }
         }
