@@ -4,9 +4,11 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionType
+import com.axoncodelabs.cashbox.data.local.relation.ExpenseWithFund
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -58,4 +60,18 @@ interface TransactionDao {
         startDate: Long,
         endDate: Long,
     ): Flow<Double>
+
+    @Transaction
+    @Query(
+        """
+    SELECT * FROM transactions
+    WHERE type = 'EXPENSE'
+    AND date BETWEEN :startDate AND :endDate
+    ORDER BY date DESC
+"""
+    )
+    fun getExpensesWithFundByDate(
+        startDate: Long,
+        endDate: Long
+    ): Flow<List<ExpenseWithFund>>
 }
