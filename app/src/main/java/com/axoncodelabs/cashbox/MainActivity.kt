@@ -103,7 +103,6 @@ fun Root() {
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {
-    val onEvent: () -> Unit = {}
     CompositionLocalProvider(
         LocalLayoutDirection provides LayoutDirection.Rtl
     ) {

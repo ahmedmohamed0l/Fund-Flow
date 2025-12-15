@@ -95,7 +95,7 @@ private fun FundItem(
             HideTextData(
                 isHideData = isHideData,
                 text = (fund.name),
-                color = MaterialTheme.colorScheme.onTertiary,
+                color = MaterialTheme.colorScheme.onBackground,
                 style = MyFontStyle.medium()
             )
         }
@@ -103,7 +103,7 @@ private fun FundItem(
         HideTextData(
             isHideData = isHideData,
             text = (doubleFormat(fund.balance)),
-            color = MaterialTheme.colorScheme.onTertiary,
+            color = MaterialTheme.colorScheme.onBackground,
             style = MyFontStyle.large()
         )
     }

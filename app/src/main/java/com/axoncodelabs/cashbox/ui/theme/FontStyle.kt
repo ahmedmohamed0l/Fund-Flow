@@ -1,10 +1,17 @@
 package com.axoncodelabs.cashbox.ui.theme
 
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.Typography
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import com.axoncodelabs.cashbox.R
 
@@ -33,6 +40,21 @@ val Typography = Typography(
 )
 
 //-------------------[Font Styles]-------------------
+@Composable
+fun AppCurrency(
+    modifier: Modifier = Modifier,
+    style: TextStyle = MyFontStyle.small(),
+    textColor: Color = MaterialTheme.colorScheme.onBackground,
+) {
+    Text(
+        modifier = modifier,
+        text = stringResource(R.string.App_Currency),
+        style = style,
+        color = textColor,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
+    )
+}
 
 object MyFontStyle {
 
@@ -72,9 +94,15 @@ object MyFontStyle {
         fontSize = 20.sp
     )
 
-    fun extremeBold() = TextStyle(
+    fun extraLarge() = TextStyle(
+        fontFamily = mainFont,
+        fontWeight = FontWeight.Normal,
+        fontSize = 24.sp
+    )
+
+    fun extraLargeBold() = TextStyle(
         fontFamily = mainFont,
         fontWeight = FontWeight.Bold,
-        fontSize = 50.sp
+        fontSize = 24.sp
     )
 }

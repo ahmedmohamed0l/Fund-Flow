@@ -16,7 +16,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
-import com.axoncodelabs.cashbox.ui.components.MyBotton
+import com.axoncodelabs.cashbox.ui.components.MyButton
 import com.axoncodelabs.cashbox.ui.components.MyLabel
 import com.axoncodelabs.cashbox.ui.components.MyNumField
 import com.axoncodelabs.cashbox.ui.components.MyTextField
@@ -116,7 +116,7 @@ private fun AddFundSheetRoot(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        MyBotton(
+        MyButton(
             text = stringResource(R.string.Sheet_Save_Bttn),
             onClick = onSaveClick
         )

@@ -5,7 +5,9 @@ import androidx.compose.ui.graphics.Color
 object MyColors {
     val White = Color(0xFFFFFFFF)
     val WhiteSmoke = Color(0xFFF5F5F5)
+    val WhiteSmoke2 = Color(0xFFEBEBEB)
     val LightGray = Color(0xFFDCDCDC)
+    val LightGray2 = Color(0xFFC8C8C8)
     val MidLightGray = Color(0xFFADADAD)
     val Gray = Color(0xFF8A8A8A)
     val DarkGray = Color(0xFF5F5F5F)

@@ -263,20 +263,6 @@ private fun FundItem(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            /*.shadow(
-                elevation = 3.dp,
-                shape = MyRoundedCornerShape.medium,
-                clip = false,
-                ambientColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f),
-                spotColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f)
-            )
-            .clip(MyRoundedCornerShape.medium)
-            .border(
-                color = MaterialTheme.colorScheme.outline,
-                width = 1.dp,
-                shape = MyRoundedCornerShape.medium
-            )
-            .background(MaterialTheme.colorScheme.secondary)*/
             .height(160.dp),
         shape = MyRoundedCornerShape.medium,
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
@@ -323,14 +309,14 @@ private fun FundItem(
                         HideTextData(
                             isHideData = isHideData,
                             text = (fund.name),
-                            color = MaterialTheme.colorScheme.onTertiary,
+                            color = MaterialTheme.colorScheme.onBackground,
                             style = MyFontStyle.medium()
                         )
                     }
                     HideTextData(
                         isHideData = isHideData,
                         text = (doubleFormat(fund.balance)),
-                        color = MaterialTheme.colorScheme.onTertiary,
+                        color = MaterialTheme.colorScheme.onBackground,
                         style = MyFontStyle.large()
                     )
                 }
@@ -355,7 +341,7 @@ private fun FundItem(
                         })
                     Text(
                         text = stringResource(R.string.FundsScreen_FundsTransfer_Bttn),
-                        color = MaterialTheme.colorScheme.onTertiary,
+                        color = MaterialTheme.colorScheme.onBackground,
                         style = MyFontStyle.small(),
                         modifier = modifier.clickable(
                             indication = null,

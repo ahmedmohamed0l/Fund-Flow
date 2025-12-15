@@ -25,51 +25,41 @@ sealed class Theme(val value: String) {
 }
 
 private val LightColorScheme = lightColorScheme(
-    background = MyColors.WhiteSmoke,
-    onBackground = MyColors.Black,
-    onPrimaryFixed = MyColors.White,
-    //Shadow
-    scrim = MyColors.Black,
-    //Nav Outline
-    outlineVariant = MyColors.White,
+    background = MyColors.LightGray,
+    onBackground = MyColors.SoftBlack,
+//    onPrimaryFixed = MyColors.White,
+
 
     primary = MyColors.DarkSkyBlue,
     onPrimary = MyColors.White,
 
-    secondary = MyColors.LightGray,
+    secondary = MyColors.LightGray2,
     onSecondary = MyColors.Gray,
 
-    surface = MyColors.SoftBlack,
-    onSurface = MyColors.WhiteSmoke,
+    surface = MyColors.WhiteSmoke2,
+//    onSurface = MyColors.WhiteSmoke,
 
-    //tertiary = MyColors.LightGray,
-    onTertiary = MyColors.SoftBlack,
+//    tertiary = MyColors.LightGray,
+
+//    onTertiary = MyColors.SoftBlack,
 
     error = MyColors.LightRed,
     inversePrimary = MyColors.DarkGreen,
 
-    outline = MyColors.MidLightGray
+    outline = MyColors.MidLightGray,
 
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    //Nav Shadow
+    scrim = MyColors.Black,
+    //Nav Outline
+    outlineVariant = MyColors.White,
 )
 
 private val DarkColorScheme = darkColorScheme(
     background = MyColors.SoftBlack,
-    onBackground = MyColors.White,
-    onPrimaryFixed = MyColors.Black,
-    //Shadow
-    scrim = MyColors.Gray,
-    //Nav Outline
-    outlineVariant = MyColors.DarkGray,
+    onBackground = MyColors.WhiteSmoke,
+//    onPrimaryFixed = MyColors.Black,
+
 
     primary = MyColors.DeepBlue,
     onPrimary = MyColors.White,
@@ -77,16 +67,22 @@ private val DarkColorScheme = darkColorScheme(
     secondary = MyColors.LightBlack,
     onSecondary = MyColors.WhiteSmoke,
 
-    surface = MyColors.WhiteSmoke,
-    onSurface = MyColors.SoftBlack,
+    surface = MyColors.LightBlack,
+//    onSurface = MyColors.SoftBlack,
 
-    //tertiary = MyColors.LightBlack,
-    onTertiary = MyColors.WhiteSmoke,
+//    tertiary = MyColors.LightBlack,
+
+//    onTertiary = MyColors.WhiteSmoke,
 
     error = MyColors.MidRed,
     inversePrimary = MyColors.MidGreen,
 
-    outline = MyColors.Gray
+    outline = MyColors.Gray,
+
+    //Nav Shadow
+    scrim = MyColors.Gray,
+    //Nav Outline
+    outlineVariant = MyColors.DarkGray,
 )
 
 @Composable

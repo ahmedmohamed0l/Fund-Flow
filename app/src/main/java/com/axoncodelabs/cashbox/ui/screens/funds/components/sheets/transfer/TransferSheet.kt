@@ -21,7 +21,7 @@ import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.util.doubleFormat
 import com.axoncodelabs.cashbox.ui.components.HideTextData
-import com.axoncodelabs.cashbox.ui.components.MyBotton
+import com.axoncodelabs.cashbox.ui.components.MyButton
 import com.axoncodelabs.cashbox.ui.components.MyLabel
 import com.axoncodelabs.cashbox.ui.components.MyNumField
 import com.axoncodelabs.cashbox.ui.components.MyRoundedLabel
@@ -188,7 +188,7 @@ private fun TransferSheetRoot(
         )
         Spacer(modifier = Modifier.height(15.dp))
 
-        MyBotton(
+        MyButton(
             text = stringResource(R.string.Sheet_AddTransaction_Bttn),
             onClick = onSaveClick
         )
