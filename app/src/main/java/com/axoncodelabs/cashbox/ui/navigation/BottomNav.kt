@@ -102,7 +102,7 @@ private fun RowScope.AddItem(
     val background = if (selected) MaterialTheme.colorScheme.primary else Color.Transparent
 
     val contentColor =
-        if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.surface
+        if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
 
     Box(
         modifier = Modifier
@@ -114,8 +114,11 @@ private fun RowScope.AddItem(
                 interactionSource = remember { MutableInteractionSource() },
                 onClick = {
                     navController.navigate(screen.route) {
-                        popUpTo(navController.graph.findStartDestination().id)
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
                         launchSingleTop = true
+                        restoreState = true
                     }
                 })
     ) {
