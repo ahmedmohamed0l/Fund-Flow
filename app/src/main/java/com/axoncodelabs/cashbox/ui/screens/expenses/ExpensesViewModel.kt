@@ -4,14 +4,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import java.util.Calendar
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ExpensesViewModel @Inject constructor(
     private val repository: CashBoxRepository,
@@ -20,35 +26,93 @@ class ExpensesViewModel @Inject constructor(
     private val _state = MutableStateFlow(ExpensesState())
     val state = _state.asStateFlow()
 
-    private fun changeDay(offset: Int) {
-        val newDate = state.value.selectedDate + offset * 24 * 60 * 60 * 1000
-        getExpensesForDate(newDate)
+    private val selectedDateFlow = state
+        .map { it.selectedDate }
+        .distinctUntilChanged()
+
+    private val expensesFlow = selectedDateFlow
+        .flatMapLatest { date ->
+            repository.getExpensesWithFundByDate(
+                startDate = date.startOfDay(),
+                endDate = date.endOfDay()
+            )
+        }
+
+    private val expensesSumFlow = selectedDateFlow
+        .flatMapLatest { date ->
+            repository.getExpensesSumByDate(
+                startDate = date.startOfDay(),
+                endDate = date.endOfDay()
+            )
+        }
+
+    init {
+        combine(
+            expensesFlow,
+            expensesSumFlow,
+            repository.hideDataFlow,
+            selectedDateFlow
+        ) { expenses, total, isHideData, selectedDate ->
+
+            _state.value.copy(
+                expenses = expenses,
+                expensesTotalValue = total,
+                isHideData = isHideData,
+                selectedDate = selectedDate
+            )
+        }.onEach { newState ->
+            _state.value = newState
+        }.launchIn(viewModelScope)
     }
 
-    private fun getExpensesForDate(date: Long) {
-        val start = date.startOfDay()
-        val end = date.endOfDay()
 
-        repository.getExpensesByDate(start, end).onEach { list ->
-            _state.update { it.copy(expenses = list, selectedDate = date) }
-        }.launchIn(viewModelScope)
+    fun changeDay(offset: Int) {
+        _state.update {
+            it.copy(
+                selectedDate = it.selectedDate + offset * 24 * 60 * 60 * 1000
+            )
+        }
+    }
+
+    fun onDatePicked(date: Long) {
+        _state.update {
+            it.copy(
+                selectedDate = date,
+                isDatePickerOpen = false
+            )
+        }
     }
 
 
     fun onEvent(event: ExpensesEvent) {
         when (event) {
-            is ExpensesEvent.OnPreviousDayClick -> changeDay(-1)
-            is ExpensesEvent.OnNextDayClick -> changeDay(1)
-            is ExpensesEvent.OnToggleDatePicker -> {
-                _state.update { it.copy(isDatePickerOpen = !it.isDatePickerOpen) }
-            }
+            ExpensesEvent.OnPreviousDayClick -> changeDay(-1)
+            ExpensesEvent.OnNextDayClick -> changeDay(1)
 
+            ExpensesEvent.OnToggleDatePicker -> {
+                _state.update {
+                    it.copy(isDatePickerOpen = !it.isDatePickerOpen)
+                }
+            }
             is ExpensesEvent.OnDateSelected -> {
-                _state.update { it.copy(isDatePickerOpen = false) }
-                getExpensesForDate(event.date)
+                onDatePicked(event.date)
             }
 
-            else -> {}
+            is ExpensesEvent.OnExpenseClick -> {}
+
+            ExpensesEvent.OnAddExpense -> {}
+
+            is ExpensesEvent.SheetDisplayed -> {
+                _state.update {
+                    it.copy(currentSheet = event.sheet)
+                }
+            }
+
+            ExpensesEvent.CloseSheet -> {
+                _state.update {
+                    it.copy(currentSheet = ExpensesSheets.None)
+                }
+            }
         }
     }
 
