@@ -265,7 +265,7 @@ private fun FundItem(
             .fillMaxWidth()
             .height(160.dp),
         shape = MyRoundedCornerShape.medium,
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+//        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {

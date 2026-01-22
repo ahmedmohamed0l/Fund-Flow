@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.components
+package com.axoncodelabs.cashbox.ui.components.topAppBar
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -40,7 +40,7 @@ fun MyTopAppBar(
     Card(
         modifier = Modifier.wrapContentSize(),
         shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+        colors = CardDefaults.cardColors(containerColor = barColor),
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
     ) {
         Box(

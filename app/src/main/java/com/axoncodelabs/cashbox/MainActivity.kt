@@ -92,7 +92,6 @@ fun Root() {
                             .fillMaxWidth()
                             .pointerInput(Unit) {}
                     )
-
                 }
             }
         }
