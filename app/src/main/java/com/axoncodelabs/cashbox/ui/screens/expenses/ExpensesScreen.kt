@@ -33,6 +33,7 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -49,7 +50,7 @@ import com.axoncodelabs.cashbox.data.local.relation.ExpenseWithFund
 import com.axoncodelabs.cashbox.data.util.doubleFormat
 import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.components.MyBlurredButton
-import com.axoncodelabs.cashbox.ui.components.MyTopAppBar
+import com.axoncodelabs.cashbox.ui.components.topAppBar.TopBarState
 import com.axoncodelabs.cashbox.ui.theme.AppCurrency
 import com.axoncodelabs.cashbox.ui.theme.CashBoxTheme
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
@@ -64,7 +65,10 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpensesScreen(viewModel: ExpensesViewModel = hiltViewModel()) {
+fun ExpensesScreen(
+    viewModel: ExpensesViewModel = hiltViewModel(),
+    onTopBarChange: (TopBarState) -> Unit
+) {
     //.....( State & ViewModel Setup ).....
     val state = viewModel.state.collectAsState().value
     val expenses = state.expenses
@@ -89,6 +93,12 @@ fun ExpensesScreen(viewModel: ExpensesViewModel = hiltViewModel()) {
         }
     }
 
+//.....( TopAppBar Data ).....
+    LaunchedEffect(Unit) {
+        onTopBarChange(
+            TopBarState(titleRes = R.string.ExpensesScreen_Identifier)
+        )
+    }
 
     //.....( Screen Layout ).....
     ExpensesScreenRoot(
@@ -139,8 +149,6 @@ private fun ExpensesScreenRoot(
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-        MyTopAppBar(title = stringResource(id = R.string.ExpensesScreen_Identifier))
-
         DatePickerDialog(
             isDatePickerOpen = isDatePickerOpen,
             datePickerState = datePickerState,

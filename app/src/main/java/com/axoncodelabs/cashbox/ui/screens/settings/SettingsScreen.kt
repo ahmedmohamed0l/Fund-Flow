@@ -27,11 +27,11 @@ import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -44,16 +44,26 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
-import com.axoncodelabs.cashbox.ui.components.MyTopAppBar
+import com.axoncodelabs.cashbox.ui.components.topAppBar.TopBarState
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
 
 
 @Composable
-fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
+fun SettingsScreen(
+    viewModel: SettingsViewModel = hiltViewModel(),
+    onTopBarChange: (TopBarState) -> Unit,
+) {
     //.....( State Section ).....
     val state by viewModel.state.collectAsState()
+
+    //.....( TopAppBar Data ).....
+    LaunchedEffect(Unit) {
+        onTopBarChange(
+            TopBarState(titleRes = R.string.SettingsScreen_Identifier)
+        )
+    }
 
     //.....( Screen Layout ).....
     SettingsScreenRoot(
@@ -73,36 +83,29 @@ private fun SettingsScreenRoot(
     isHideData: Boolean,
     onHideDataClick: (Boolean) -> Unit,
 ) {
-    Scaffold(
-        topBar = {
-            MyTopAppBar(title = stringResource(id = R.string.SettingsScreen_Identifier))
-        }
-    ) { inner ->
-        Column(
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 30.dp)
+            .padding(top = 10.dp, bottom = 29.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        SwitchTheme(
+            darkMode = darkMode,
+            onThemeSwitcherClick = onThemeSwitcherClick
+        )
+        HorizontalDivider(
             modifier = Modifier
-                .padding(inner)
-                .fillMaxSize()
-                .padding(horizontal = 30.dp)
-                .padding(top = 10.dp, bottom = 29.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            SwitchTheme(
-                darkMode = darkMode,
-                onThemeSwitcherClick = onThemeSwitcherClick
-            )
-            HorizontalDivider(
-                modifier = Modifier
-                    .padding(vertical = 5.dp)
-                    .clip(MyRoundedCornerShape.large),
-                thickness = 1.dp,
-                color = MaterialTheme.colorScheme.onSecondary
-            )
-            HideData(
-                isHideData = isHideData,
-                onHideDataClick = onHideDataClick
-            )
+                .padding(vertical = 5.dp)
+                .clip(MyRoundedCornerShape.large),
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.onSecondary
+        )
+        HideData(
+            isHideData = isHideData,
+            onHideDataClick = onHideDataClick
+        )
 
-        }
     }
 }
 

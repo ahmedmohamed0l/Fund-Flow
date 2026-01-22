@@ -18,7 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.ui.components.EditExpenseDialog
-import com.axoncodelabs.cashbox.ui.components.MyTopAppBar
+import com.axoncodelabs.cashbox.ui.components.topAppBar.MyTopAppBar
 import com.axoncodelabs.cashbox.ui.components.ReportCard
 
 @Composable

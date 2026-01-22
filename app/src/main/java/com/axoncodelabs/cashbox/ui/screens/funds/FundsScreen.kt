@@ -25,6 +25,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -42,7 +43,7 @@ import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.util.doubleFormat
 import com.axoncodelabs.cashbox.ui.components.HideTextData
-import com.axoncodelabs.cashbox.ui.components.MyTopAppBar
+import com.axoncodelabs.cashbox.ui.components.topAppBar.TopBarState
 import com.axoncodelabs.cashbox.ui.screens.funds.components.deletepopup.DeleteFundConfirm
 import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addamount.AddAmountSheet
 import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addfund.AddFundSheet
@@ -60,6 +61,7 @@ import dev.chrisbanes.haze.hazeChild
 @Composable
 fun FundsScreen(
     viewModel: FundsViewModel = hiltViewModel(),
+    onTopBarChange: (TopBarState) -> Unit,
 ) {
     //.....( State & ViewModel Setup ).....
     val state = viewModel.state.collectAsState()
@@ -74,6 +76,20 @@ fun FundsScreen(
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val hazeState = remember { HazeState() }
+
+    //.....( TopAppBar Data ).....
+    LaunchedEffect(Unit) {
+        onTopBarChange(
+            TopBarState(
+                titleRes = R.string.FundsScreen_Identifier,
+                showAction = true,
+                actionIconRes = R.drawable.ic_add_card,
+                onActionClick = {
+                    viewModel.onEvent(FundsEvent.SheetDisplayed(FundsSheets.AddFund))
+                }
+            )
+        )
+    }
 
     //.....( Sheets & Popups Handling ).....
     @Composable
@@ -166,13 +182,6 @@ fun FundsScreen(
     ) {
         sheetsHandle()
         popupsHandle()
-
-        MyTopAppBar(
-            title = stringResource(id = R.string.FundsScreen_Identifier),
-            showAction = true,
-            actionIcon = painterResource(id = R.drawable.ic_add_card),
-            onActionClick = { viewModel.onEvent(FundsEvent.SheetDisplayed(FundsSheets.AddFund)) }
-        )
 
         Box(
             modifier = Modifier

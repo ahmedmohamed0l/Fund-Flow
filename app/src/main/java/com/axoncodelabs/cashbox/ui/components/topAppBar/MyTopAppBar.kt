@@ -22,20 +22,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 
 @Composable
 fun MyTopAppBar(
+    state: TopBarState,
     barColor: Color = MaterialTheme.colorScheme.primary,
     onBarColor: Color = MaterialTheme.colorScheme.onPrimary,
-    title: String,
-
-    showAction: Boolean = false,
-    actionIcon: Painter? = null,
-    onActionClick: (() -> Unit)? = null,
 ) {
     Card(
         modifier = Modifier.wrapContentSize(),
@@ -46,10 +43,11 @@ fun MyTopAppBar(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(top = 25.dp)
                 .height(60.dp)
         ) {
             Text(
-                text = title,
+                text = stringResource(id = state.titleRes),
                 color = onBarColor,
                 style = MyFontStyle.mediumBold(),
                 modifier = Modifier
@@ -57,7 +55,7 @@ fun MyTopAppBar(
                     .padding(vertical = 20.dp),
                 textAlign = TextAlign.Center
             )
-            if (showAction && actionIcon != null && onActionClick != null) {
+            if (state.showAction && state.actionIconRes != null && state.onActionClick != null) {
                 Row(
                     modifier = Modifier
                         .align(Alignment.CenterStart)
@@ -68,14 +66,13 @@ fun MyTopAppBar(
                             .clickable(
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() }
-                            ) { onActionClick() }
+                            ) { state.onActionClick.invoke() }
                             .padding(10.dp),
                     ) {
                         Icon(
-                            painter = actionIcon,
+                            painter = painterResource(id = state.actionIconRes),
                             contentDescription = "Action",
                             tint = onBarColor,
-
                             )
                     }
                     VerticalDivider(

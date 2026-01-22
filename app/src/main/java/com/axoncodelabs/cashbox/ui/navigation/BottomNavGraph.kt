@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.axoncodelabs.cashbox.ui.components.topAppBar.TopBarState
 import com.axoncodelabs.cashbox.ui.screens.expenses.ExpensesScreen
 import com.axoncodelabs.cashbox.ui.screens.funds.FundsScreen
 import com.axoncodelabs.cashbox.ui.screens.reports.ReportsScreen
@@ -17,7 +18,8 @@ import com.axoncodelabs.cashbox.ui.screens.settings.SettingsScreen
 @Composable
 fun BottomNavGraph(
     modifier: Modifier = Modifier,
-    navController: NavHostController
+    navController: NavHostController,
+    onTopBarChange: (TopBarState) -> Unit
 ) {
     NavHost(
         modifier = modifier.fillMaxSize(),
@@ -29,16 +31,16 @@ fun BottomNavGraph(
         exitTransition = { fadeOut(animationSpec = tween(300)) },
     ) {
         composable(route = BottomBarScreen.Expenses.route) {
-            ExpensesScreen()
+            ExpensesScreen(onTopBarChange = onTopBarChange)
         }
         composable(route = BottomBarScreen.Reports.route) {
             ReportsScreen()
         }
         composable(route = BottomBarScreen.Funds.route) {
-            FundsScreen()
+            FundsScreen(onTopBarChange = onTopBarChange)
         }
         composable(route = BottomBarScreen.Settings.route) {
-            SettingsScreen()
+            SettingsScreen(onTopBarChange = onTopBarChange)
         }
     }
 }
