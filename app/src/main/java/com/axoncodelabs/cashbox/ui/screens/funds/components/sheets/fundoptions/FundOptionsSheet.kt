@@ -87,9 +87,9 @@ fun FundOptionsSheet(
         onSaveClick = { viewModel.onEvent(FundOptionsEvent.OnSaveClick) },
         onDeleteFundTransactionClick = { viewModel.showDeleteFundTransPopup = true }
     )
-
 }
 
+/**.....( Screen Layout ).....**/
 @Composable
 private fun FundOptionsSheetRoot(
     isHideData: Boolean,
@@ -152,16 +152,19 @@ private fun FundOptionsSheetRoot(
                     )
                 }
             } else {
-                HideTextData(
-                    modifier = Modifier.padding(vertical = 15.dp),
-                    isHideData = isHideData,
-                    text = (name),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MyFontStyle.medium()
-                )
+                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
+                    HideTextData(
+                        modifier = Modifier.padding(vertical = 15.dp),
+                        isHideData = isHideData,
+                        text = (name),
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MyFontStyle.medium()
+                    )
+                }
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
+                        .padding(start = 10.dp)
                         .clip(MyRoundedCornerShape.medium)
                         .background(MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f))
                         .padding(10.dp)

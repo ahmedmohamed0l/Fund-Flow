@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -66,7 +67,7 @@ fun FundSelectionBttn(
     }
 
     Column {
-        Box(
+        Row(
             modifier = modifier
                 .fillMaxWidth()
                 .border(1.dp, finalBorderColor, RoundedCornerShape(10.dp))
@@ -74,20 +75,22 @@ fun FundSelectionBttn(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() }
                 ) { viewModel.showFunds = true }
-                .padding(horizontal = 15.dp)
+                .padding(horizontal = 15.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            HideTextData(
-                modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .padding(vertical = 15.dp),
-                isHideData = isHideData,
-                text = (fund?.name ?: stringResource(R.string.Sheet_FundSelection)),
-                color = fund?.let { textColor } ?: finalBorderColor,
-                style = MyFontStyle.medium()
-            )
+            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
+                HideTextData(
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .padding(vertical = 15.dp),
+                    isHideData = isHideData,
+                    text = (fund?.name ?: stringResource(R.string.Sheet_FundSelection)),
+                    color = fund?.let { textColor } ?: finalBorderColor,
+                    style = MyFontStyle.medium()
+                )
+            }
             MyIcons.Arrow(
                 autoMirroredState = false,
-                modifier = Modifier.align(Alignment.CenterEnd),
                 size = 25.dp, color = finalBorderColor, angle = 180f
             )
         }
@@ -99,6 +102,5 @@ fun FundSelectionBttn(
                 modifier = Modifier.padding(start = 10.dp, top = 10.dp)
             )
         }
-
     }
 }

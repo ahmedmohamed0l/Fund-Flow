@@ -1,6 +1,7 @@
 package com.axoncodelabs.cashbox.ui.screens.funds
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -32,12 +34,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.datastore.preferences.protobuf.LazyStringArrayList.emptyList
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
@@ -154,6 +161,7 @@ fun FundsScreen(
             FundsSheets.None -> Unit
         }
     }
+    sheetsHandle()
 
     @Composable
     fun popupsHandle() {
@@ -172,92 +180,204 @@ fun FundsScreen(
             FundsPopup.Close -> Unit
         }
     }
-
+    popupsHandle()
 
     //.....( Screen Layout ).....
+    FundsScreenRoot(
+        hazeState = hazeState,
+        emptyListHazeState = hazeState,
+        funds = funds,
+        isHideData = isHideData,
+        onEvent = viewModel::onEvent,
+        fundsTotalBalance = fundsTotalBalance
+    )
+}
 
+/**.....( Screen Layout ).....**/
+@Composable
+private fun FundsScreenRoot(
+    hazeState: HazeState,
+    emptyListHazeState: HazeState,
+    funds: List<FundEntity>,
+    isHideData: Boolean,
+    onEvent: (FundsEvent) -> Unit,
+    fundsTotalBalance: Double
+) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        sheetsHandle()
-        popupsHandle()
-
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 20.dp)
         ) {
-            Column(
+            FundsPageState(
+                hazeState = hazeState,
+                emptyListHazeState = emptyListHazeState,
+                funds = funds,
+                isHideData = isHideData,
+                onEvent = onEvent
+            )
+
+            TotalFundsValue(
+                modifier = Modifier.align(Alignment.TopCenter),
+                hazeState = if (funds == emptyList()) emptyListHazeState else hazeState,
+                isHideData = isHideData,
+                fundsTotalBalance = fundsTotalBalance
+            )
+        }
+    }
+}
+
+/** --------------------[ Components ]-------------------- **/
+
+@Composable
+private fun TotalFundsValue(
+    modifier: Modifier = Modifier,
+    hazeState: HazeState,
+    isHideData: Boolean,
+    fundsTotalBalance: Double
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 10.dp)
+            .padding(top = 10.dp)
+            .height(50.dp)
+            .clip(CircleShape)
+            .hazeChild(
+                state = hazeState, shape = CircleShape, style = HazeStyle(
+                    tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
+                    blurRadius = 10.dp,
+                    noiseFactor = 5f
+                )
+            )
+            .border(
+                1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.4f), CircleShape
+            ),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            stringResource(R.string.FundsScreen_FundsTotal),
+            style = MyFontStyle.medium(),
+            color = MaterialTheme.colorScheme.onBackground,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier
+                .padding(start = 30.dp)
+                .weight(5f)
+        )
+        Box(modifier = Modifier.weight(5f), contentAlignment = Alignment.CenterEnd) {
+            HideTextData(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .haze(state = hazeState),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(MyRoundedCornerShape.medium)
-                ) {
-                    item { Spacer(modifier = Modifier.height(70.dp)) }
-                    itemsIndexed(
-                        items = funds,
-                        key = { _, fund -> fund.id },
-                        contentType = { _, _ -> "FundItem" }) { index, fund ->
-                        FundItem(
-                            isHideData = isHideData,
-                            fund = fund,
-                            onEvent = viewModel::onEvent
-                        )
-                        if (index != funds.lastIndex) {
-                            Spacer(modifier = Modifier.height(15.dp))
-                        }
-                    }
-                    item { Spacer(modifier = Modifier.height(75.dp)) }
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 30.dp),
+                isHideData = isHideData,
+                text = (doubleFormat(fundsTotalBalance)),
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MyFontStyle.large()
+            )
+        }
+    }
+
+}
+
+@Composable
+private fun FundsPageState(
+    hazeState: HazeState,
+    emptyListHazeState: HazeState,
+    funds: List<FundEntity>,
+    isHideData: Boolean,
+    onEvent: (FundsEvent) -> Unit
+) {
+    if (funds == emptyList()) {
+        EmptyExpensesPage(emptyListHazeState = emptyListHazeState)
+    } else {
+        FundsList(
+            hazeState = hazeState,
+            funds = funds,
+            isHideData = isHideData,
+            onEvent = onEvent,
+        )
+    }
+}
+
+@Composable
+private fun EmptyExpensesPage(emptyListHazeState: HazeState) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 15.dp)
+            .haze(state = emptyListHazeState),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(130.dp))
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = stringResource(id = R.string.FundsScreen_EmptyFundsPage_Title),
+            style = MyFontStyle.largeBold(),
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onBackground,
+            lineHeight = 28.sp
+        )
+
+        Image(
+            modifier = Modifier
+                .fillMaxWidth()
+                .scale(1f)
+                .size(300.dp),
+            painter = painterResource(id = R.drawable.img_empty_box),
+            contentDescription = "comfort"
+        )
+
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp),
+            text = stringResource(id = R.string.FundsScreen_EmptyFundsPage_Description),
+            style = MyFontStyle.medium(),
+            textAlign = TextAlign.Center,
+            lineHeight = 20.sp,
+            color = MaterialTheme.colorScheme.onSecondary
+        )
+    }
+}
+
+@Composable
+private fun FundsList(
+    hazeState: HazeState,
+    funds: List<FundEntity>,
+    isHideData: Boolean,
+    onEvent: (FundsEvent) -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .haze(state = hazeState),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(MyRoundedCornerShape.medium)
+        ) {
+            item { Spacer(modifier = Modifier.height(70.dp)) }
+            itemsIndexed(
+                items = funds,
+                key = { _, fund -> fund.id },
+                contentType = { _, _ -> "FundItem" }) { index, fund ->
+                FundItem(
+                    isHideData = isHideData, fund = fund, onEvent = onEvent
+                )
+                if (index != funds.lastIndex) {
+                    Spacer(modifier = Modifier.height(15.dp))
                 }
             }
-
-            Box(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp)
-                    .padding(top = 10.dp)
-                    .height(50.dp)
-                    .clip(CircleShape)
-                    .hazeChild(
-                        state = hazeState,
-                        shape = CircleShape,
-                        style = HazeStyle(
-                            tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
-                            blurRadius = 10.dp,
-                            noiseFactor = 5f
-                        )
-                    )
-                    .border(
-                        1.dp,
-                        MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
-                        CircleShape
-                    )
-            ) {
-                Text(
-                    stringResource(R.string.FundsScreen_FundsTotal),
-                    style = MyFontStyle.medium(),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .padding(start = 30.dp)
-                )
-                HideTextData(
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .padding(end = 30.dp),
-                    isHideData = isHideData,
-                    text = (doubleFormat(fundsTotalBalance)),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MyFontStyle.large()
-                )
-            }
+            item { Spacer(modifier = Modifier.height(75.dp)) }
         }
     }
 }
@@ -301,6 +421,7 @@ private fun FundItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(
+                        modifier = modifier.weight(20f),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         MyIcons.Settings(
@@ -322,12 +443,14 @@ private fun FundItem(
                             style = MyFontStyle.medium()
                         )
                     }
-                    HideTextData(
-                        isHideData = isHideData,
-                        text = (doubleFormat(fund.balance)),
-                        color = MaterialTheme.colorScheme.onBackground,
-                        style = MyFontStyle.large()
-                    )
+                    Box(modifier = Modifier.weight(10f), contentAlignment = Alignment.CenterEnd) {
+                        HideTextData(
+                            isHideData = isHideData,
+                            text = (doubleFormat(fund.balance)),
+                            color = MaterialTheme.colorScheme.onBackground,
+                            style = MyFontStyle.large()
+                        )
+                    }
                 }
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -381,3 +504,39 @@ private fun FundItem(
         }
     }
 }
+/*
+/**--------------------[ Preview ]--------------------**/
+@SuppressLint("RememberReturnType")
+@Preview(showBackground = true)
+@Composable
+private fun Preview() {
+    val mockExpenseList = mockFundsList(0)
+
+    CompositionLocalProvider(
+        LocalLayoutDirection provides LayoutDirection.Rtl
+    ) {
+        val darkMode = true
+        CashBoxTheme(
+            darkTheme = darkMode
+        ) {
+            FundsScreenRoot(
+                hazeState = remember { HazeState() },
+                emptyListHazeState = remember { HazeState() },
+                funds = mockExpenseList,
+                isHideData = false,
+                onEvent = {},
+                fundsTotalBalance = 100.00
+            )
+        }
+    }
+}
+
+private fun mockFundsList(count: Int): List<FundEntity> {
+    return List(count) { index ->
+        FundEntity(
+            id = index + 1,
+            name = "صندوق رقم ${index + 1}",
+            balance = 100.0 + index * 10
+        )
+    }
+}*/
