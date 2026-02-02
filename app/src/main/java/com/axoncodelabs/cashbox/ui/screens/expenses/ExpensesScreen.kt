@@ -1,6 +1,5 @@
 package com.axoncodelabs.cashbox.ui.screens.expenses
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,12 +28,12 @@ import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
@@ -42,27 +41,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.protobuf.LazyStringArrayList.emptyList
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
-import com.axoncodelabs.cashbox.data.local.entity.FundEntity
-import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
-import com.axoncodelabs.cashbox.data.local.entity.TransactionType
 import com.axoncodelabs.cashbox.data.local.relation.ExpenseWithFund
 import com.axoncodelabs.cashbox.data.util.doubleFormat
 import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.components.MyBlurredButton
 import com.axoncodelabs.cashbox.ui.components.topAppBar.TopBarState
+import com.axoncodelabs.cashbox.ui.screens.expenses.components.sheets.addExpenseSheet.AddExpenseSheet
 import com.axoncodelabs.cashbox.ui.theme.AppCurrency
-import com.axoncodelabs.cashbox.ui.theme.CashBoxTheme
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
@@ -102,13 +95,27 @@ fun ExpensesScreen(
     val datePickerState = rememberDatePickerState(initialSelectedDateMillis = selectedDate)
 
     //.....( Sheets & Popups Handling ).....
+    @Composable
     fun sheetsHandle() {
         when (sheet) {
-            ExpensesSheets.AddExpense -> {}
+            ExpensesSheets.AddExpense -> {
+                ModalBottomSheet(
+                    onDismissRequest = { viewModel.onEvent(ExpensesEvent.CloseSheet) },
+                    containerColor = MaterialTheme.colorScheme.background,
+                    sheetState = sheetState
+                ) {
+                    AddExpenseSheet(
+                        isHideData = isHideData,
+                        selectedDate = state.selectedDate,
+                        onClose = { viewModel.onEvent(ExpensesEvent.CloseSheet) }
+                    )
+                }
+            }
             is ExpensesSheets.EditExpense -> {}
             ExpensesSheets.None -> Unit
         }
     }
+    sheetsHandle()
 
     //.....( Screen Layout ).....
     ExpensesScreenRoot(
@@ -130,6 +137,7 @@ fun ExpensesScreen(
         expensesTotalValue = expensesTotalValue,
 
         expenses = expenses,
+        onEvent = viewModel::onEvent
     )
 }
 
@@ -153,6 +161,7 @@ private fun ExpensesScreenRoot(
     expensesTotalValue: Double,
 
     expenses: List<ExpenseWithFund>,
+    onEvent: (ExpensesEvent) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -213,7 +222,8 @@ private fun ExpensesScreenRoot(
                     emptyListHazeState = emptyListHazeState,
                     hazeState = hazeState,
                     isHideData = isHideData,
-                    selectedDate = selectedDate
+                    selectedDate = selectedDate,
+                    onEvent = onEvent
                 )
             }
 
@@ -224,7 +234,9 @@ private fun ExpensesScreenRoot(
                     .padding(horizontal = 40.dp),
                 text = stringResource(R.string.ExpensesScreen_AddExpenses_Butt),
                 hazeState = if (expenses == emptyList()) emptyListHazeState else hazeState,
-                onClick = {}
+                onClick = {
+                    onEvent(ExpensesEvent.SheetDisplayed(ExpensesSheets.AddExpense))
+                }
             )
         }
     }
@@ -347,6 +359,7 @@ private fun ExpensesPageState(
     hazeState: HazeState,
     isHideData: Boolean,
     selectedDate: Long,
+    onEvent: (ExpensesEvent) -> Unit,
 
     ) {
     if (expenses == emptyList()) {
@@ -356,7 +369,8 @@ private fun ExpensesPageState(
             expenses = expenses,
             hazeState = hazeState,
             isHideData = isHideData,
-            selectedDate = selectedDate
+            selectedDate = selectedDate,
+            onEvent = onEvent
         )
     }
 }
@@ -408,6 +422,7 @@ private fun ExpensesList(
     hazeState: HazeState,
     isHideData: Boolean,
     selectedDate: Long,
+    onEvent: (ExpensesEvent) -> Unit,
 ) {
     Card(
         modifier = Modifier
@@ -437,6 +452,7 @@ private fun ExpensesList(
                     isHideData = isHideData,
                     selectedDate = selectedDate,
                     expense = expense,
+                    onEvent = onEvent
                 )
                 if (index != expenses.lastIndex) {
                     Spacer(modifier = Modifier.height(15.dp))
@@ -453,6 +469,7 @@ fun ExpenseItem(
     expense: ExpenseWithFund,
     selectedDate: Long,
     modifier: Modifier = Modifier,
+    onEvent: (ExpensesEvent) -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -461,7 +478,7 @@ fun ExpenseItem(
             .clip(MyRoundedCornerShape.medium)
             .clickable(
                 indication = null, interactionSource = remember { MutableInteractionSource() }) {
-                //TODO: onExpenseClick(expense)
+                onEvent(ExpensesEvent.SheetDisplayed(ExpensesSheets.EditExpense(expense)))
             }
             .border(
                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
@@ -526,7 +543,7 @@ fun formatDate(timestamp: Long): String {
     val sdf = SimpleDateFormat("EEEE dd MMMM yyyy", Locale.forLanguageTag("ar"))
     return sdf.format(cal.time)
 }
-
+/*
 /**--------------------[ Preview ]--------------------**/
 @SuppressLint("RememberReturnType")
 @Preview(showBackground = true)
@@ -574,4 +591,4 @@ private fun mockExpenseList(count: Int): List<ExpenseWithFund> {
             )
         )
     }
-}
+}*/

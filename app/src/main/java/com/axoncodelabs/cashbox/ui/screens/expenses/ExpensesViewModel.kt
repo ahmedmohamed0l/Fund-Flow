@@ -88,12 +88,23 @@ class ExpensesViewModel @Inject constructor(
         when (event) {
             ExpensesEvent.OnPreviousDayClick -> changeDay(-1)
             ExpensesEvent.OnNextDayClick -> changeDay(1)
-
             ExpensesEvent.OnToggleDatePicker -> {
                 _state.update {
                     it.copy(isDatePickerOpen = !it.isDatePickerOpen)
                 }
             }
+
+            is ExpensesEvent.SheetDisplayed -> {
+                _state.update {
+                    it.copy(currentSheet = event.sheet)
+                }
+            }
+            ExpensesEvent.CloseSheet -> {
+                _state.update {
+                    it.copy(currentSheet = ExpensesSheets.None)
+                }
+            }
+
             is ExpensesEvent.OnDateSelected -> {
                 onDatePicked(event.date)
             }
@@ -101,18 +112,6 @@ class ExpensesViewModel @Inject constructor(
             is ExpensesEvent.OnExpenseClick -> {}
 
             ExpensesEvent.OnAddExpense -> {}
-
-            is ExpensesEvent.SheetDisplayed -> {
-                _state.update {
-                    it.copy(currentSheet = event.sheet)
-                }
-            }
-
-            ExpensesEvent.CloseSheet -> {
-                _state.update {
-                    it.copy(currentSheet = ExpensesSheets.None)
-                }
-            }
         }
     }
 

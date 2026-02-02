@@ -34,11 +34,15 @@ import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
 fun FundSelectionSheet(
     isHideData: Boolean,
     onSelect: (FundEntity) -> Unit,
-    fromFundId: Int,
+    fromFundId: Int? = null,
     viewModel: FundSelectionVM = hiltViewModel(),
 ) {
     val funds = viewModel.funds.collectAsState(initial = emptyList())
-    val filteredFunds = funds.value.filter { it.id != fromFundId }
+    val displayedFunds = if (fromFundId != null) {
+        funds.value.filter { it.id != fromFundId }
+    } else {
+        funds.value
+    }
 
     Column(
         modifier = Modifier
@@ -47,13 +51,13 @@ fun FundSelectionSheet(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
-            items(filteredFunds) { fund ->
+            items(displayedFunds) { fund ->
                 FundItem(
                     isHideData = isHideData,
                     fund = fund,
                     onSelect = { onSelect(fund) }
                 )
-                if (fund != filteredFunds.last()) {
+                if (fund != displayedFunds.last()) {
                     HorizontalDivider(
                         modifier = Modifier
                             .padding(vertical = 5.dp)

@@ -23,25 +23,6 @@ Ic_Name(
                 modifier = Modifier.clickable { })
 */
 
-/*Just for preview icons edits quikly:-
-@Composable
-@Preview(showBackground = true)
-fun PreviewIcon() {
-    Column(
-        modifier = Modifier
-            //.fillMaxSize()
-            .padding(20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        //CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-            MyIcons.Analytics(size = 200.dp,
-                filledState = false
-            )
-        //}
-    }
-}*/
-
 object MyIcons {
 
     @Composable
@@ -65,6 +46,44 @@ object MyIcons {
     }
 
     @Composable
+    fun ExpenseWallet(
+        modifier: Modifier = Modifier,
+        size: Dp = 48.dp,
+        angle: Float = 0f,
+        color: Color = MyColors.Black,
+        alphaValue: Float = 1f,
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_expense_wallet),
+            contentDescription = "AddExpense description",
+            modifier = modifier
+                .size(size)
+                .rotate(angle)
+                .alpha(alphaValue),
+            tint = color,
+        )
+    }
+
+    @Composable
+    fun Money(
+        modifier: Modifier = Modifier,
+        size: Dp = 48.dp,
+        angle: Float = 0f,
+        color: Color = MyColors.Black,
+        alphaValue: Float = 1f,
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_money),
+            contentDescription = "AddExpense description",
+            modifier = modifier
+                .size(size)
+                .rotate(angle)
+                .alpha(alphaValue),
+            tint = color,
+        )
+    }
+
+    @Composable
     fun Description(
         modifier: Modifier = Modifier,
         size: Dp = 48.dp,
@@ -73,7 +92,7 @@ object MyIcons {
         alphaValue: Float = 1f,
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.ic_comment),
+            painter = painterResource(id = R.drawable.ic_description),
             contentDescription = "AddExpense description",
             modifier = modifier
                 .size(size)

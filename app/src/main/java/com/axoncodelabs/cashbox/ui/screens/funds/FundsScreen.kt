@@ -480,11 +480,7 @@ private fun FundItem(
                             interactionSource = remember { MutableInteractionSource() }
                         ) {
                             onEvent(
-                                FundsEvent.SheetDisplayed(
-                                    FundsSheets.Transfer(
-                                        fund
-                                    )
-                                )
+                                FundsEvent.SheetDisplayed(FundsSheets.Transfer(fund))
                             )
                         })
                     Text(
@@ -504,39 +500,3 @@ private fun FundItem(
         }
     }
 }
-/*
-/**--------------------[ Preview ]--------------------**/
-@SuppressLint("RememberReturnType")
-@Preview(showBackground = true)
-@Composable
-private fun Preview() {
-    val mockExpenseList = mockFundsList(0)
-
-    CompositionLocalProvider(
-        LocalLayoutDirection provides LayoutDirection.Rtl
-    ) {
-        val darkMode = true
-        CashBoxTheme(
-            darkTheme = darkMode
-        ) {
-            FundsScreenRoot(
-                hazeState = remember { HazeState() },
-                emptyListHazeState = remember { HazeState() },
-                funds = mockExpenseList,
-                isHideData = false,
-                onEvent = {},
-                fundsTotalBalance = 100.00
-            )
-        }
-    }
-}
-
-private fun mockFundsList(count: Int): List<FundEntity> {
-    return List(count) { index ->
-        FundEntity(
-            id = index + 1,
-            name = "صندوق رقم ${index + 1}",
-            balance = 100.0 + index * 10
-        )
-    }
-}*/

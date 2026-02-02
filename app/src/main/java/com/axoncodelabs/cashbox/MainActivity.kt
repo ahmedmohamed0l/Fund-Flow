@@ -19,7 +19,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.axoncodelabs.cashbox.ui.components.topAppBar.MyTopAppBar
@@ -52,7 +51,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Preview(showBackground = true)
 @Composable
 fun Root() {
     val viewModel: SettingsViewModel = hiltViewModel()
@@ -98,27 +96,3 @@ fun Root() {
         }
     }
 }
-
-/*/**--------------------[ Preview ]--------------------**/
-@Preview(showBackground = true)
-@Composable
-private fun Preview() {
-    CompositionLocalProvider(
-        LocalLayoutDirection provides LayoutDirection.Rtl
-    ) {
-        val darkMode = false
-        CashBoxTheme(
-            darkTheme = darkMode
-        ) {
-            AddFundSheetRoot(
-                name = "",
-                amount = "",
-                description = "",
-                onNameChange = {},
-                onAmountChange = {},
-                onDescriptionChange = {},
-                onSaveClick = {}
-            )
-        }
-    }
-}*/
