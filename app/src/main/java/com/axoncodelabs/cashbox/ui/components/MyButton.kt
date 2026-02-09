@@ -17,9 +17,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
-import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.HazeStyle
-import dev.chrisbanes.haze.hazeChild
 
 @Composable
 fun MyButton(
@@ -51,7 +48,6 @@ fun MyButton(
 fun MyBlurredButton(
     modifier: Modifier,
     text: String,
-    hazeState: HazeState,
     onClick: () -> Unit,
 ) {
     Box(
@@ -59,18 +55,10 @@ fun MyBlurredButton(
             .fillMaxWidth()
             .height(50.dp)
             .clip(MyRoundedCornerShape.large)
-            .hazeChild(
-                state = hazeState,
-                shape = MyRoundedCornerShape.large,
-                style = HazeStyle(
-                    tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
-                    blurRadius = 10.dp,
-                    noiseFactor = 10f
-                )
-            )
+            .background(MaterialTheme.colorScheme.primary)
             .border(
                 (0.5).dp,
-                MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
                 MyRoundedCornerShape.large
             )
             .clickable(

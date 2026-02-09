@@ -29,8 +29,6 @@ import com.axoncodelabs.cashbox.ui.screens.settings.SettingsViewModel
 import com.axoncodelabs.cashbox.ui.theme.CashBoxTheme
 import com.axoncodelabs.cashbox.ui.theme.LocaleHelper
 import dagger.hilt.android.AndroidEntryPoint
-import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.haze
 import java.util.Locale
 
 @AndroidEntryPoint
@@ -56,7 +54,6 @@ fun Root() {
     val viewModel: SettingsViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
     val navController = rememberNavController()
-    val hazeState = remember { HazeState() }
     var topBarState by remember {
         mutableStateOf(TopBarState(titleRes = R.string.ExpensesScreen_Identifier))
     }
@@ -77,15 +74,13 @@ fun Root() {
 
                     BottomNavGraph(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .haze(state = hazeState),
+                            .fillMaxSize(),
                         navController = navController,
                         onTopBarChange = { topBarState = it }
                     )
 
                     BottomBar(
                         navController = navController,
-                        hazeState = hazeState,
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .fillMaxWidth()

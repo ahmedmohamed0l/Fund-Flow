@@ -22,7 +22,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,14 +32,10 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
-import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.HazeStyle
-import dev.chrisbanes.haze.hazeChild
 
 @Composable
 fun BottomBar(
     navController: NavHostController,
-    hazeState: HazeState,
     modifier: Modifier = Modifier
 ) {
     val screens = listOf(
@@ -57,25 +52,17 @@ fun BottomBar(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 10.dp)
-            .shadow(
+            /*.shadow(
                 elevation = (3.5).dp,
                 shape = CircleShape,
                 clip = true,
                 ambientColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f),
                 spotColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f)
-            )
+            )*/
             .clip(CircleShape)
-            .hazeChild(
-                state = hazeState,
-                shape = CircleShape,
-                style = HazeStyle(
-                    tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
-                    blurRadius = 5.dp,
-                    noiseFactor = 0.1f
-                )
-            )
+            .background(MaterialTheme.colorScheme.secondary)
             .border(
-                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
                 width = 1.dp,
                 shape = CircleShape
             )

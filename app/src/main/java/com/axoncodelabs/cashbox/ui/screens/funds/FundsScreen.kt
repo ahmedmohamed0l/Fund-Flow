@@ -59,10 +59,6 @@ import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.transfer.Tran
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
-import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.HazeStyle
-import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.hazeChild
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,7 +78,6 @@ fun FundsScreen(
     val isHideData = state.value.isHideData
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val hazeState = remember { HazeState() }
 
     //.....( TopAppBar Data ).....
     LaunchedEffect(Unit) {
@@ -184,8 +179,6 @@ fun FundsScreen(
 
     //.....( Screen Layout ).....
     FundsScreenRoot(
-        hazeState = hazeState,
-        emptyListHazeState = hazeState,
         funds = funds,
         isHideData = isHideData,
         onEvent = viewModel::onEvent,
@@ -196,8 +189,6 @@ fun FundsScreen(
 /**.....( Screen Layout ).....**/
 @Composable
 private fun FundsScreenRoot(
-    hazeState: HazeState,
-    emptyListHazeState: HazeState,
     funds: List<FundEntity>,
     isHideData: Boolean,
     onEvent: (FundsEvent) -> Unit,
@@ -215,8 +206,6 @@ private fun FundsScreenRoot(
                 .padding(horizontal = 20.dp)
         ) {
             FundsPageState(
-                hazeState = hazeState,
-                emptyListHazeState = emptyListHazeState,
                 funds = funds,
                 isHideData = isHideData,
                 onEvent = onEvent
@@ -224,7 +213,6 @@ private fun FundsScreenRoot(
 
             TotalFundsValue(
                 modifier = Modifier.align(Alignment.TopCenter),
-                hazeState = if (funds == emptyList()) emptyListHazeState else hazeState,
                 isHideData = isHideData,
                 fundsTotalBalance = fundsTotalBalance
             )
@@ -237,7 +225,6 @@ private fun FundsScreenRoot(
 @Composable
 private fun TotalFundsValue(
     modifier: Modifier = Modifier,
-    hazeState: HazeState,
     isHideData: Boolean,
     fundsTotalBalance: Double
 ) {
@@ -248,15 +235,9 @@ private fun TotalFundsValue(
             .padding(top = 10.dp)
             .height(50.dp)
             .clip(CircleShape)
-            .hazeChild(
-                state = hazeState, shape = CircleShape, style = HazeStyle(
-                    tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
-                    blurRadius = 10.dp,
-                    noiseFactor = 5f
-                )
-            )
+            .background(MaterialTheme.colorScheme.secondary)
             .border(
-                1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.4f), CircleShape
+                1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f), CircleShape
             ),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -288,17 +269,14 @@ private fun TotalFundsValue(
 
 @Composable
 private fun FundsPageState(
-    hazeState: HazeState,
-    emptyListHazeState: HazeState,
     funds: List<FundEntity>,
     isHideData: Boolean,
     onEvent: (FundsEvent) -> Unit
 ) {
     if (funds == emptyList()) {
-        EmptyExpensesPage(emptyListHazeState = emptyListHazeState)
+        EmptyFundsPage()
     } else {
         FundsList(
-            hazeState = hazeState,
             funds = funds,
             isHideData = isHideData,
             onEvent = onEvent,
@@ -307,12 +285,11 @@ private fun FundsPageState(
 }
 
 @Composable
-private fun EmptyExpensesPage(emptyListHazeState: HazeState) {
+private fun EmptyFundsPage() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 15.dp)
-            .haze(state = emptyListHazeState),
+            .padding(horizontal = 15.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(130.dp))
@@ -349,15 +326,13 @@ private fun EmptyExpensesPage(emptyListHazeState: HazeState) {
 
 @Composable
 private fun FundsList(
-    hazeState: HazeState,
     funds: List<FundEntity>,
     isHideData: Boolean,
     onEvent: (FundsEvent) -> Unit,
 ) {
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .haze(state = hazeState),
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         LazyColumn(

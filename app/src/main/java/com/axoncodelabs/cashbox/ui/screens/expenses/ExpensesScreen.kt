@@ -59,8 +59,6 @@ import com.axoncodelabs.cashbox.ui.theme.AppCurrency
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
-import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.haze
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -82,7 +80,6 @@ fun ExpensesScreen(
     val isHideData = state.isHideData
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val hazeState = remember { HazeState() }
 
     //.....( TopAppBar Data ).....
     LaunchedEffect(Unit) {
@@ -119,9 +116,6 @@ fun ExpensesScreen(
 
     //.....( Screen Layout ).....
     ExpensesScreenRoot(
-        hazeState = hazeState,
-        emptyListHazeState = hazeState,
-
         isDatePickerOpen = state.isDatePickerOpen,
         datePickerState = datePickerState,
         onDismissDatePicker = { viewModel.onEvent(ExpensesEvent.OnToggleDatePicker) },
@@ -144,8 +138,6 @@ fun ExpensesScreen(
 /**.....( Screen Layout ).....**/
 @Composable
 private fun ExpensesScreenRoot(
-    hazeState: HazeState,
-    emptyListHazeState: HazeState,
 
     isDatePickerOpen: Boolean,
     datePickerState: DatePickerState,
@@ -219,8 +211,6 @@ private fun ExpensesScreenRoot(
 
                 ExpensesPageState(
                     expenses = expenses,
-                    emptyListHazeState = emptyListHazeState,
-                    hazeState = hazeState,
                     isHideData = isHideData,
                     selectedDate = selectedDate,
                     onEvent = onEvent
@@ -233,7 +223,6 @@ private fun ExpensesScreenRoot(
                     .padding(bottom = 70.dp)
                     .padding(horizontal = 40.dp),
                 text = stringResource(R.string.ExpensesScreen_AddExpenses_Butt),
-                hazeState = if (expenses == emptyList()) emptyListHazeState else hazeState,
                 onClick = {
                     onEvent(ExpensesEvent.SheetDisplayed(ExpensesSheets.AddExpense))
                 }
@@ -355,19 +344,16 @@ fun DayExpensesTotalValue(
 @Composable
 private fun ExpensesPageState(
     expenses: List<ExpenseWithFund>,
-    emptyListHazeState: HazeState,
-    hazeState: HazeState,
     isHideData: Boolean,
     selectedDate: Long,
     onEvent: (ExpensesEvent) -> Unit,
 
     ) {
     if (expenses == emptyList()) {
-        EmptyExpensesPage(emptyListHazeState)
+        EmptyExpensesPage()
     } else {
         ExpensesList(
             expenses = expenses,
-            hazeState = hazeState,
             isHideData = isHideData,
             selectedDate = selectedDate,
             onEvent = onEvent
@@ -377,12 +363,12 @@ private fun ExpensesPageState(
 
 
 @Composable
-private fun EmptyExpensesPage(emptyListHazeState: HazeState) {
+private fun EmptyExpensesPage() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 15.dp)
-            .haze(state = emptyListHazeState), horizontalAlignment = Alignment.CenterHorizontally
+            .padding(horizontal = 15.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(50.dp))
         Text(
@@ -419,7 +405,6 @@ private fun EmptyExpensesPage(emptyListHazeState: HazeState) {
 @Composable
 private fun ExpensesList(
     expenses: List<ExpenseWithFund>,
-    hazeState: HazeState,
     isHideData: Boolean,
     selectedDate: Long,
     onEvent: (ExpensesEvent) -> Unit,
@@ -439,8 +424,7 @@ private fun ExpensesList(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 20.dp)
-                .haze(state = hazeState),
+                .padding(horizontal = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             item { Spacer(modifier = Modifier.height(20.dp)) }
