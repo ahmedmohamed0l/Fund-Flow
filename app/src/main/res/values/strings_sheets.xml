@@ -15,6 +15,7 @@
     <string name="Sheet_NegativeAmountError">مينفعش تكون قيمة الصندوق سالبة</string>
     <string name="Sheet_FundAmountError">مينفعش تكون القيمة أكثر من رقمين عشريين</string>
     <string name="Sheet_AddFundAmountError">لازم تدخل قيمة الرصيد المضاف</string>
+    <string name="Sheet_AddFundDescriptionError">لازم تدخل وصف المصروف</string>
 
 
     <string name="Sheet_DescriptionLapel">الوصف مثال: مواصلات، ايجار…</string>

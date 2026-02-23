@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.screens.expenses.components.sheets.addExpenseSheet
+package com.axoncodelabs.cashbox.ui.screens.expenses.components.sheets.addExpense
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -64,6 +64,8 @@ fun AddExpenseSheet(
         onDescriptionChange = { viewModel.onEvent(AddExpenseEvent.OnDescriptionChange(it)) },
         onSaveClick = { viewModel.onEvent(AddExpenseEvent.OnSaveClick) },
         isAmountEmpty = viewModel.isAmountEmpty,
+        isDescriptionEmpty = viewModel.isDescriptionEmpty,
+        fund = viewModel.fund,
         onFundSelected = { viewModel.onEvent(AddExpenseEvent.OnFundSelected(it)) },
         isNoFundSelected = viewModel.isNoFundSelected
     )
@@ -81,6 +83,8 @@ private fun AddExpenseSheetRoot(
     onDescriptionChange: (String) -> Unit,
     onSaveClick: () -> Unit,
     isAmountEmpty: Boolean,
+    isDescriptionEmpty: Boolean,
+    fund: FundEntity?,
     onFundSelected: (FundEntity) -> Unit,
     isNoFundSelected: Boolean,
 ) {
@@ -90,15 +94,24 @@ private fun AddExpenseSheetRoot(
             .background(MaterialTheme.colorScheme.background)
             .padding(25.dp), horizontalAlignment = Alignment.Start
     ) {
-        FundSelectionBttn(
-            isHideData = isHideData,
-            fund = fund,
-            //TODO CHECKPOINT: continue from here1
-            onFundSelected = onFundSelected,
-            isUnSelected = isNoFundSelected,
-            unSelectedErrorMsg = stringResource(R.string.Sheet_NoFundSelected)
-        )
-        Spacer(modifier = Modifier.height(5.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            MyIcons.ExpenseWallet(color = MaterialTheme.colorScheme.onBackground, size = 30.dp)
+            Spacer(modifier = Modifier.width(10.dp))
+            FundSelectionBttn(
+                isHideData = isHideData,
+                fund = fund,
+                //TODO CHECKPOINT: continue from here1
+                onFundSelected = onFundSelected,
+                isUnSelected = isNoFundSelected,
+                unSelectedErrorMsg = stringResource(R.string.Sheet_NoFundSelected)
+            )
+        }
+        Spacer(modifier = Modifier.height(7.dp))
 
         HideTextData(
             modifier = Modifier.align(Alignment.End),
@@ -110,7 +123,7 @@ private fun AddExpenseSheetRoot(
             style = MyFontStyle.small()
         )
 
-        Spacer(modifier = Modifier.height(5.dp))
+        Spacer(modifier = Modifier.height(7.dp))
 
         Row(
             modifier = Modifier
@@ -152,7 +165,9 @@ private fun AddExpenseSheetRoot(
                 hintText = stringResource(R.string.Sheet_Description_Hint),
                 keyboardType = KeyboardType.Text,
                 singleLine = false,
-                maxLines = 3
+                maxLines = 3,
+                isError = isDescriptionEmpty,
+                errorMsg = stringResource(R.string.Sheet_AddFundDescriptionError)
             )
         }
         Spacer(modifier = Modifier.height(20.dp))

@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.screens.expenses.components.sheets.addExpenseSheet
+package com.axoncodelabs.cashbox.ui.screens.expenses.components.sheets.addExpense
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
@@ -70,7 +70,9 @@ class AddExpenseVM @Inject constructor(
             is AddExpenseEvent.OnFundSelected -> {
                 fund = event.fund
                 fundName = event.fund.name
+                fundBalance = event.fund.balance
                 isNoFundSelected = false
+                updateAvailableBalance()
             }
 
             is AddExpenseEvent.OnAmountChange -> {
@@ -81,6 +83,7 @@ class AddExpenseVM @Inject constructor(
 
             is AddExpenseEvent.OnDescriptionChange -> {
                 description = event.description
+                isDescriptionEmpty = false
             }
 
             AddExpenseEvent.OnSaveClick -> {
@@ -121,6 +124,7 @@ class AddExpenseVM @Inject constructor(
     fun clearSheetData() {
         fund = null
         fundName = ""
+        fundBalance = 0.0
         isNoFundSelected = false
         amount = ""
         description = ""

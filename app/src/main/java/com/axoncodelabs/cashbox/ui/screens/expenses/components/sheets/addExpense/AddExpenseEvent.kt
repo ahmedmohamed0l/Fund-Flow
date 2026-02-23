@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.screens.expenses.components.sheets.addExpenseSheet
+package com.axoncodelabs.cashbox.ui.screens.expenses.components.sheets.addExpense
 
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 
