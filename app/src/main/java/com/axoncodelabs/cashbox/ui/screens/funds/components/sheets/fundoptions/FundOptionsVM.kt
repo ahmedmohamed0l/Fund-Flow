@@ -78,6 +78,7 @@ class FundOptionsVM @Inject constructor(
                         repository.deleteAllFundTransactions(it.id)
                     }
                     sendFundsEvent(FundsEvent.ClosePopup)
+                    sendFundsEvent(FundsEvent.CloseSheet)
                 }
             }
 

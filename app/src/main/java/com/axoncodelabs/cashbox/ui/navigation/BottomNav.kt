@@ -105,7 +105,7 @@ private fun RowScope.AddItem(
                             saveState = true
                         }
                         launchSingleTop = true
-                        restoreState = false
+                        restoreState = true
                     }
                 })
     ) {

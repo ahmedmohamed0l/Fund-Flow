@@ -54,7 +54,7 @@ import com.axoncodelabs.cashbox.data.util.doubleFormat
 import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.components.MyBlurredButton
 import com.axoncodelabs.cashbox.ui.components.topAppBar.TopBarState
-import com.axoncodelabs.cashbox.ui.screens.expenses.components.sheets.addExpenseSheet.AddExpenseSheet
+import com.axoncodelabs.cashbox.ui.screens.expenses.components.sheets.addExpense.AddExpenseSheet
 import com.axoncodelabs.cashbox.ui.theme.AppCurrency
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
