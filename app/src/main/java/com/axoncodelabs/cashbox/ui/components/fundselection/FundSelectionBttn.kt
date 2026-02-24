@@ -28,7 +28,6 @@ import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 
-//TODO CHECKPOINT: continue from here2
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FundSelectionBttn(

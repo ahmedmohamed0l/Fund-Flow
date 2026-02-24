@@ -78,7 +78,6 @@ fun TransferSheet(
     )
 }
 
-//TODO CHECKPOINT: continue from here2
 @Composable
 private fun TransferSheetRoot(
     isHideData: Boolean,

@@ -105,7 +105,6 @@ private fun AddExpenseSheetRoot(
             FundSelectionBttn(
                 isHideData = isHideData,
                 fund = fund,
-                //TODO CHECKPOINT: continue from here1
                 onFundSelected = onFundSelected,
                 isUnSelected = isNoFundSelected,
                 unSelectedErrorMsg = stringResource(R.string.Sheet_NoFundSelected)

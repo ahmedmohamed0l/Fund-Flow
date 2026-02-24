@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.screens.expenses.components.sheets.addExpense
+package com.axoncodelabs.cashbox.ui.screens.expenses.components.sheets.editExpense
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionType
+import com.axoncodelabs.cashbox.data.local.relation.ExpenseWithFund
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
 import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,9 +20,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AddExpenseVM @Inject constructor(
+class EditExpenseVM @Inject constructor(
     private val repository: CashBoxRepository,
-) : ViewModel(){
+) : ViewModel() {
+
+    var expense by mutableStateOf<ExpenseWithFund?>(null)
+        private set
+
     var fund by mutableStateOf<FundEntity?>(null)
         private set
     var fundName by mutableStateOf("")
@@ -29,12 +34,8 @@ class AddExpenseVM @Inject constructor(
     var fundBalance by mutableDoubleStateOf(0.0)
         private set
 
-    var isNoFundSelected by mutableStateOf(false)
+    var availableBalance by mutableDoubleStateOf(0.0)
         private set
-
-    var availableBalance by mutableDoubleStateOf(0.00)
-        private set
-
     var isAvailableNegative by mutableStateOf(false)
         private set
 
@@ -49,49 +50,82 @@ class AddExpenseVM @Inject constructor(
     var selectedDate by mutableLongStateOf(System.currentTimeMillis())
         private set
 
-    private fun updateAvailableBalance() {
-        val amount = amount.toDoubleOrNull() ?: 0.0
-        val delta = fundBalance - amount
-        availableBalance = delta
-        isAvailableNegative = delta < 0
+    var isSaveBttnEnabled by mutableStateOf(false)
+        private set
+
+    var showDeleteExpensePopup by mutableStateOf(false)
+
+    private data class EditableExpense(
+        val fund: FundEntity?,
+        val amount: String,
+        val description: String,
+        val date: Long
+    )
+
+    private var originalEditableExpense: EditableExpense? = null
+    private fun currentEditableExpense(): EditableExpense {
+        return EditableExpense(
+            fund = fund,
+            amount = amount,
+            description = description,
+            date = selectedDate
+        )
     }
 
-    fun initTransaction(selectedDate: Long) {
-        this.selectedDate = selectedDate
-        clearSheetData()
+    fun initTransaction(expense: ExpenseWithFund) {
+        this.expense = expense
+        fund = expense.fund
+        fundName = expense.fund.name
+        amount = expense.transaction.amount.toString()
+        description = expense.transaction.description
+        selectedDate = expense.transaction.date
+
+        fundBalance = expense.fund.balance
+        updateAvailableBalance()
+
+        originalEditableExpense = currentEditableExpense()
+        updateSaveBttnState()
+    }
+
+    private fun updateAvailableBalance() {
+        val amount = amount.toDoubleOrNull() ?: 0.0
+        val delta = if (fund?.id == originalEditableExpense?.fund?.id) {
+            val originalAmount = originalEditableExpense?.amount?.toDoubleOrNull() ?: 0.0
+            fundBalance + originalAmount - amount
+        } else {
+            fundBalance - amount
+        }
+        availableBalance = delta
+        isAvailableNegative = delta < 0
     }
 
     private val _fundsEvent = Channel<FundsEvent>()
     val fundsEvent = _fundsEvent.receiveAsFlow()
 
-    fun onEvent(event: AddExpenseEvent){
+    fun onEvent(event: EditExpenseEvent) {
         when (event) {
-            is AddExpenseEvent.OnFundSelected -> {
+            is EditExpenseEvent.OnFundChanged -> {
                 fund = event.fund
                 fundName = event.fund.name
-                fundBalance = event.fund.balance
-                isNoFundSelected = false
                 updateAvailableBalance()
+                updateSaveBttnState()
             }
 
-            is AddExpenseEvent.OnAmountChange -> {
+            is EditExpenseEvent.OnAmountChange -> {
                 amount = event.amount
                 isAmountEmpty = false
                 updateAvailableBalance()
+                updateSaveBttnState()
             }
 
-            is AddExpenseEvent.OnDescriptionChange -> {
+            is EditExpenseEvent.OnDescriptionChange -> {
                 description = event.description
                 isDescriptionEmpty = false
+                updateSaveBttnState()
             }
 
-            AddExpenseEvent.OnSaveClick -> {
+            EditExpenseEvent.OnSaveClick -> {
                 viewModelScope.launch {
-                    fund ?: run {
-                        isNoFundSelected = true
-                        return@launch
-                    }
-
                     val amountDouble = amount.toDoubleOrNull()
                     if (amount.isBlank() || amountDouble == null) {
                         isAmountEmpty = true
@@ -102,8 +136,7 @@ class AddExpenseVM @Inject constructor(
                         isDescriptionEmpty = true
                         return@launch
                     }
-
-                    repository.insertTransaction(
+                    repository.updateTransaction(
                         TransactionEntity(
                             fundId = fund!!.id,
                             amount = amountDouble,
@@ -113,24 +146,28 @@ class AddExpenseVM @Inject constructor(
                             isTransfer = false
                         )
                     )
-
                     sendFundsEvent(FundsEvent.CloseSheet)
                 }
+            }
+
+            EditExpenseEvent.OnDeleteClick -> {
+                viewModelScope.launch {
+                    expense?.transaction?.let { transaction ->
+                        repository.deleteTransaction(transaction)
+                    }
+                }
+                sendFundsEvent(FundsEvent.ClosePopup)
+                sendFundsEvent(FundsEvent.CloseSheet)
+            }
+
+            EditExpenseEvent.OnCancelClick -> {
+                sendFundsEvent(FundsEvent.CloseSheet)
             }
         }
     }
 
-    fun clearSheetData() {
-        fund = null
-        fundName = ""
-        fundBalance = 0.0
-        isNoFundSelected = false
-        amount = ""
-        description = ""
-        isAmountEmpty = false
-        isDescriptionEmpty = false
-        selectedDate = System.currentTimeMillis()
-        updateAvailableBalance()
+    fun updateSaveBttnState() {
+        isSaveBttnEnabled = originalEditableExpense != currentEditableExpense()
     }
 
     private fun sendFundsEvent(event: FundsEvent) {
