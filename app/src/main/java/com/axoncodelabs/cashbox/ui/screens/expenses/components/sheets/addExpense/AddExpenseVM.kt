@@ -11,7 +11,7 @@ import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionType
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
-import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
+import com.axoncodelabs.cashbox.ui.screens.expenses.ExpensesEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -61,8 +61,8 @@ class AddExpenseVM @Inject constructor(
         clearSheetData()
     }
 
-    private val _fundsEvent = Channel<FundsEvent>()
-    val fundsEvent = _fundsEvent.receiveAsFlow()
+    private val _expensesEvent = Channel<ExpensesEvent>()
+    val expensesEvent = _expensesEvent.receiveAsFlow()
 
     fun onEvent(event: AddExpenseEvent){
         when (event) {
@@ -114,7 +114,7 @@ class AddExpenseVM @Inject constructor(
                         )
                     )
 
-                    sendFundsEvent(FundsEvent.CloseSheet)
+                    sendExpensesEvent(ExpensesEvent.CloseSheet)
                 }
             }
         }
@@ -133,9 +133,9 @@ class AddExpenseVM @Inject constructor(
         updateAvailableBalance()
     }
 
-    private fun sendFundsEvent(event: FundsEvent) {
+    private fun sendExpensesEvent(event: ExpensesEvent) {
         viewModelScope.launch {
-            _fundsEvent.send(event)
+            _expensesEvent.send(event)
         }
     }
 }

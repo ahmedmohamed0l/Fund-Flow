@@ -39,7 +39,7 @@ fun AddExpenseSheet(
     onClose: () -> Unit,
 ) {
     LaunchedEffect(key1 = true) {
-        viewModel.fundsEvent.collect { event ->
+        viewModel.expensesEvent.collect { event ->
             when (event) {
                 FundsEvent.CloseSheet -> {
                     viewModel.clearSheetData()
