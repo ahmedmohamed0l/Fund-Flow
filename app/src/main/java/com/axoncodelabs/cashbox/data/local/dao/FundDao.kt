@@ -28,6 +28,6 @@ interface FundDao {
     @Query("SELECT * FROM funds WHERE id = :id")
     suspend fun getFundById(id: Int): FundEntity?
 
-    @Query("SELECT SUM(balance) FROM funds")
-    fun getTotalBalance(): Flow<Double>
+    @Query("SELECT SUM(balance) FROM funds WHERE isExcepted = 0")
+    fun getFundsSUM(): Flow<Double>
 }

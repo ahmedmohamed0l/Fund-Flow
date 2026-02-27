@@ -69,8 +69,8 @@ class CashBoxRepositoryImpl @Inject constructor(
         return fundDao.getFundById(id)
     }
 
-    override fun getTotalBalance(): Flow<Double> {
-        return fundDao.getTotalBalance()
+    override fun getFundsSUM(): Flow<Double> {
+        return fundDao.getFundsSUM()
     }
 
     // helper: sign of transaction for balance calculation

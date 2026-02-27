@@ -22,7 +22,7 @@ class FundsViewModel @Inject constructor(
     init {
         combine(
             repository.getAllFunds(),
-            repository.getTotalBalance(),
+            repository.getFundsSUM(),
             repository.hideDataFlow
         ) { funds, totalBalance, isHideData ->
             _state.update {
