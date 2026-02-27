@@ -176,33 +176,3 @@ private fun AddExpenseSheetRoot(
         )
     }
 }
-
-/*
-/**--------------------[ Preview ]--------------------**/
-@Preview(showBackground = true)
-@Composable
-private fun Preview() {
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-        val darkMode = false
-        CashBoxTheme(darkTheme = darkMode) {
-            AddExpenseSheetRoot(
-                isHideData = false,
-                fund = FundEntity(
-                    id = 0,
-                    name = "",
-                    balance = 0.0
-                ),
-                availableBalance = 0.0,
-                isAvailableNegative = false,
-                amount = "",
-                description = "",
-                onAmountChange = {},
-                onDescriptionChange = {},
-                onSaveClick = {},
-                isAmountEmpty = false,
-                onFundSelected = {},
-                isNoFundSelected = false
-            )
-        }
-    }
-}*/
