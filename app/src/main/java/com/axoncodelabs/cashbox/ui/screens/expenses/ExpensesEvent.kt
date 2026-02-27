@@ -7,6 +7,10 @@ sealed class ExpensesEvent {
     data class SheetDisplayed(val sheet: ExpensesSheets) : ExpensesEvent()
     object CloseSheet : ExpensesEvent()
 
+    // Popup
+    data class PopupDisplay(val popup: ExpensesPopup) : ExpensesEvent()
+    object ClosePopup : ExpensesEvent()
+
     //DatePickerEvents
     object OnPreviousDayClick : ExpensesEvent()
     object OnNextDayClick : ExpensesEvent()

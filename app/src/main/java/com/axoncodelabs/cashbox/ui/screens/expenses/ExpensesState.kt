@@ -8,8 +8,13 @@ sealed class ExpensesSheets {
     data class EditExpense(val expense: ExpenseWithFund) : ExpensesSheets()
 }
 
+sealed class ExpensesPopup {
+    object Close : ExpensesPopup()
+}
+
 data class ExpensesState(
     val currentSheet: ExpensesSheets = ExpensesSheets.None,
+    val popupState: ExpensesPopup = ExpensesPopup.Close,
     val expenses: List<ExpenseWithFund> = emptyList(),
     val expensesTotalValue: Double = 0.0,
     val isHideData: Boolean = false,

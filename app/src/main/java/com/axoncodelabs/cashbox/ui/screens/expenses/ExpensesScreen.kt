@@ -19,12 +19,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -55,6 +56,7 @@ import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.components.MyBlurredButton
 import com.axoncodelabs.cashbox.ui.components.topAppBar.TopBarState
 import com.axoncodelabs.cashbox.ui.screens.expenses.components.sheets.addExpense.AddExpenseSheet
+import com.axoncodelabs.cashbox.ui.screens.expenses.components.sheets.editExpense.EditExpenseSheet
 import com.axoncodelabs.cashbox.ui.theme.AppCurrency
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
@@ -108,7 +110,19 @@ fun ExpensesScreen(
                     )
                 }
             }
-            is ExpensesSheets.EditExpense -> {}
+            is ExpensesSheets.EditExpense -> {
+                ModalBottomSheet(
+                    onDismissRequest = { viewModel.onEvent(ExpensesEvent.CloseSheet) },
+                    containerColor = MaterialTheme.colorScheme.background,
+                    sheetState = sheetState
+                ) {
+                    EditExpenseSheet(
+                        isHideData = isHideData,
+                        expense = sheet.expense,
+                        onClose = { viewModel.onEvent(ExpensesEvent.CloseSheet) }
+                    )
+                }
+            }
             ExpensesSheets.None -> Unit
         }
     }

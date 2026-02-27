@@ -6,6 +6,7 @@ sealed class EditExpenseEvent {
     data class OnFundChanged(val fund: FundEntity) : EditExpenseEvent()
     data class OnAmountChange(val amount: String) : EditExpenseEvent()
     data class OnDescriptionChange(val description: String) : EditExpenseEvent()
+    data class OnDateChange(val newDate: Long) : EditExpenseEvent()
     object OnSaveClick : EditExpenseEvent()
     object OnCancelClick : EditExpenseEvent()
 

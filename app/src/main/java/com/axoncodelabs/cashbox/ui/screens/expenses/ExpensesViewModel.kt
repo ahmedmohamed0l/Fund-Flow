@@ -112,6 +112,18 @@ class ExpensesViewModel @Inject constructor(
             is ExpensesEvent.OnExpenseClick -> {}
 
             ExpensesEvent.OnAddExpense -> {}
+
+            is ExpensesEvent.PopupDisplay -> {
+                _state.update {
+                    it.copy(popupState = event.popup)
+                }
+            }
+
+            ExpensesEvent.ClosePopup -> {
+                _state.update {
+                    it.copy(popupState = ExpensesPopup.Close)
+                }
+            }
         }
     }
 
