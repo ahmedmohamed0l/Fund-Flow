@@ -50,7 +50,7 @@ fun DeleteFundTransactionsPopup(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = stringResource(id = R.string.Popups_Delete_Bttn),
+                text = stringResource(id = R.string.Delete_Bttn),
                 color = MaterialTheme.colorScheme.error,
                 style = MyFontStyle.small(),
                 modifier = Modifier.clickable(
@@ -59,7 +59,7 @@ fun DeleteFundTransactionsPopup(
                     onDelete()
                 })
             Text(
-                text = stringResource(id = R.string.Popups_Cancel_Bttn),
+                text = stringResource(id = R.string.Cancel_Bttn),
                 color = MaterialTheme.colorScheme.primary,
                 style = MyFontStyle.small(),
                 modifier = Modifier.clickable(

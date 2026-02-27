@@ -6,7 +6,7 @@
     <string name="ReportsScreen_ZoneSelection">الفترة</string>
 
     <string name="ReportsScreen_Income_Identifier">الإيرادات</string>
-    <string name="ReportsScreen_Expense_Identifier">الإيرادات</string>
+    <string name="ReportsScreen_Expense_Identifier">المصروفات</string>
 
     <string name="ReportsScreen_NoReports_Title">لاتوجد تقارير في هذه الفترة</string>
     <string name="ReportsScreen_NoReports_Description">يمكنك تغيير الفترة أو الصندوق لمشاهدة نتائج مختلفة</string>

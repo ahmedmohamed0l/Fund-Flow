@@ -3,4 +3,6 @@
     <string name="app_name" translatable="false">Cash Box</string>
 
     <string name="App_Currency">جم</string>
+    <string name="Delete_Bttn">حذف</string>
+    <string name="Cancel_Bttn">إلغاء</string>
 </resources>
