@@ -90,9 +90,6 @@ fun ExpensesScreen(
         )
     }
 
-    //.....( Date Picker Helper ).....
-    val datePickerState = rememberDatePickerState(initialSelectedDateMillis = selectedDate)
-
     //.....( Sheets & Popups Handling ).....
     @Composable
     fun sheetsHandle() {
@@ -131,8 +128,8 @@ fun ExpensesScreen(
     //.....( Screen Layout ).....
     ExpensesScreenRoot(
         isDatePickerOpen = state.isDatePickerOpen,
-        datePickerState = datePickerState,
-        onDismissDatePicker = { viewModel.onEvent(ExpensesEvent.OnToggleDatePicker) },
+        initialDate = selectedDate,
+        onDatePickerDismiss = { viewModel.onEvent(ExpensesEvent.OnToggleDatePicker) },
         onClickConfirmBttn = { viewModel.onEvent(ExpensesEvent.OnDateSelected(it)) },
 
         onPreviousDayClick = { viewModel.onEvent(ExpensesEvent.OnPreviousDayClick) },
@@ -154,8 +151,8 @@ fun ExpensesScreen(
 private fun ExpensesScreenRoot(
 
     isDatePickerOpen: Boolean,
-    datePickerState: DatePickerState,
-    onDismissDatePicker: () -> Unit,
+    initialDate: Long,
+    onDatePickerDismiss: () -> Unit,
     onClickConfirmBttn: (Long) -> Unit,
 
     onPreviousDayClick: () -> Unit,
@@ -176,10 +173,10 @@ private fun ExpensesScreenRoot(
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-        DatePickerDialog(
+        MyDatePickerDialog(
             isDatePickerOpen = isDatePickerOpen,
-            datePickerState = datePickerState,
-            onDatePickerDismiss = { onDismissDatePicker() },
+            initialDate = initialDate,
+            onDatePickerDismiss = { onDatePickerDismiss() },
             onConfirmBttnClick = onClickConfirmBttn,
         )
 
@@ -248,30 +245,75 @@ private fun ExpensesScreenRoot(
 /** --------------------[ Components ]-------------------- **/
 /**.....( Date Pick ).....**/
 @Composable
-fun DatePickerDialog(
+fun MyDatePickerDialog(
     isDatePickerOpen: Boolean,
-    datePickerState: DatePickerState,
+    initialDate: Long,
     onDatePickerDismiss: () -> Unit,
     onConfirmBttnClick: (Long) -> Unit,
 ) {
     if (isDatePickerOpen) {
+        val datePickerState = rememberDatePickerState(initialSelectedDateMillis = initialDate)
         DatePickerDialog(
             onDismissRequest = { onDatePickerDismiss() },
             confirmButton = {
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let { selectedDate ->
-                        onConfirmBttnClick(selectedDate)
-
+                        onConfirmBttnClick(
+                            selectedDate
+                        )
                     }
                 }) {
-                    Text(stringResource(R.string.Popups_DatePickerConfirm_Bttn))
+                    Text(
+                        stringResource(R.string.Popups_DatePickerConfirm_Bttn),
+                        style = MyFontStyle.small(),
+                        color = MaterialTheme.colorScheme.inversePrimary
+                    )
                 }
             },
             dismissButton = {
-                TextButton(onClick = { onDatePickerDismiss }) { Text(stringResource(R.string.Popups_Cancel_Bttn)) }
-            }
+                TextButton(onClick = { onConfirmBttnClick(System.currentTimeMillis()) }) {
+                    Text(
+                        stringResource(R.string.DatePickerTodaySelect),
+                        modifier = Modifier
+                            .border(
+                                shape = CircleShape,
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            .padding(10.dp),
+                        style = MyFontStyle.small()
+                    )
+                }
+                Spacer(modifier = Modifier.width(30.dp))
+                TextButton(onClick = { onDatePickerDismiss() }) {
+                    Text(
+                        stringResource(R.string.Cancel_Bttn),
+                        style = MyFontStyle.small(),
+                        color = MaterialTheme.colorScheme.onSecondary
+                    )
+                }
+            },
+            colors = DatePickerDefaults.colors(
+                containerColor = MaterialTheme.colorScheme.background,
+            )
         ) {
-            DatePicker(state = datePickerState, showModeToggle = false)
+
+            DatePicker(
+                state = datePickerState,
+                showModeToggle = false,
+                colors = DatePickerDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                    headlineContentColor = MaterialTheme.colorScheme.primary,
+                    dividerColor = MaterialTheme.colorScheme.primary,
+                    weekdayContentColor = MaterialTheme.colorScheme.primary,
+                    dayContentColor = MaterialTheme.colorScheme.onBackground,
+                    selectedDayContainerColor = MaterialTheme.colorScheme.primary,
+                    selectedDayContentColor = MaterialTheme.colorScheme.onPrimary,
+                    disabledDayContentColor = MaterialTheme.colorScheme.outline,
+                    todayContentColor = MaterialTheme.colorScheme.primary
+                ),
+            )
         }
     }
 
