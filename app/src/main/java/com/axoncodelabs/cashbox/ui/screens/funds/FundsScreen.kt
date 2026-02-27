@@ -459,7 +459,7 @@ private fun FundItem(
                             )
                         })
                     Text(
-                        text = stringResource(R.string.FundsScreen_DeleteFunds_Bttn),
+                        text = stringResource(R.string.Delete_Bttn),
                         color = MaterialTheme.colorScheme.error,
                         style = MyFontStyle.small(),
                         modifier = modifier.clickable(

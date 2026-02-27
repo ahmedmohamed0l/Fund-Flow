@@ -83,7 +83,7 @@ class AddFundVM @Inject constructor(
                             type = TransactionType.INCOME
                         )
                     )
-
+                    clearSheetData()
                     sendFundsEvent(FundsEvent.CloseSheet)
                 }
             }

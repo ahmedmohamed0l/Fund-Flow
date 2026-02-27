@@ -22,7 +22,7 @@ interface FundDao {
     @Delete
     suspend fun deleteFund(fund: FundEntity)
 
-    @Query("SELECT * FROM funds ORDER BY createdAt DESC")
+    @Query("SELECT * FROM funds ORDER BY createdAt ASC")
     fun getAllFunds(): Flow<List<FundEntity>>
 
     @Query("SELECT * FROM funds WHERE id = :id")

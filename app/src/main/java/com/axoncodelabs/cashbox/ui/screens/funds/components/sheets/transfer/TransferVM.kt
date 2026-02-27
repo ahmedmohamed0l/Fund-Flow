@@ -109,8 +109,8 @@ class TransferVM @Inject constructor(
 
                     if (description.isBlank()) {
                         description =
-                            (stringProvider.getString(R.string.Sheet_TransferFromDescription)) + "" + source.name +
-                                    (stringProvider.getString(R.string.Sheet_TransferToDescription)) + "" + target.name
+                            (stringProvider.getString(R.string.Sheet_TransferFromDescription)) + " " + source.name +
+                                    (stringProvider.getString(R.string.Sheet_TransferToDescription)) + " " + target.name
                     }
 
                     repository.transferBetweenFunds(
@@ -121,6 +121,7 @@ class TransferVM @Inject constructor(
                         timestamp = selectedDate
                     )
 
+                    clearSheetData()
                     sendFundsEvent(FundsEvent.CloseSheet)
                 }
             }

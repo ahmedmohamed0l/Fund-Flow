@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.screens.funds.components
+package com.axoncodelabs.cashbox.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -23,7 +23,8 @@ fun DateSelection(
     onDateIncrease: () -> Unit,
     date: String,
     onDateDecrease: () -> Unit,
-    textColor: Color = MaterialTheme.colorScheme.onBackground,
+    identifierColor: Color = MaterialTheme.colorScheme.onBackground,
+    dateColor: Color = MaterialTheme.colorScheme.primary,
     arrowColor: Color = MaterialTheme.colorScheme.outline,
 ) {
 
@@ -32,7 +33,7 @@ fun DateSelection(
             modifier = Modifier.align(Alignment.CenterStart),
             text = stringResource(id = R.string.Sheet_TransactionDateSelector),
             style = MyFontStyle.medium(),
-            color = textColor
+            color = identifierColor
         )
 
         Row(
@@ -51,7 +52,7 @@ fun DateSelection(
             Text(
                 text = date,
                 style = MyFontStyle.medium(),
-                color = textColor
+                color = dateColor
             )
             MyIcons.Arrow(
                 autoMirroredState = true,

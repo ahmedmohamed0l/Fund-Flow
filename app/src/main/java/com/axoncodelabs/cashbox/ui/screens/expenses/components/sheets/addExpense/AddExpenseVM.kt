@@ -113,7 +113,7 @@ class AddExpenseVM @Inject constructor(
                             isTransfer = false
                         )
                     )
-
+                    clearSheetData()
                     sendExpensesEvent(ExpensesEvent.CloseSheet)
                 }
             }
@@ -129,7 +129,6 @@ class AddExpenseVM @Inject constructor(
         description = ""
         isAmountEmpty = false
         isDescriptionEmpty = false
-        selectedDate = System.currentTimeMillis()
         updateAvailableBalance()
     }
 

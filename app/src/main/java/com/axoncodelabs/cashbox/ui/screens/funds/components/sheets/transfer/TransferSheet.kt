@@ -20,6 +20,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.util.doubleFormat
+import com.axoncodelabs.cashbox.ui.components.DateSelection
 import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.components.MyButton
 import com.axoncodelabs.cashbox.ui.components.MyLabel
@@ -28,7 +29,6 @@ import com.axoncodelabs.cashbox.ui.components.MyRoundedLabel
 import com.axoncodelabs.cashbox.ui.components.MyTextField
 import com.axoncodelabs.cashbox.ui.components.fundselection.FundSelectionBttn
 import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
-import com.axoncodelabs.cashbox.ui.screens.funds.components.DateSelection
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -46,7 +46,6 @@ fun TransferSheet(
         viewModel.fundsEvent.collect { event ->
             when (event) {
                 FundsEvent.CloseSheet -> {
-                    viewModel.clearSheetData()
                     onClose()
                 }
 

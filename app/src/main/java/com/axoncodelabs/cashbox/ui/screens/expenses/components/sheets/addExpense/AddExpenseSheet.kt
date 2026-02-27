@@ -27,7 +27,7 @@ import com.axoncodelabs.cashbox.ui.components.MyButton
 import com.axoncodelabs.cashbox.ui.components.MyNumField
 import com.axoncodelabs.cashbox.ui.components.MyTextField
 import com.axoncodelabs.cashbox.ui.components.fundselection.FundSelectionBttn
-import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
+import com.axoncodelabs.cashbox.ui.screens.expenses.ExpensesEvent
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 
@@ -41,8 +41,7 @@ fun AddExpenseSheet(
     LaunchedEffect(key1 = true) {
         viewModel.expensesEvent.collect { event ->
             when (event) {
-                FundsEvent.CloseSheet -> {
-                    viewModel.clearSheetData()
+                ExpensesEvent.CloseSheet -> {
                     onClose()
                 }
 

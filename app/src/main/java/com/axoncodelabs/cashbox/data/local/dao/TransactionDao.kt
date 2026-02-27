@@ -33,19 +33,19 @@ interface TransactionDao {
     suspend fun deleteTransactionsByFundId(fundId: Int)
     //-------------------------------------------------------------------
 
-    @Query("SELECT * FROM transactions WHERE type = 'EXPENSE' And date BETWEEN :startDate AND :endDate ORDER BY date DESC")
+    @Query("SELECT * FROM transactions WHERE type = 'EXPENSE' And date BETWEEN :startDate AND :endDate ORDER BY date ASC")
     fun getExpensesByDate(
         startDate: Long,
         endDate: Long,
     ): Flow<List<TransactionEntity>>
 
-    @Query("SELECT SUM(amount) FROM transactions WHERE type = 'EXPENSE' And date BETWEEN :startDate AND :endDate ORDER BY date DESC")
+    @Query("SELECT SUM(amount) FROM transactions WHERE type = 'EXPENSE' And date BETWEEN :startDate AND :endDate")
     fun getExpensesSumByDate(
         startDate: Long,
         endDate: Long,
     ): Flow<Double>
 
-    @Query("SELECT * FROM transactions WHERE fundId = :fundId And type = :type And date BETWEEN :startDate AND :endDate ORDER BY date DESC")
+    @Query("SELECT * FROM transactions WHERE fundId = :fundId And type = :type And date BETWEEN :startDate AND :endDate ORDER BY date ASC")
     fun getTransactionsByType(
         fundId: Int,
         type: TransactionType,
@@ -66,8 +66,9 @@ interface TransactionDao {
         """
     SELECT * FROM transactions
     WHERE type = 'EXPENSE'
+    AND isTransfer = 0
     AND date BETWEEN :startDate AND :endDate
-    ORDER BY date DESC
+    ORDER BY date ASC
 """
     )
     fun getExpensesWithFundByDate(

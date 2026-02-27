@@ -90,7 +90,7 @@ class AddAmountVM @Inject constructor(
                             )
                         )
                     }
-
+                    clearSheetData()
                     sendFundsEvent(FundsEvent.CloseSheet)
                 }
             }
