@@ -8,7 +8,7 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionType
-import com.axoncodelabs.cashbox.data.local.relation.ExpenseWithFund
+import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -74,5 +74,5 @@ interface TransactionDao {
     fun getExpensesWithFundByDate(
         startDate: Long,
         endDate: Long
-    ): Flow<List<ExpenseWithFund>>
+    ): Flow<List<TransactionWithFund>>
 }

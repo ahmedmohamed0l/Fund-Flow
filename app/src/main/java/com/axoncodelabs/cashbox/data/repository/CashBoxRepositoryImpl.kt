@@ -11,7 +11,7 @@ import com.axoncodelabs.cashbox.data.local.dao.TransactionDao
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionType
-import com.axoncodelabs.cashbox.data.local.relation.ExpenseWithFund
+import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
 import com.axoncodelabs.cashbox.ui.theme.Theme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -145,7 +145,7 @@ class CashBoxRepositoryImpl @Inject constructor(
     override fun getExpensesWithFundByDate(
         startDate: Long,
         endDate: Long
-    ): Flow<List<ExpenseWithFund>> {
+    ): Flow<List<TransactionWithFund>> {
         return transactionDao.getExpensesWithFundByDate(startDate, endDate)
     }
 

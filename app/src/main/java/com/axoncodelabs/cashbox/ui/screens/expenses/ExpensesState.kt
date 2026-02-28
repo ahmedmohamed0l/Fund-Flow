@@ -1,11 +1,11 @@
 package com.axoncodelabs.cashbox.ui.screens.expenses
 
-import com.axoncodelabs.cashbox.data.local.relation.ExpenseWithFund
+import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
 
 sealed class ExpensesSheets {
     object None : ExpensesSheets()
     object AddExpense : ExpensesSheets()
-    data class EditExpense(val expense: ExpenseWithFund) : ExpensesSheets()
+    data class EditExpense(val expense: TransactionWithFund) : ExpensesSheets()
 }
 
 sealed class ExpensesPopup {
@@ -15,7 +15,7 @@ sealed class ExpensesPopup {
 data class ExpensesState(
     val currentSheet: ExpensesSheets = ExpensesSheets.None,
     val popupState: ExpensesPopup = ExpensesPopup.Close,
-    val expenses: List<ExpenseWithFund> = emptyList(),
+    val expenses: List<TransactionWithFund> = emptyList(),
     val expensesTotalValue: Double = 0.0,
     val isHideData: Boolean = false,
 

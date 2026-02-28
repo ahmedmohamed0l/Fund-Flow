@@ -29,5 +29,5 @@
 
     <string name="Sheet_AddTransaction_Bttn">إضافة</string>
     <string name="Sheet_Save_Bttn">حفظ</string>
-    <string name="Sheet_EditExpense_Bttn">حفظ التعديلات</string>
+    <string name="Sheet_EditTransaction_Bttn">حفظ التعديلات</string>
 </resources>

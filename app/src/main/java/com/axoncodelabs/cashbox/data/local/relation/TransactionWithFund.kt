@@ -5,7 +5,7 @@ import androidx.room.Relation
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 
-data class ExpenseWithFund(
+data class TransactionWithFund(
     @Embedded
     val transaction: TransactionEntity,
 

@@ -99,7 +99,7 @@ private fun AddExpenseSheetRoot(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            MyIcons.ExpenseWallet(color = MaterialTheme.colorScheme.onBackground, size = 30.dp)
+            MyIcons.TransactionWallet(color = MaterialTheme.colorScheme.onBackground, size = 30.dp)
             Spacer(modifier = Modifier.width(10.dp))
             FundSelectionBttn(
                 isHideData = isHideData,

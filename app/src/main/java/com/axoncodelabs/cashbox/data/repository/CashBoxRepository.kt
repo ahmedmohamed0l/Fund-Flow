@@ -3,7 +3,7 @@ package com.axoncodelabs.cashbox.data.repository
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionType
-import com.axoncodelabs.cashbox.data.local.relation.ExpenseWithFund
+import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
 import com.axoncodelabs.cashbox.ui.theme.Theme
 import kotlinx.coroutines.flow.Flow
 
@@ -31,7 +31,7 @@ interface CashBoxRepository {
     fun getExpensesWithFundByDate(
         startDate: Long,
         endDate: Long
-    ): Flow<List<ExpenseWithFund>>
+    ): Flow<List<TransactionWithFund>>
 
     fun getExpensesSumByDate(startDate: Long, endDate: Long): Flow<Double>
 

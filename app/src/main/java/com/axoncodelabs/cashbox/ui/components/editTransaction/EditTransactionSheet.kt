@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.screens.expenses.components.sheets.editExpense
+package com.axoncodelabs.cashbox.ui.components.editTransaction
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,7 +28,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
-import com.axoncodelabs.cashbox.data.local.relation.ExpenseWithFund
+import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
 import com.axoncodelabs.cashbox.ui.components.DateSelection
 import com.axoncodelabs.cashbox.ui.components.MyNumField
 import com.axoncodelabs.cashbox.ui.components.MyTextField
@@ -41,17 +41,15 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-//TODO CHECKPOINT: | Step2: Convert Edit Expense to Edit Transaction
-
 @Composable
-fun EditExpenseSheet(
+fun EditTransactionSheet(
     isHideData: Boolean,
-    expense: ExpenseWithFund,
-    viewModel: EditExpenseVM = hiltViewModel(),
+    transaction: TransactionWithFund,
+    viewModel: EditTransactionVM = hiltViewModel(),
     onClose: () -> Unit,
 ) {
-    LaunchedEffect(key1 = expense.transaction.id) {
-        viewModel.initTransaction(expense)
+    LaunchedEffect(key1 = transaction.transaction.id) {
+        viewModel.initTransaction(transaction)
     }
     LaunchedEffect(key1 = true) {
         viewModel.expensesEvent.collect { event ->
@@ -66,40 +64,40 @@ fun EditExpenseSheet(
         }
     }
 
-    if (viewModel.showDeleteExpensePopup) {
-        Dialog(onDismissRequest = { viewModel.showDeleteExpensePopup = false }) {
-            DeleteExpensePopup(
+    if (viewModel.showDeleteTransactionPopup) {
+        Dialog(onDismissRequest = { viewModel.showDeleteTransactionPopup = false }) {
+            DeleteTransactionPopup(
                 onDelete = {
-                    viewModel.onEvent(EditExpenseEvent.OnDeleteClick)
-                    viewModel.showDeleteExpensePopup = false
+                    viewModel.onEvent(EditTransactionEvent.OnDeleteClick)
+                    viewModel.showDeleteTransactionPopup = false
                 },
-                onCancel = { viewModel.showDeleteExpensePopup = false }
+                onCancel = { viewModel.showDeleteTransactionPopup = false }
             )
         }
     }
 
-    EditExpenseSheetRoot(
+    EditTransactionSheetRoot(
         isHideData = isHideData,
         fund = viewModel.fund,
-        onFundChanged = { viewModel.onEvent(EditExpenseEvent.OnFundChanged(it)) },
+        onFundChanged = { viewModel.onEvent(EditTransactionEvent.OnFundChanged(it)) },
         amount = viewModel.amount,
-        onAmountChange = { viewModel.onEvent(EditExpenseEvent.OnAmountChange(it)) },
+        onAmountChange = { viewModel.onEvent(EditTransactionEvent.OnAmountChange(it)) },
         isAmountEmpty = viewModel.isAmountEmpty,
         description = viewModel.description,
-        onDescriptionChange = { viewModel.onEvent(EditExpenseEvent.OnDescriptionChange(it)) },
+        onDescriptionChange = { viewModel.onEvent(EditTransactionEvent.OnDescriptionChange(it)) },
         isDescriptionEmpty = viewModel.isDescriptionEmpty,
         selectedDate = viewModel.selectedDate,
-        onDateChange = { viewModel.onEvent(EditExpenseEvent.OnDateChange(it)) },
+        onDateChange = { viewModel.onEvent(EditTransactionEvent.OnDateChange(it)) },
         isSaveEnabled = viewModel.isSaveBttnEnabled,
-        onSaveClick = { viewModel.onEvent(EditExpenseEvent.OnSaveClick) },
-        onDeleteClick = { viewModel.showDeleteExpensePopup = true },
+        onSaveClick = { viewModel.onEvent(EditTransactionEvent.OnSaveClick) },
+        onDeleteClick = { viewModel.showDeleteTransactionPopup = true },
         onCancelClick = { onClose() },
     )
 }
 
 /**.....( Screen Layout ).....**/
 @Composable
-private fun EditExpenseSheetRoot(
+private fun EditTransactionSheetRoot(
     isHideData: Boolean,
     fund: FundEntity?,
     onFundChanged: (FundEntity) -> Unit,
@@ -128,7 +126,7 @@ private fun EditExpenseSheetRoot(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            MyIcons.ExpenseWallet(color = MaterialTheme.colorScheme.onBackground, size = 30.dp)
+            MyIcons.TransactionWallet(color = MaterialTheme.colorScheme.onBackground, size = 30.dp)
             Spacer(modifier = Modifier.width(10.dp))
             FundSelectionBttn(
                 isHideData = isHideData,
@@ -221,7 +219,7 @@ private fun EditExpenseSheetRoot(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
                     ) { onSaveClick() },
-                text = stringResource(R.string.Sheet_EditExpense_Bttn),
+                text = stringResource(R.string.Sheet_EditTransaction_Bttn),
                 textAlign = TextAlign.Start,
                 color = if (isSaveEnabled)
                     MaterialTheme.colorScheme.primary

@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.screens.expenses.components.sheets.editExpense
+package com.axoncodelabs.cashbox.ui.components.editTransaction
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
-import com.axoncodelabs.cashbox.data.local.relation.ExpenseWithFund
+import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
 import com.axoncodelabs.cashbox.ui.screens.expenses.ExpensesEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,11 +17,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class EditExpenseVM @Inject constructor(
+class EditTransactionVM @Inject constructor(
     private val repository: CashBoxRepository,
 ) : ViewModel() {
 
-    var expense by mutableStateOf<ExpenseWithFund?>(null)
+    var transaction by mutableStateOf<TransactionWithFund?>(null)
         private set
 
     var fund by mutableStateOf<FundEntity?>(null)
@@ -43,18 +43,18 @@ class EditExpenseVM @Inject constructor(
     var isSaveBttnEnabled by mutableStateOf(false)
         private set
 
-    var showDeleteExpensePopup by mutableStateOf(false)
+    var showDeleteTransactionPopup by mutableStateOf(false)
 
-    private data class EditableExpense(
+    private data class EditableTransaction(
         val fund: FundEntity?,
         val amount: String,
         val description: String,
         val date: Long
     )
 
-    private var originalEditableExpense: EditableExpense? = null
-    private fun currentEditableExpense(): EditableExpense {
-        return EditableExpense(
+    private var originalEditableTransaction: EditableTransaction? = null
+    private fun currentEditableTransaction(): EditableTransaction {
+        return EditableTransaction(
             fund = fund,
             amount = amount,
             description = description,
@@ -62,47 +62,47 @@ class EditExpenseVM @Inject constructor(
         )
     }
 
-    fun initTransaction(expense: ExpenseWithFund) {
-        this.expense = expense
-        fund = expense.fund
-        fundName = expense.fund.name
-        amount = expense.transaction.amount.toString()
-        description = expense.transaction.description
-        selectedDate = expense.transaction.date
+    fun initTransaction(transaction: TransactionWithFund) {
+        this.transaction = transaction
+        fund = transaction.fund
+        fundName = transaction.fund.name
+        amount = transaction.transaction.amount.toString()
+        description = transaction.transaction.description
+        selectedDate = transaction.transaction.date
 
-        originalEditableExpense = currentEditableExpense()
+        originalEditableTransaction = currentEditableTransaction()
         updateSaveBttnState()
     }
 
     private val _expensesEvent = Channel<ExpensesEvent>()
     val expensesEvent = _expensesEvent.receiveAsFlow()
 
-    fun onEvent(event: EditExpenseEvent) {
+    fun onEvent(event: EditTransactionEvent) {
         when (event) {
-            is EditExpenseEvent.OnFundChanged -> {
+            is EditTransactionEvent.OnFundChanged -> {
                 fund = event.fund
                 fundName = event.fund.name
                 updateSaveBttnState()
             }
 
-            is EditExpenseEvent.OnAmountChange -> {
+            is EditTransactionEvent.OnAmountChange -> {
                 amount = event.amount
                 isAmountEmpty = false
                 updateSaveBttnState()
             }
 
-            is EditExpenseEvent.OnDescriptionChange -> {
+            is EditTransactionEvent.OnDescriptionChange -> {
                 description = event.description
                 isDescriptionEmpty = false
                 updateSaveBttnState()
             }
 
-            is EditExpenseEvent.OnDateChange -> {
+            is EditTransactionEvent.OnDateChange -> {
                 selectedDate = event.newDate
                 updateSaveBttnState()
             }
 
-            EditExpenseEvent.OnSaveClick -> {
+            EditTransactionEvent.OnSaveClick -> {
                 viewModelScope.launch {
                     val amountDouble = amount.toDoubleOrNull()
                     if (amount.isBlank() || amountDouble == null) {
@@ -114,7 +114,7 @@ class EditExpenseVM @Inject constructor(
                         isDescriptionEmpty = true
                         return@launch
                     }
-                    expense?.transaction?.let {
+                    transaction?.transaction?.let {
                         repository.updateTransaction(
                             it.copy(
                                 fundId = fund!!.id,
@@ -128,9 +128,9 @@ class EditExpenseVM @Inject constructor(
                 }
             }
 
-            EditExpenseEvent.OnDeleteClick -> {
+            EditTransactionEvent.OnDeleteClick -> {
                 viewModelScope.launch {
-                    expense?.transaction?.let { transaction ->
+                    transaction?.transaction?.let { transaction ->
                         repository.deleteTransaction(transaction)
                     }
                 }
@@ -138,14 +138,14 @@ class EditExpenseVM @Inject constructor(
                 sendExpensesEvent(ExpensesEvent.CloseSheet)
             }
 
-            EditExpenseEvent.OnCancelClick -> {
+            EditTransactionEvent.OnCancelClick -> {
                 sendExpensesEvent(ExpensesEvent.CloseSheet)
             }
         }
     }
 
     fun updateSaveBttnState() {
-        isSaveBttnEnabled = originalEditableExpense != currentEditableExpense()
+        isSaveBttnEnabled = originalEditableTransaction != currentEditableTransaction()
     }
 
     private fun sendExpensesEvent(event: ExpensesEvent) {

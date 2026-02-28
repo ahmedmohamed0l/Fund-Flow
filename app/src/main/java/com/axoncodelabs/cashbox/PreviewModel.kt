@@ -25,9 +25,9 @@ private fun Preview() {
     }
 }
 /*  Mock Data
-private fun mockExpenseList(count: Int): List<ExpenseWithFund> {
+private fun mockExpenseList(count: Int): List<TransactionWithFund> {
     return List(count) { index ->
-        ExpenseWithFund(
+        TransactionWithFund(
             transaction = TransactionEntity(
                 id = index + 1,
                 amount = 100.0 + index * 10,

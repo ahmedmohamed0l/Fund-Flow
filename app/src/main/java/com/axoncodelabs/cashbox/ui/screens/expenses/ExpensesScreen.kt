@@ -50,13 +50,13 @@ import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.protobuf.LazyStringArrayList.emptyList
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
-import com.axoncodelabs.cashbox.data.local.relation.ExpenseWithFund
+import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
 import com.axoncodelabs.cashbox.data.util.doubleFormat
 import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.components.MyBlurredButton
 import com.axoncodelabs.cashbox.ui.components.topAppBar.TopBarState
 import com.axoncodelabs.cashbox.ui.screens.expenses.components.sheets.addExpense.AddExpenseSheet
-import com.axoncodelabs.cashbox.ui.screens.expenses.components.sheets.editExpense.EditExpenseSheet
+import com.axoncodelabs.cashbox.ui.components.editTransaction.EditTransactionSheet
 import com.axoncodelabs.cashbox.ui.theme.AppCurrency
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
@@ -113,9 +113,9 @@ fun ExpensesScreen(
                     containerColor = MaterialTheme.colorScheme.background,
                     sheetState = sheetState
                 ) {
-                    EditExpenseSheet(
+                    EditTransactionSheet(
                         isHideData = isHideData,
-                        expense = sheet.expense,
+                        transaction = sheet.expense,
                         onClose = { viewModel.onEvent(ExpensesEvent.CloseSheet) }
                     )
                 }
@@ -163,7 +163,7 @@ private fun ExpensesScreenRoot(
     isHideData: Boolean,
     expensesTotalValue: Double,
 
-    expenses: List<ExpenseWithFund>,
+    expenses: List<TransactionWithFund>,
     onEvent: (ExpensesEvent) -> Unit,
 ) {
     Column(
@@ -399,7 +399,7 @@ fun DayExpensesTotalValue(
 /**.....( Screen Components ).....**/
 @Composable
 private fun ExpensesPageState(
-    expenses: List<ExpenseWithFund>,
+    expenses: List<TransactionWithFund>,
     isHideData: Boolean,
     selectedDate: Long,
     onEvent: (ExpensesEvent) -> Unit,
@@ -460,7 +460,7 @@ private fun EmptyExpensesPage() {
 
 @Composable
 private fun ExpensesList(
-    expenses: List<ExpenseWithFund>,
+    expenses: List<TransactionWithFund>,
     isHideData: Boolean,
     selectedDate: Long,
     onEvent: (ExpensesEvent) -> Unit,
@@ -506,7 +506,7 @@ private fun ExpensesList(
 @Composable
 fun ExpenseItem(
     isHideData: Boolean,
-    expense: ExpenseWithFund,
+    expense: TransactionWithFund,
     selectedDate: Long,
     modifier: Modifier = Modifier,
     onEvent: (ExpensesEvent) -> Unit,

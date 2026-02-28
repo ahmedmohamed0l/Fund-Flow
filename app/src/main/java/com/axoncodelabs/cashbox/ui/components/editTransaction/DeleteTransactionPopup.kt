@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.screens.expenses.components.sheets.editExpense
+package com.axoncodelabs.cashbox.ui.components.editTransaction
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,7 +25,7 @@ import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
 
 @Composable
-fun DeleteExpensePopup(
+fun DeleteTransactionPopup(
     onDelete: () -> Unit,
     onCancel: () -> Unit,
 ) {

@@ -1,6 +1,6 @@
 package com.axoncodelabs.cashbox.ui.screens.expenses
 
-import com.axoncodelabs.cashbox.data.local.relation.ExpenseWithFund
+import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
 
 sealed class ExpensesEvent {
     // Sheet
@@ -17,6 +17,6 @@ sealed class ExpensesEvent {
     object OnToggleDatePicker : ExpensesEvent()
     data class OnDateSelected(val date: Long) : ExpensesEvent()
 
-    data class OnExpenseClick(val expense: ExpenseWithFund) : ExpensesEvent()
+    data class OnExpenseClick(val expense: TransactionWithFund) : ExpensesEvent()
     object OnAddExpense : ExpensesEvent()
 }

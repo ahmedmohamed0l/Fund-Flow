@@ -46,7 +46,7 @@ object MyIcons {
     }
 
     @Composable
-    fun ExpenseWallet(
+    fun TransactionWallet(
         modifier: Modifier = Modifier,
         size: Dp = 48.dp,
         angle: Float = 0f,
