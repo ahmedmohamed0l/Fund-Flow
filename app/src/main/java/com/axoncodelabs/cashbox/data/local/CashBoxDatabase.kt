@@ -9,7 +9,7 @@ import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 
 @Database(
     entities = [FundEntity::class, TransactionEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class CashBoxDatabase : RoomDatabase() {

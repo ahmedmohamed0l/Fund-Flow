@@ -10,4 +10,5 @@ data class FundEntity(
     val name: String,
     val balance: Double,
     val createdAt: Long = System.currentTimeMillis(),
+    val isExcepted: Boolean = false,
 )

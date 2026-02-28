@@ -9,6 +9,7 @@ import androidx.room.Room
 import com.axoncodelabs.cashbox.data.local.CashBoxDatabase
 import com.axoncodelabs.cashbox.data.local.dao.FundDao
 import com.axoncodelabs.cashbox.data.local.dao.TransactionDao
+import com.axoncodelabs.cashbox.data.local.migration.MIGRATION_1_2
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepositoryImpl
 import com.axoncodelabs.cashbox.data.util.StringProvider
@@ -32,7 +33,9 @@ object AppModule {
             app,
             CashBoxDatabase::class.java,
             "cashbox_db"
-        ).build()
+        )
+            .addMigrations(MIGRATION_1_2)
+            .build()
     }
 
     @Provides
