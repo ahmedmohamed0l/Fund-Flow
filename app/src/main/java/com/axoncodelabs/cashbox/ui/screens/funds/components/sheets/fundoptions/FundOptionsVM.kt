@@ -29,12 +29,16 @@ class FundOptionsVM @Inject constructor(
     var isNameEmpty by mutableStateOf(false)
         private set
 
+    var isFundBalanceExcepted by mutableStateOf(false)
+        private set
+
     var showDeleteFundTransPopup by mutableStateOf(false)
 
     fun initData(fund: FundEntity) {
         //Set new
         this.fund = fund
         name = fund.name
+        isFundBalanceExcepted = fund.isExcepted
 
         //Clear old
         clearSheetData()
@@ -68,6 +72,19 @@ class FundOptionsVM @Inject constructor(
                         )
                     }
                     isEditMode = false
+                }
+            }
+
+            FundOptionsEvent.OnExceptFundToggle -> {
+                viewModelScope.launch {
+                    isFundBalanceExcepted = !isFundBalanceExcepted
+                    fund?.let {
+                        repository.updateFund(
+                            it.copy(
+                                isExcepted = isFundBalanceExcepted
+                            )
+                        )
+                    }
                 }
             }
 

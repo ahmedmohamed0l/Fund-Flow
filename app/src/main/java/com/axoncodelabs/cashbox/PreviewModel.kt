@@ -16,7 +16,7 @@ private fun Preview() {
     CompositionLocalProvider(
         LocalLayoutDirection provides LayoutDirection.Rtl
     ) {
-        val darkMode = true
+        val darkMode = false
         CashBoxTheme(
             darkTheme = darkMode
         ) {

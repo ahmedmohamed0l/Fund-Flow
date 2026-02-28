@@ -18,6 +18,8 @@ import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -85,6 +87,8 @@ fun FundOptionsSheet(
         onNameChange = { viewModel.onEvent(FundOptionsEvent.OnNameChange(it)) },
         isNameEmpty = viewModel.isNameEmpty,
         onSaveClick = { viewModel.onEvent(FundOptionsEvent.OnSaveClick) },
+        isFundBalanceExcepted = viewModel.isFundBalanceExcepted,
+        onExceptFundToggle = { viewModel.onEvent(FundOptionsEvent.OnExceptFundToggle) },
         onDeleteFundTransactionClick = { viewModel.showDeleteFundTransPopup = true }
     )
 }
@@ -99,6 +103,8 @@ private fun FundOptionsSheetRoot(
     onNameChange: (String) -> Unit,
     isNameEmpty: Boolean,
     onSaveClick: () -> Unit,
+    isFundBalanceExcepted: Boolean,
+    onExceptFundToggle: () -> Unit,
     onDeleteFundTransactionClick: () -> Unit,
 ) {
     Column(
@@ -189,6 +195,39 @@ private fun FundOptionsSheetRoot(
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.outline
         )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 5.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = stringResource(R.string.Sheet_ExceptFundFromSUM),
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MyFontStyle.medium()
+            )
+            Switch(
+                checked = isFundBalanceExcepted,
+                onCheckedChange = { onExceptFundToggle() },
+                modifier = Modifier.width(70.dp),
+                colors = SwitchDefaults.colors(
+                    uncheckedTrackColor = MaterialTheme.colorScheme.background,
+                    uncheckedBorderColor = MaterialTheme.colorScheme.outline,
+                    uncheckedThumbColor = MaterialTheme.colorScheme.outline,
+                )
+            )
+
+        }
+        HorizontalDivider(
+            modifier = Modifier
+                .padding(vertical = 5.dp)
+                .clip(MyRoundedCornerShape.large),
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.outline
+        )
+
         Text(
             text = stringResource(R.string.Sheet_DeleteFundTransactions),
             color = MaterialTheme.colorScheme.error,

@@ -4,6 +4,7 @@ sealed class FundOptionsEvent {
     object OnEditFundClick : FundOptionsEvent()
     data class OnNameChange(val name: String) : FundOptionsEvent()
     object OnSaveClick : FundOptionsEvent()
+    object OnExceptFundToggle : FundOptionsEvent()
 
 
     //  data class OnExceptBalance(val fund: FundEntity) : FundOptionsEvent()
