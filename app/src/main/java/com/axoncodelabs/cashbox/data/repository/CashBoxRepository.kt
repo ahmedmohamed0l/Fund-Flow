@@ -8,51 +8,70 @@ import com.axoncodelabs.cashbox.ui.theme.Theme
 import kotlinx.coroutines.flow.Flow
 
 interface CashBoxRepository {
-    //-----------------[ Funds ]-----------------
+    /**...............( Fund Actions )...............**/
     suspend fun insertFund(fund: FundEntity): Long
     suspend fun updateFund(fund: FundEntity)
     suspend fun deleteFund(fund: FundEntity)
-    suspend fun deleteAllFundTransactions(fundId: Int)
-    fun getAllFunds(): Flow<List<FundEntity>>
+
+    // For All App Sheets
     suspend fun getFundById(id: Int): FundEntity?
+
+    /*-----( For Funds_Screen )-----*/
+    fun getAllFunds(): Flow<List<FundEntity>>
     fun getFundsSUM(): Flow<Double>
 
-    //-----------------[ Transactions]-----------------
+    suspend fun deleteAllFundTransactions(fundId: Int)
+    /*------------------------------*/
+
+    /**...............( Transaction Actions )...............**/
     suspend fun insertTransaction(transaction: TransactionEntity)
     suspend fun updateTransaction(transaction: TransactionEntity)
     suspend fun deleteTransaction(transaction: TransactionEntity)
+
+    // For (Transaction_Edit)
     suspend fun getTransactionById(id: Int): TransactionEntity?
 
-    fun getExpensesByDate(
+    /*-----( For Expenses_Screen )-----*/
+    fun getExpensesByDateAndType(
         startDate: Long,
         endDate: Long,
-    ): Flow<List<TransactionEntity>>
-
-    fun getExpensesWithFundByDate(
-        startDate: Long,
-        endDate: Long
     ): Flow<List<TransactionWithFund>>
 
-    fun getExpensesSumByDate(startDate: Long, endDate: Long): Flow<Double>
+    fun getExpensesSumByDateAndType(
+        startDate: Long,
+        endDate: Long,
+    ): Flow<Double>
+    /*---------------------------------*/
 
-    fun getTransactionsByType(
-        fundId: Int,
+    /*-----( For Reports_Screen )-----*/
+    fun getTransactionsByDateAndType(
         type: TransactionType,
         startDate: Long,
         endDate: Long,
-    ): Flow<List<TransactionEntity>>
+    ): Flow<List<TransactionWithFund>>
 
-    fun getTransactionsSumByType(
-        fundId: Int,
+    fun getTransactionsSumByDateAndType(
         type: TransactionType,
         startDate: Long,
         endDate: Long,
     ): Flow<Double>
 
-    fun getFundIncomeSumFlow(fundId: Int, startDate: Long, endDate: Long): Flow<Double>
-    fun getFundExpenseSumFlow(fundId: Int, startDate: Long, endDate: Long): Flow<Double>
+    fun getTransactionsByFundAndTypeAndDate(
+        fundId: Int,
+        type: TransactionType,
+        startDate: Long,
+        endDate: Long,
+    ): Flow<List<TransactionWithFund>>
 
-    //-----------------[ Funds Transfer]-----------------
+    fun getTransactionsSumByFundAndTypeAndDate(
+        fundId: Int,
+        type: TransactionType,
+        startDate: Long,
+        endDate: Long,
+    ): Flow<Double>
+    /*--------------------------------*/
+
+    /**...............( Funds Transfer )...............**/
     suspend fun transferBetweenFunds(
         fromFundId: Int,
         toFundId: Int,
@@ -61,7 +80,40 @@ interface CashBoxRepository {
         timestamp: Long = System.currentTimeMillis(),
     )
 
-    //-----------------[ Preferences ]-----------------
+    /*
+//    fun getExpensesByDate(
+//        startDate: Long,
+//        endDate: Long,
+//    ): Flow<List<TransactionEntity>>
+
+//    fun getAllTransactionsByFundAndDate(
+//        fundId: Int,
+//        startDate: Long,
+//        endDate: Long,
+//    ): Flow<List<TransactionEntity>>
+
+
+
+//    fun getTransactionsByType(
+//        fundId: Int,
+//        type: TransactionType,
+//        startDate: Long,
+//        endDate: Long,
+//    ): Flow<List<TransactionEntity>>
+
+//    fun getTransactionsSumByType(
+//        fundId: Int,
+//        type: TransactionType,
+//        startDate: Long,
+//        endDate: Long,
+//    ): Flow<Double>
+
+//    fun getFundIncomeSumFlow(fundId: Int, startDate: Long, endDate: Long): Flow<Double>
+//    fun getFundExpenseSumFlow(fundId: Int, startDate: Long, endDate: Long): Flow<Double>
+
+     */
+
+    /**...............( Preferences )...............**/
 
     //......( Read Flow )......
     val themeFlow: Flow<Theme>
