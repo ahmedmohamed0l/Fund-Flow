@@ -74,16 +74,6 @@ class ExpensesViewModel @Inject constructor(
         }
     }
 
-    fun onDatePicked(date: Long) {
-        _state.update {
-            it.copy(
-                selectedDate = date,
-                isDatePickerOpen = false
-            )
-        }
-    }
-
-
     fun onEvent(event: ExpensesEvent) {
         when (event) {
             ExpensesEvent.OnPreviousDayClick -> changeDay(-1)
@@ -106,7 +96,12 @@ class ExpensesViewModel @Inject constructor(
             }
 
             is ExpensesEvent.OnDateSelected -> {
-                onDatePicked(event.date)
+                _state.update {
+                    it.copy(
+                        selectedDate = event.date,
+                        isDatePickerOpen = false
+                    )
+                }
             }
 
             is ExpensesEvent.OnExpenseClick -> {}
