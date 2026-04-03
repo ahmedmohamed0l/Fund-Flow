@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionType
@@ -35,6 +36,7 @@ interface TransactionDao {
     suspend fun getTransactionById(id: Int): TransactionEntity?
 
     /*-----( For Expenses_Screen )-----*/
+    @Transaction
     @Query("SELECT * FROM transactions WHERE type = 'EXPENSE' AND isTransfer = 0 AND date BETWEEN :startDate AND :endDate ORDER BY date ASC")
     fun getExpensesByDateAndType(
         startDate: Long,
@@ -53,7 +55,7 @@ interface TransactionDao {
     @Query("SELECT MIN(date) AS firstDate, MAX(date) AS lastDate FROM transactions")
     fun getFirstAndLastDate(): Flow<DateRange>
 
-
+    @Transaction
     @Query("SELECT * FROM transactions WHERE type = :type AND date BETWEEN :startDate AND :endDate ORDER BY date ASC")
     fun getTransactionsByDateAndType(
         type: TransactionType,
@@ -68,6 +70,7 @@ interface TransactionDao {
         endDate: Long,
     ): Flow<Double>
 
+    @Transaction
     @Query("SELECT * FROM transactions WHERE fundId = :fundId And type = :type And date BETWEEN :startDate AND :endDate ORDER BY date ASC")
     fun getTransactionsByFundAndTypeAndDate(
         fundId: Int,
