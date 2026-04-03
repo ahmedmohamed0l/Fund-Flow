@@ -49,6 +49,9 @@ interface TransactionDao {
     /*---------------------------------*/
 
     /*-----( For Reports_Screen )-----*/
+    @Query("SELECT date FROM TRANSACTIONS ORDER BY date ASC")
+    fun getAllDates(): Flow<List<Long>>
+
     @Query("SELECT * FROM transactions WHERE type = :type AND date BETWEEN :startDate AND :endDate ORDER BY date ASC")
     fun getTransactionsByDateAndType(
         type: TransactionType,

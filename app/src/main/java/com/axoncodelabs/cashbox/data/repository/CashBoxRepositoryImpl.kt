@@ -157,6 +157,10 @@ class CashBoxRepositoryImpl @Inject constructor(
     /*---------------------------------*/
 
     /*-----( For Reports_Screen )-----*/
+    override fun getAllDates(): Flow<List<Long>>{
+        return transactionDao.getAllDates()
+    }
+
     override fun getTransactionsByDateAndType(
         type: TransactionType,
         startDate: Long,
