@@ -26,5 +26,11 @@ val MyRoundedCornerShape: Shapes
             topEnd = 16.dp,
             bottomStart = 16.dp,
             bottomEnd = 16.dp
+        ),
+        extraLarge = RoundedCornerShape(
+            topStart = 30.dp,
+            topEnd = 30.dp,
+            bottomStart = 30.dp,
+            bottomEnd = 30.dp
         )
     )

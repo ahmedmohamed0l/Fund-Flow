@@ -54,9 +54,9 @@ import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
 import com.axoncodelabs.cashbox.data.util.doubleFormat
 import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.components.MyBlurredButton
+import com.axoncodelabs.cashbox.ui.components.editTransaction.EditTransactionSheet
 import com.axoncodelabs.cashbox.ui.components.topAppBar.TopBarState
 import com.axoncodelabs.cashbox.ui.screens.expenses.components.sheets.addExpense.AddExpenseSheet
-import com.axoncodelabs.cashbox.ui.components.editTransaction.EditTransactionSheet
 import com.axoncodelabs.cashbox.ui.theme.AppCurrency
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
@@ -166,79 +166,72 @@ private fun ExpensesScreenRoot(
     expenses: List<TransactionWithFund>,
     onEvent: (ExpensesEvent) -> Unit,
 ) {
-    Column(
+    MyDatePickerDialog(
+        isDatePickerOpen = isDatePickerOpen,
+        initialDate = initialDate,
+        onDatePickerDismiss = { onDatePickerDismiss() },
+        onConfirmBttnClick = onClickConfirmBttn,
+    )
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
-        horizontalAlignment = Alignment.CenterHorizontally
-
     ) {
-        MyDatePickerDialog(
-            isDatePickerOpen = isDatePickerOpen,
-            initialDate = initialDate,
-            onDatePickerDismiss = { onDatePickerDismiss() },
-            onConfirmBttnClick = onClickConfirmBttn,
-        )
-
-        Box(
-            modifier = Modifier.fillMaxSize()
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Card(
+                modifier = Modifier
+                    .padding(vertical = 20.dp),
+                shape = MyRoundedCornerShape.medium,
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
             ) {
-                Card(
+                Column(
                     modifier = Modifier
-                        .padding(vertical = 20.dp),
-                    shape = MyRoundedCornerShape.medium,
-                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
+                        .wrapContentSize()
+                        .padding(horizontal = 5.dp, vertical = 15.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Column(
+                    DateSelect(
+                        onPreviousDayClick = { onPreviousDayClick() },
+                        onNextDayClick = { onNextDayClick() },
+                        onToggleDatePicker = { onToggleDatePicker() },
+                        selectedDate = selectedDate,
+                    )
+                    HorizontalDivider(
                         modifier = Modifier
-                            .wrapContentSize()
-                            .padding(horizontal = 5.dp, vertical = 15.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        DateSelect(
-                            onPreviousDayClick = { onPreviousDayClick() },
-                            onNextDayClick = { onNextDayClick() },
-                            onToggleDatePicker = { onToggleDatePicker() },
-                            selectedDate = selectedDate,
-                        )
-                        HorizontalDivider(
-                            modifier = Modifier
-                                .width(280.dp)
-                                .padding(15.dp),
-                            thickness = 1.dp,
-                            color = MaterialTheme.colorScheme.outline
-                        )
-                        DayExpensesTotalValue(
-                            isHideData = isHideData,
-                            expensesTotalValue = expensesTotalValue
-                        )
-                    }
+                            .width(280.dp)
+                            .padding(15.dp),
+                        thickness = 1.dp,
+                        color = MaterialTheme.colorScheme.outline
+                    )
+                    DayExpensesTotalValue(
+                        isHideData = isHideData,
+                        expensesTotalValue = expensesTotalValue
+                    )
                 }
-
-                ExpensesPageState(
-                    expenses = expenses,
-                    isHideData = isHideData,
-                    selectedDate = selectedDate,
-                    onEvent = onEvent
-                )
             }
 
-            MyBlurredButton(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(bottom = 70.dp)
-                    .padding(horizontal = 40.dp),
-                text = stringResource(R.string.ExpensesScreen_AddExpenses_Butt),
-                onClick = {
-                    onEvent(ExpensesEvent.SheetDisplayed(ExpensesSheets.AddExpense))
-                }
+            ExpensesPageState(
+                expenses = expenses,
+                isHideData = isHideData,
+                selectedDate = selectedDate,
+                onEvent = onEvent
             )
         }
+
+        MyBlurredButton(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(bottom = 70.dp)
+                .padding(horizontal = 40.dp),
+            text = stringResource(R.string.ExpensesScreen_AddExpenses_Butt),
+            onClick = {
+                onEvent(ExpensesEvent.SheetDisplayed(ExpensesSheets.AddExpense))
+            }
+        )
     }
 }
 
@@ -470,10 +463,10 @@ private fun ExpensesList(
             .fillMaxSize()
             .border(
                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
-                shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp),
+                shape = MyRoundedCornerShape.extraLarge,
                 width = (0.5).dp
             ),
-        shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp),
+        shape = MyRoundedCornerShape.extraLarge,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
     ) {
@@ -498,7 +491,7 @@ private fun ExpensesList(
                     Spacer(modifier = Modifier.height(15.dp))
                 }
             }
-            item { Spacer(modifier = Modifier.height(75.dp)) }
+            item { Spacer(modifier = Modifier.height(125.dp)) }
         }
     }
 }

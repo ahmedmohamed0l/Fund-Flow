@@ -25,7 +25,7 @@ sealed class Theme(val value: String) {
 }
 
 private val LightColorScheme = lightColorScheme(
-    background = MyColors.WhiteSmoke2,
+    background = MyColors.WhiteSmoke,
     onBackground = MyColors.SoftBlack,
 //    onPrimaryFixed = MyColors.White,
 
@@ -33,10 +33,10 @@ private val LightColorScheme = lightColorScheme(
     primary = MyColors.DarkSkyBlue,
     onPrimary = MyColors.White,
 
-    secondary = MyColors.LightGray2,
+    secondary = MyColors.LightGray,
     onSecondary = MyColors.Gray,
 
-    surface = MyColors.WhiteSmoke,
+    surface = MyColors.White,
     onSurface = MyColors.Gray,
 
 //    tertiary = MyColors.LightGray,
