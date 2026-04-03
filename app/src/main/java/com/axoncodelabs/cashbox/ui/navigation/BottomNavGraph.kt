@@ -34,7 +34,7 @@ fun BottomNavGraph(
             ExpensesScreen(onTopBarChange = onTopBarChange)
         }
         composable(route = BottomBarScreen.Reports.route) {
-            ReportsScreen()
+            ReportsScreen(onTopBarChange = onTopBarChange)
         }
         composable(route = BottomBarScreen.Funds.route) {
             FundsScreen(onTopBarChange = onTopBarChange)

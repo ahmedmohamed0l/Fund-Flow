@@ -5,6 +5,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
+import com.axoncodelabs.cashbox.ui.screens.reports.ReportType
+import com.axoncodelabs.cashbox.ui.screens.reports.ReportTypeSelector
+import com.axoncodelabs.cashbox.ui.screens.reports.ReportsScreenRoot
 import com.axoncodelabs.cashbox.ui.theme.CashBoxTheme
 
 @Preview(showBackground = true)
@@ -21,9 +24,15 @@ private fun Preview() {
             darkTheme = darkMode
         ) {
             /**--------- Content ---------**/
+//            ReportsScreenRoot()
+            ReportTypeSelector(
+                selectedType = ReportType.Expenses,
+                onTypeSelected = {}
+            )
         }
     }
 }
+
 /*  Mock Data
 private fun mockExpenseList(count: Int): List<TransactionWithFund> {
     return List(count) { index ->
