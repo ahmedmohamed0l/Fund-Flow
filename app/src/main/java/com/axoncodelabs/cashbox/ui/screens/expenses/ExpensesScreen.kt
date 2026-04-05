@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DatePicker
@@ -51,7 +50,7 @@ import androidx.datastore.preferences.protobuf.LazyStringArrayList.emptyList
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
-import com.axoncodelabs.cashbox.data.util.doubleFormat
+import com.axoncodelabs.cashbox.data.util.myDoubleFormat
 import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.components.MyBlurredButton
 import com.axoncodelabs.cashbox.ui.components.editTransaction.EditTransactionSheet
@@ -380,7 +379,7 @@ fun DayExpensesTotalValue(
         Spacer(modifier = Modifier.width(3.dp))
         HideTextData(
             isHideData = isHideData,
-            text = (doubleFormat(expensesTotalValue)),
+            text = (myDoubleFormat(expensesTotalValue)),
             color = MaterialTheme.colorScheme.primary,
             style = MyFontStyle.largeBold(),
         )
@@ -561,7 +560,7 @@ fun ExpenseItem(
             Box(modifier = Modifier.weight(10f), contentAlignment = Alignment.CenterEnd) {
                 HideTextData(
                     isHideData = isHideData,
-                    text = doubleFormat(expense.transaction.amount),
+                    text = myDoubleFormat(expense.transaction.amount),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MyFontStyle.extraLargeBold()
                 )

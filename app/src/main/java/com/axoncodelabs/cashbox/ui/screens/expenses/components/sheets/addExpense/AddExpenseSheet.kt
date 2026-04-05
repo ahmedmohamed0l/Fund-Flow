@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
-import com.axoncodelabs.cashbox.data.util.doubleFormat
+import com.axoncodelabs.cashbox.data.util.myDoubleFormat
 import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.components.MyButton
 import com.axoncodelabs.cashbox.ui.components.MyNumField
@@ -114,7 +114,7 @@ private fun AddExpenseSheetRoot(
         HideTextData(
             modifier = Modifier.align(Alignment.End),
             isHideData = isHideData,
-            text = (stringResource(R.string.Sheet_FundFromBalance) + " " + doubleFormat(
+            text = (stringResource(R.string.Sheet_FundFromBalance) + " " + myDoubleFormat(
                 availableBalance
             )),
             color = if (isAvailableNegative) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.inversePrimary,

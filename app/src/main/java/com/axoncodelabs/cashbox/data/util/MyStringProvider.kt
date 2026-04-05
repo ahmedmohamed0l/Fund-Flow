@@ -5,19 +5,19 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import java.text.DecimalFormat
 
-interface StringProvider {
+interface MyStringProvider {
     fun getString(resId: Int): String
 }
 
-class StringProviderImpl @Inject constructor(
+class MyStringProviderImpl @Inject constructor(
     @ApplicationContext private val context: Context,
-) : StringProvider {
+) : MyStringProvider {
     override fun getString(resId: Int): String {
         return context.getString(resId)
     }
 }
 
-fun doubleFormat(double: Double): String {
+fun myDoubleFormat(double: Double): String {
     val formatter = DecimalFormat("#,##0.##")
     return formatter.format(double)
 }

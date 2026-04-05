@@ -23,7 +23,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -51,7 +50,7 @@ import androidx.datastore.preferences.protobuf.LazyStringArrayList.emptyList
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
-import com.axoncodelabs.cashbox.data.util.doubleFormat
+import com.axoncodelabs.cashbox.data.util.myDoubleFormat
 import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.components.topAppBar.TopBarState
 import com.axoncodelabs.cashbox.ui.screens.funds.components.deletepopup.DeleteFundConfirm
@@ -261,7 +260,7 @@ private fun TotalFundsValue(
                     .align(Alignment.CenterEnd)
                     .padding(end = 30.dp),
                 isHideData = isHideData,
-                text = (doubleFormat(fundsTotalBalance)),
+                text = (myDoubleFormat(fundsTotalBalance)),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MyFontStyle.large()
             )
@@ -435,7 +434,7 @@ fun FundItem(
                     Box(modifier = Modifier.weight(10f), contentAlignment = Alignment.CenterEnd) {
                         HideTextData(
                             isHideData = isHideData,
-                            text = (doubleFormat(fund.balance)),
+                            text = (myDoubleFormat(fund.balance)),
                             color = MaterialTheme.colorScheme.onBackground,
                             style = MyFontStyle.large()
                         )
