@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jakarta.inject.Inject
+import javax.inject.Inject
 
 @HiltViewModel
 class FundSelectionVM @Inject constructor(

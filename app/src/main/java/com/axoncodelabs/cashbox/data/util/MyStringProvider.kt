@@ -2,7 +2,7 @@ package com.axoncodelabs.cashbox.data.util
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
-import jakarta.inject.Inject
+import javax.inject.Inject
 import java.text.DecimalFormat
 
 interface MyStringProvider {
