@@ -34,7 +34,7 @@ data class ReportsState(
     val popupState: ReportsPopups = ReportsPopups.None,
 
     var selectedFund: FundEntity? = null,
-    var selectedDate: Long? = System.currentTimeMillis(),
+    var selectedDate: Long? = null,
     val selectedReportType: ReportType = ReportType.Expenses,
 
     val expensesSum: Double = 0.0,

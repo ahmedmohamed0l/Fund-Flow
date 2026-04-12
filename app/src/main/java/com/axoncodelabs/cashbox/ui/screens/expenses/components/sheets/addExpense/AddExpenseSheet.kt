@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
@@ -99,7 +98,6 @@ private fun AddExpenseSheetRoot(
             modifier = Modifier
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             MyIcons.TransactionWallet(color = MaterialTheme.colorScheme.onBackground, size = 30.dp)
             Spacer(modifier = Modifier.width(10.dp))
@@ -121,7 +119,7 @@ private fun AddExpenseSheetRoot(
             )),
             color = if (isAvailableNegative) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.inversePrimary,
             style = MyFontStyle.small(),
-            textAlign = TextAlign.End
+            align = Alignment.CenterEnd
         )
 
         Spacer(modifier = Modifier.height(7.dp))

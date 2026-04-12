@@ -20,7 +20,6 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
@@ -56,12 +55,15 @@ fun MyLabel(
     )
 }
 
+/** @param textAlign > **controls Text position inside the Label Frame by {contentAlignment: Alignment}** */
 @Composable
 fun MyRoundedLabel(
-    lapel: String,
     modifier: Modifier = Modifier,
+    lapel: String,
     isHideData: Boolean,
     textColor: Color = MaterialTheme.colorScheme.primary,
+    /** @param textAlign > **controls Text position inside the Label Frame by {contentAlignment: Alignment}** */
+    textAlign: Alignment = Alignment.Center,
     borderColor: Color = MaterialTheme.colorScheme.outline,
 ) {
     Box(
@@ -75,7 +77,7 @@ fun MyRoundedLabel(
             text = lapel,
             color = textColor,
             style = MyFontStyle.medium(),
-            textAlign = TextAlign.End
+            align = textAlign
         )
     }
 }

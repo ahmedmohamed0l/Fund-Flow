@@ -1,5 +1,6 @@
 package com.axoncodelabs.cashbox.ui.theme
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.Typography
@@ -12,6 +13,8 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axoncodelabs.cashbox.R
 
@@ -43,11 +46,12 @@ val Typography = Typography(
 @Composable
 fun AppCurrency(
     modifier: Modifier = Modifier,
-    style: TextStyle = MyFontStyle.small(),
+    style: TextStyle = MyFontStyle.xSmall(),
     textColor: Color = MaterialTheme.colorScheme.onBackground,
+    startPadding: Dp = 5.dp
 ) {
     Text(
-        modifier = modifier,
+        modifier = modifier.padding(start = startPadding),
         text = stringResource(R.string.App_Currency),
         style = style,
         color = textColor,
@@ -58,6 +62,11 @@ fun AppCurrency(
 
 object MyFontStyle {
 
+    fun xSmall() = TextStyle(
+        fontFamily = mainFont,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp
+    )
     fun small() = TextStyle(
         fontFamily = mainFont,
         fontWeight = FontWeight.Normal,

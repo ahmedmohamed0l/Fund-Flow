@@ -3,7 +3,6 @@ package com.axoncodelabs.cashbox.ui.components.fundselection
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
@@ -32,8 +30,8 @@ import com.axoncodelabs.cashbox.ui.theme.MyIcons
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FundSelectionBttn(
-    isHideData: Boolean,
     modifier: Modifier = Modifier,
+    isHideData: Boolean,
     fund: FundEntity?,
     fromFundId: Int? = null,
     onFundSelected: (FundEntity) -> Unit,
@@ -60,14 +58,9 @@ fun FundSelectionBttn(
             )
         }
     }
+    val finalBorderColor = if (isUnSelected) MaterialTheme.colorScheme.error else borderColor
 
-    val finalBorderColor = if (isUnSelected) {
-        MaterialTheme.colorScheme.error
-    } else {
-        borderColor
-    }
-
-    Column {
+    Column(modifier = modifier.fillMaxWidth()) {
         Row(
             modifier = modifier
                 .fillMaxWidth()
@@ -79,16 +72,16 @@ fun FundSelectionBttn(
                 .padding(horizontal = 15.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-                HideTextData(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(vertical = 15.dp),
-                    isHideData = isHideData,
-                    text = (fund?.name ?: stringResource(R.string.Sheet_FundSelection)),
-                    color = fund?.let { textColor } ?: finalBorderColor,
-                    style = MyFontStyle.medium(),
-                    textAlign = TextAlign.End
-                )
+            HideTextData(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(vertical = 15.dp),
+                isHideData = isHideData,
+                text = (fund?.name ?: stringResource(R.string.Sheet_FundSelection)),
+                color = fund?.let { textColor } ?: finalBorderColor,
+                style = MyFontStyle.medium(),
+                align = Alignment.CenterStart
+            )
             MyIcons.Arrow(
                 autoMirroredState = false,
                 size = 25.dp, color = finalBorderColor, angle = 180f

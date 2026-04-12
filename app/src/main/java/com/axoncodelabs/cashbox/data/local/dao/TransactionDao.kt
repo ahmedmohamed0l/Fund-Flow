@@ -55,6 +55,7 @@ interface TransactionDao {
     @Query("SELECT MIN(date) AS firstDate, MAX(date) AS lastDate FROM transactions")
     fun getFirstAndLastDate(): Flow<DateRange>
 
+
     @Transaction
     @Query("SELECT * FROM transactions WHERE type = :type AND date BETWEEN :startDate AND :endDate ORDER BY date ASC")
     fun getTransactionsByDateAndType(

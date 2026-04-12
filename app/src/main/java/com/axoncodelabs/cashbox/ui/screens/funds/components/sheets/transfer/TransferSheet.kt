@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
@@ -109,7 +108,8 @@ private fun TransferSheetRoot(
             modifier = Modifier.fillMaxWidth(),
             isHideData = isHideData,
             lapel = fromName,
-            textColor = MaterialTheme.colorScheme.onBackground
+            textColor = MaterialTheme.colorScheme.onBackground,
+            textAlign = Alignment.CenterStart
         )
 
 
@@ -142,7 +142,7 @@ private fun TransferSheetRoot(
                 )),
                 color = if (isAvailableNegative) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.inversePrimary,
                 style = MyFontStyle.medium(),
-                textAlign = TextAlign.End
+                align = Alignment.CenterEnd
             )
         }
         Spacer(modifier = Modifier.height(10.dp))

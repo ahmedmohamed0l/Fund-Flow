@@ -3,7 +3,6 @@ package com.axoncodelabs.cashbox.ui.components.fundselection
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,12 +20,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.util.myDoubleFormat
 import com.axoncodelabs.cashbox.ui.components.HideTextData
+import com.axoncodelabs.cashbox.ui.theme.AppCurrency
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
@@ -105,7 +104,7 @@ private fun FundItem(
                 text = (fund.name),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MyFontStyle.medium(),
-                textAlign = TextAlign.Start
+                align = Alignment.CenterStart
             )
         }
             HideTextData(
@@ -114,7 +113,8 @@ private fun FundItem(
                 text = (myDoubleFormat(fund.balance)),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MyFontStyle.large(),
-                textAlign = TextAlign.End
+                align = Alignment.CenterEnd
             )
+        AppCurrency(textColor = MaterialTheme.colorScheme.onBackground)
     }
 }

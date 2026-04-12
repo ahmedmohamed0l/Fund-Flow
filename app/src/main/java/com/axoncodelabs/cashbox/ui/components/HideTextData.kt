@@ -1,15 +1,13 @@
 package com.axoncodelabs.cashbox.ui.components
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
@@ -35,6 +33,7 @@ fun hideDataMask(isHide: Boolean, text: String): String {
         )
 */
 
+/** @param align > **controls Text position inside the Box by {contentAlignment: Alignment}** */
 @Composable
 fun HideTextData(
     modifier: Modifier = Modifier,
@@ -42,25 +41,24 @@ fun HideTextData(
     text: String,
     color: Color,
     style: TextStyle,
-    textAlign: TextAlign = TextAlign.Center,
+    /** @param align > **controls Text position inside the Box by {contentAlignment: Alignment}** */
+    align: Alignment = Alignment.Center,
+    maxLines: Int = 1,
 ) {
     val hideBlurState = if (isHideData) (1.5).dp else 0.dp
     Box(
-        modifier = Modifier
-            .wrapContentSize()
-            .blur(hideBlurState)
+        modifier = modifier.blur(hideBlurState),
+        contentAlignment = align
     ) {
         Text(
-            modifier = modifier.fillMaxWidth(),
             text = hideDataMask(
                 isHideData,
                 text = (text)
             ),
             style = style,
             color = color,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            textAlign = textAlign
+            maxLines = maxLines,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }

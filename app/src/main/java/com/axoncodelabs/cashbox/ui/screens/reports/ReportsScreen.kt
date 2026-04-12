@@ -29,6 +29,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
@@ -196,8 +197,7 @@ fun ReportsScreen(
 
 /**.....( Screen Layout ).....**/
 @Composable
-//TODO ToDo: Make it Private (Fun).
-fun ReportsScreenRoot(
+private fun ReportsScreenRoot(
     onFundSelectorClick: () -> Unit,
     selectedFund: String,
 
@@ -340,7 +340,8 @@ private fun SelectorBar(
                     interactionSource = remember { MutableInteractionSource() }) {
                     openSheet()
                 },
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
         ) {
             Icon(
                 painter = icon,
@@ -365,14 +366,16 @@ private fun SelectorBar(
                     interactionSource = remember { MutableInteractionSource() }) {
                     openSheet()
                 },
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.End
         ) {
             HideTextData(
+                modifier = Modifier.weight(1f),
                 isHideData = isHideData,
                 text = selectedValue.ifEmpty { stringResource(R.string.ReportsScreen_AllSelected) },
                 color = colorScheme.primary,
                 style = MyFontStyle.mediumBold(),
-                textAlign = TextAlign.End
+                align = Alignment.CenterEnd
             )
             MyIcons.Arrow(
                 modifier = modifier.offset(y = (-2.5).dp),
@@ -503,9 +506,7 @@ private fun ReportTab(
                 color = textColor,
                 style = MyFontStyle.large()
             )
-            Spacer(modifier = Modifier.width(5.dp))
             AppCurrency(textColor = textColor)
-
         }
     }
 }
@@ -668,12 +669,12 @@ private fun TransactionItem(
                 color = colorScheme.onSecondary,
                 style = MyFontStyle.small()
             )
-            HideTextData(
+           HideTextData(
                 isHideData = isHideData,
                 text = transaction.fund.name,
                 color = colorScheme.onSecondary,
                 style = MyFontStyle.small(),
-                textAlign = TextAlign.End
+                align = Alignment.CenterEnd
             )
         }
         Row(
@@ -684,11 +685,14 @@ private fun TransactionItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
                 HideTextData(
-                    modifier = Modifier.weight(2f).padding(end = 5.dp),
+                    modifier = Modifier
+                        .weight(2f)
+                        .padding(end = 5.dp),
                     isHideData = isHideData,
                     text = transaction.transaction.description,
                     color = colorScheme.onBackground,
-                    style = MyFontStyle.large()
+                    style = MyFontStyle.large(),
+                    align = Alignment.CenterStart
                 )
                 HideTextData(
                     modifier = Modifier.weight(1f),
@@ -696,8 +700,9 @@ private fun TransactionItem(
                     text = myDoubleFormat(transaction.transaction.amount),
                     color = colorScheme.onBackground,
                     style = MyFontStyle.xxLargeBold(),
-                    textAlign = TextAlign.End
+                    align = Alignment.CenterEnd
                 )
+            AppCurrency(textColor = colorScheme.onBackground)
         }
     }
 }

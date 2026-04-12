@@ -58,6 +58,7 @@ import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addamount.Add
 import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addfund.AddFundSheet
 import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.fundoptions.FundOptionsSheet
 import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.transfer.TransferSheet
+import com.axoncodelabs.cashbox.ui.theme.AppCurrency
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
@@ -254,16 +255,15 @@ private fun TotalFundsValue(
                 .padding(start = 30.dp)
                 .weight(5f)
         )
-            HideTextData(
-                modifier = Modifier
-                    .weight(5f)
-                    .padding(end = 30.dp),
-                isHideData = isHideData,
-                text = (myDoubleFormat(fundsTotalBalance)),
-                color = MaterialTheme.colorScheme.onBackground,
-                style = MyFontStyle.large(),
-                textAlign = TextAlign.End
-            )
+        HideTextData(
+            isHideData = isHideData,
+            text = (myDoubleFormat(fundsTotalBalance)),
+            color = MaterialTheme.colorScheme.primary,
+            style = MyFontStyle.large(),
+            align = Alignment.CenterEnd
+        )
+        AppCurrency(textColor = MaterialTheme.colorScheme.primary)
+        Spacer(modifier = Modifier.width(30.dp))
     }
 }
 
@@ -427,7 +427,7 @@ fun FundItem(
                             text = (fund.name),
                             color = MaterialTheme.colorScheme.onBackground,
                             style = MyFontStyle.medium(),
-                            textAlign = TextAlign.Start
+                            align = Alignment.CenterStart
                         )
                     }
                         HideTextData(
@@ -436,8 +436,9 @@ fun FundItem(
                             text = (myDoubleFormat(fund.balance)),
                             color = MaterialTheme.colorScheme.onBackground,
                             style = MyFontStyle.large(),
-                            textAlign = TextAlign.End
+                            align = Alignment.CenterEnd
                         )
+                    AppCurrency(textColor = MaterialTheme.colorScheme.onBackground)
                 }
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,

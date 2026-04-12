@@ -216,7 +216,6 @@ private fun ExpensesScreenRoot(
             ExpensesPageState(
                 expenses = expenses,
                 isHideData = isHideData,
-                selectedDate = selectedDate,
                 onEvent = onEvent
             )
         }
@@ -237,7 +236,7 @@ private fun ExpensesScreenRoot(
 /** --------------------[ Components ]-------------------- **/
 /**.....( Date Pick ).....**/
 @Composable
-fun MyDatePickerDialog(
+private fun MyDatePickerDialog(
     isDatePickerOpen: Boolean,
     initialDate: Long,
     onDatePickerDismiss: () -> Unit,
@@ -312,7 +311,7 @@ fun MyDatePickerDialog(
 }
 
 @Composable
-fun DateSelect(
+private fun DateSelect(
     onPreviousDayClick: () -> Unit,
     onNextDayClick: () -> Unit,
     onToggleDatePicker: () -> Unit,
@@ -364,7 +363,7 @@ fun DateSelect(
 }
 
 @Composable
-fun DayExpensesTotalValue(
+private fun DayExpensesTotalValue(
     isHideData: Boolean,
     expensesTotalValue: Double,
 ) {
@@ -383,7 +382,6 @@ fun DayExpensesTotalValue(
             color = MaterialTheme.colorScheme.primary,
             style = MyFontStyle.largeBold(),
         )
-        Spacer(modifier = Modifier.width(5.dp))
         AppCurrency(textColor = MaterialTheme.colorScheme.primary)
     }
 }
@@ -393,7 +391,6 @@ fun DayExpensesTotalValue(
 private fun ExpensesPageState(
     expenses: List<TransactionWithFund>,
     isHideData: Boolean,
-    selectedDate: Long,
     onEvent: (ExpensesEvent) -> Unit,
 
     ) {
@@ -403,7 +400,6 @@ private fun ExpensesPageState(
         ExpensesList(
             expenses = expenses,
             isHideData = isHideData,
-            selectedDate = selectedDate,
             onEvent = onEvent
         )
     }
@@ -454,7 +450,6 @@ private fun EmptyExpensesPage() {
 private fun ExpensesList(
     expenses: List<TransactionWithFund>,
     isHideData: Boolean,
-    selectedDate: Long,
     onEvent: (ExpensesEvent) -> Unit,
 ) {
     Card(
@@ -482,7 +477,6 @@ private fun ExpensesList(
                 contentType = { _, _ -> "ExpenseItem" }) { index, expense ->
                 ExpenseItem(
                     isHideData = isHideData,
-                    selectedDate = selectedDate,
                     expense = expense,
                     onEvent = onEvent
                 )
@@ -497,16 +491,14 @@ private fun ExpensesList(
 
 @Composable
 private fun ExpenseItem(
+    modifier: Modifier = Modifier,
     isHideData: Boolean,
     expense: TransactionWithFund,
-    selectedDate: Long,
-    modifier: Modifier = Modifier,
     onEvent: (ExpensesEvent) -> Unit,
 ) {
-    Box(
+    Column(
         modifier = modifier
             .fillMaxWidth()
-            .height(100.dp)
             .clip(MyRoundedCornerShape.medium)
             .clickable(
                 indication = null, interactionSource = remember { MutableInteractionSource() }) {
@@ -522,15 +514,13 @@ private fun ExpenseItem(
             .padding(vertical = 5.dp)
     ) {
         Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .align(Alignment.TopCenter),
+            modifier = modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 modifier = Modifier.padding(end = 10.dp),
-                text = formatDate(selectedDate),
+                text = formatDate(expense.transaction.date),
                 color = MaterialTheme.colorScheme.onSecondary,
                 style = MyFontStyle.small()
             )
@@ -539,38 +529,40 @@ private fun ExpenseItem(
                 text = expense.fund.name,
                 color = MaterialTheme.colorScheme.onSecondary,
                 style = MyFontStyle.small(),
-                textAlign = TextAlign.End
+                align = Alignment.CenterEnd
             )
         }
+        Spacer(Modifier.height(20.dp))
         Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-                HideTextData(
-                    modifier = Modifier.weight(2f).padding(end = 5.dp),
-                    isHideData = isHideData,
-                    text = expense.transaction.description,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MyFontStyle.large(),
-                    textAlign = TextAlign.Start
-                )
-                HideTextData(
-                    modifier = Modifier.weight(1f),
-                    isHideData = isHideData,
-                    text = myDoubleFormat(expense.transaction.amount),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MyFontStyle.xxLargeBold()                    ,
-                    textAlign = TextAlign.End
-                )
+            HideTextData(
+                modifier = Modifier
+                    .weight(2f)
+                    .padding(end = 5.dp),
+                isHideData = isHideData,
+                text = expense.transaction.description,
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MyFontStyle.large(),
+                maxLines = 2,
+                align = Alignment.CenterStart
+            )
+            HideTextData(
+                modifier = Modifier.weight(1f),
+                isHideData = isHideData,
+                text = myDoubleFormat(expense.transaction.amount),
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MyFontStyle.xxLargeBold(),
+                align = Alignment.CenterEnd
+            )
+            AppCurrency(textColor = MaterialTheme.colorScheme.onBackground)
         }
     }
 }
 
 /** --------------------[ Helpers ]-------------------- **/
-fun formatDate(timestamp: Long): String {
+private fun formatDate(timestamp: Long): String {
     val cal = Calendar.getInstance().apply { timeInMillis = timestamp }
     val sdf = SimpleDateFormat("EEEE dd MMMM yyyy", Locale.forLanguageTag("ar"))
     return sdf.format(cal.time)

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -30,7 +31,6 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -124,13 +124,11 @@ private fun FundOptionsSheetRoot(
             if (isEditMode) {
                 Box(
                     modifier = Modifier
-                        .width(300.dp)
-                        .padding(end = 10.dp)
-                        .wrapContentSize()
+                        .weight(1f)
                         .blur(if (isHideData) (1.5).dp else 0.dp)
                 ) {
                     MyTextField(
-                        modifier = Modifier.width(300.dp),
+                        modifier = Modifier.fillMaxWidth(1f),
                         value = hideDataMask(isHideData, text = (name)),
                         onValueChange = onNameChange,
                         keyboardType = KeyboardType.Text,
@@ -139,6 +137,8 @@ private fun FundOptionsSheetRoot(
                         errorMsg = stringResource(R.string.Sheet_FundNameError)
                     )
                 }
+
+                Spacer(modifier = Modifier.width(10.dp))
 
                 Box(
                     contentAlignment = Alignment.Center,
@@ -160,12 +160,14 @@ private fun FundOptionsSheetRoot(
                 }
             } else {
                     HideTextData(
-                        modifier = Modifier.weight(1f).padding(vertical = 15.dp),
+                        modifier = Modifier
+                            .padding(vertical = 15.dp)
+                            .weight(1f),
                         isHideData = isHideData,
                         text = (name),
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MyFontStyle.medium(),
-                        textAlign = TextAlign.Start
+                        align = Alignment.CenterStart
                     )
                 Box(
                     contentAlignment = Alignment.Center,

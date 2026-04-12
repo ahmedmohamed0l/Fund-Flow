@@ -89,7 +89,8 @@ private fun AddAmountSheetRoot(
         MyRoundedLabel(
             modifier = Modifier.fillMaxWidth(),
             isHideData = isHideData,
-            lapel = (name)
+            lapel = (name),
+            textAlign = Alignment.CenterStart,
         )
         Spacer(modifier = Modifier.height(20.dp))
 
