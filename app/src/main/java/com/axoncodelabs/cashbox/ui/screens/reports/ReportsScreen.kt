@@ -1,41 +1,70 @@
 package com.axoncodelabs.cashbox.ui.screens.reports
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.datastore.preferences.protobuf.Enum
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
+import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
+import com.axoncodelabs.cashbox.data.util.myDoubleFormat
+import com.axoncodelabs.cashbox.ui.components.HideTextData
+import com.axoncodelabs.cashbox.ui.components.editTransaction.EditTransactionSheet
+import com.axoncodelabs.cashbox.ui.components.fundselection.FundSelectionSheet
 import com.axoncodelabs.cashbox.ui.components.topAppBar.TopBarState
+import com.axoncodelabs.cashbox.ui.screens.reports.componants.monthPickerPopup.ScrollableMonthPicker
+import com.axoncodelabs.cashbox.ui.theme.AppCurrency
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
-import javax.annotation.meta.When
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,34 +90,42 @@ fun ReportsScreen(
     @Composable
     fun sheetsHandle() {
         when (sheet) {
-            is ReportsSheets.EditTransaction -> {
-                ModalBottomSheet(
-                    onDismissRequest = { viewModel.onEvent(ReportsEvent.CloseSheet) },
-                    containerColor = colorScheme.background,
-                    sheetState = sheetState
-                ) {
-                    /*EditTransactionSheet(
-                        isHideData = isHideData,
-                        transaction = sheet.expense,
-                        onClose = { viewModel.onEvent(ExpensesEvent.CloseSheet) }
-                    )*/
-                }
-            }
-
             ReportsSheets.FundSelection -> {
                 ModalBottomSheet(
                     onDismissRequest = { viewModel.onEvent(ReportsEvent.CloseSheet) },
                     containerColor = colorScheme.background,
                     sheetState = sheetState
                 ) {
-                    /*FundSelectionSheet(
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        SelectAllValues(
+                            modifier = Modifier.padding(start = 20.dp),
+                            selectedValue = state.selectedFund?.name.orEmpty(),
+                            onSelectAll = { viewModel.onEvent(ReportsEvent.OnSelectAllFunds) }
+                        )
+                        FundSelectionSheet(
+                            isHideData = isHideData,
+                            onSelect = {
+                                state.selectedFund = it
+                                viewModel.onEvent(ReportsEvent.CloseSheet)
+                            }
+                        )
+                    }
+                }
+            }
+
+            is ReportsSheets.EditTransaction -> {
+                ModalBottomSheet(
+                    onDismissRequest = { viewModel.onEvent(ReportsEvent.CloseSheet) },
+                    containerColor = colorScheme.background,
+                    sheetState = sheetState
+                ) {
+                    EditTransactionSheet(
                         isHideData = isHideData,
-                        onSelect = {
-                            onFundSelected(it)
-                            viewModel.showFunds = false
-                        },
-                        fromFundId = fromFundId
-                    )*/
+                        transaction = sheet.transaction,
+                        onClose = { viewModel.onEvent(ReportsEvent.CloseSheet) }
+                    )
                 }
             }
 
@@ -101,22 +138,83 @@ fun ReportsScreen(
     fun popupsHandle() {
         when (popup) {
             ReportsPopups.DateSelection -> {
-                //TODO ToDo: Create Date Selection Popup.
-            }
+                BasicAlertDialog(onDismissRequest = { viewModel.onEvent(ReportsEvent.ClosePopup) }) {
+                    Surface(
+                        shape = MyRoundedCornerShape.extraLarge,
+                        color = colorScheme.background
+                    ) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Spacer(Modifier.height(25.dp))
+                            ScrollableMonthPicker(
+                                initialDateMillis = state.selectedDate,
+                                onDateConfirmed = { dateMillis ->
+                                    viewModel.onEvent(ReportsEvent.OnDateChange(dateMillis))
+                                }
+                            )
 
+                            Spacer(Modifier.height(15.dp))
+                            SelectAllValues(
+                                modifier = Modifier
+                                    .padding(horizontal = 25.dp)
+                                    .padding(bottom = 25.dp),
+                                selectedValue = formatDate(state.selectedDate),
+                                onSelectAll = { viewModel.onEvent(ReportsEvent.OnSelectAllDates) }
+                            )
+                        }
+                    }
+                }
+            }
             ReportsPopups.None -> Unit
         }
     }
     popupsHandle()
 
     //.....( Screen Layout ).....
-    ReportsScreenRoot()
+    ReportsScreenRoot(
+        onFundSelectorClick = { viewModel.onEvent(ReportsEvent.SheetDisplayed(ReportsSheets.FundSelection)) },
+        onDateSelectorClick = { viewModel.onEvent(ReportsEvent.PopupDisplayed(ReportsPopups.DateSelection)) },
+
+        //TODO CHECKPOINT: continue from here (Start to handle the data)
+        selectedFund = state.selectedFund?.name.orEmpty(),
+        selectedDate = formatDate(state.selectedDate),
+        selectedType = state.selectedReportType,
+        onTypeSelected = { viewModel.onEvent(ReportsEvent.OnReportTypeChange(it)) },
+
+        expensesSum = state.expensesSum,
+        incomeSum = state.incomeSum,
+
+        expenses = state.expensesList,
+        income = state.incomeList,
+        onEvent = viewModel::onEvent,
+
+        isHideData = isHideData
+    )
 }
 
 /**.....( Screen Layout ).....**/
 @Composable
 //TODO ToDo: Make it Private (Fun).
-fun ReportsScreenRoot() {
+fun ReportsScreenRoot(
+    onFundSelectorClick: () -> Unit,
+    selectedFund: String,
+
+    onDateSelectorClick: () -> Unit,
+    selectedDate: String,
+
+    selectedType: ReportType,
+    expensesSum: Double,
+    incomeSum: Double,
+    onTypeSelected: (ReportType) -> Unit,
+
+    expenses: List<TransactionWithFund>,
+    income: List<TransactionWithFund>,
+    onEvent: (ReportsEvent) -> Unit,
+
+    isHideData: Boolean
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -128,24 +226,38 @@ fun ReportsScreenRoot() {
         DataSelectors(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-                .clip(MyRoundedCornerShape.medium)
-                .border(
-                    1.dp,
-                    colorScheme.primary.copy(alpha = 0.5f),
-                    MyRoundedCornerShape.medium
-                )
-                .background(colorScheme.surface)
-                .padding(10.dp),
-            onFundSelectorClick = {},
-            onDateSelectorClick = {}
+                .padding(horizontal = 20.dp),
+            onFundSelectorClick = { onFundSelectorClick() },
+            selectedFund = selectedFund,
+
+            onDateSelectorClick = { onDateSelectorClick() },
+            selectedDate = selectedDate,
+
+            isHideData = isHideData
         )
         Spacer(Modifier.height(20.dp))
 
-
-
+        ReportTypeSelector(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(90.dp)
+                .padding(horizontal = 20.dp),
+            selectedType = selectedType,
+            expensesSum = expensesSum,
+            incomeSum = incomeSum,
+            onTypeSelected = onTypeSelected,
+            isHideData = isHideData
+        )
         Spacer(Modifier.height(20.dp))
 
+        ReportsPageState(
+            expenses = expenses,
+            income = income,
+            selectedType = selectedType,
+            isHideData = isHideData,
+            onEvent = onEvent
+        )
+        /**........................**/
 
         Spacer(Modifier.height(20.dp))
 
@@ -159,61 +271,115 @@ fun ReportsScreenRoot() {
 private fun DataSelectors(
     modifier: Modifier = Modifier,
     onFundSelectorClick: () -> Unit,
-    onDateSelectorClick: () -> Unit
+    selectedFund: String,
+
+    onDateSelectorClick: () -> Unit,
+    selectedDate: String,
+
+    isHideData: Boolean
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier
+            .clip(MyRoundedCornerShape.medium)
+            .border(
+                1.dp,
+                colorScheme.primary.copy(alpha = 0.5f),
+                MyRoundedCornerShape.medium
+            )
+            .background(colorScheme.surface)
+            .padding(15.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        FundSelector(onFundSelectorClick = onFundSelectorClick)
+        // Fund Selector
+        SelectorBar(
+            icon = painterResource(id = R.drawable.ic_credit_card),
+            title = stringResource(id = R.string.ReportsScreen_FundSelection),
+            openSheet = { onFundSelectorClick() },
+            selectedValue = selectedFund,
+            isHideData = isHideData
+        )
+
         HorizontalDivider(
             Modifier
                 .fillMaxWidth()
-                .padding(vertical = 10.dp)
+                .padding(vertical = 15.dp)
                 .clip(MyRoundedCornerShape.medium),
             thickness = 1.dp,
             color = colorScheme.primary.copy(alpha = 0.5f)
         )
-        DateSelector(onDateSelectorClick = onDateSelectorClick)
+
+        // Date Selector
+        SelectorBar(
+            icon = painterResource(id = R.drawable.ic_search_activity),
+            title = stringResource(id = R.string.ReportsScreen_ZoneSelection),
+            openSheet = { onDateSelectorClick() },
+            selectedValue = selectedDate,
+            isHideData = isHideData
+        )
     }
 }
 
 @Composable
-private fun FundSelector(onFundSelectorClick: () -> Unit) {
+private fun SelectorBar(
+    modifier: Modifier = Modifier,
+    icon: Painter,
+    title: String,
+    openSheet: () -> Unit,
+    selectedValue: String,
+    isHideData: Boolean,
+) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() }) {
-                onFundSelectorClick()
-            },
-        horizontalArrangement = Arrangement.SpaceBetween
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            MyIcons.CreditCard(color = colorScheme.onBackground, size = 30.dp)
+        Row(
+            modifier = modifier
+                .weight(2f)
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }) {
+                    openSheet()
+                },
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = icon,
+                contentDescription = "Fund Selection",
+                modifier = modifier.size(30.dp),
+                tint = colorScheme.onBackground,
+            )
             Text(
-                modifier = Modifier.padding(start = 5.dp, top = 4.dp),
-                text = stringResource(id = R.string.ReportsScreen_FundSelection),
+                modifier = modifier.padding(start = 5.dp, top = 4.dp),
+                text = title,
                 color = colorScheme.onBackground,
                 style = MyFontStyle.medium()
             )
         }
 
         Row(
-            modifier = Modifier.padding(top = 4.dp),
+            modifier = modifier
+                .weight(3f)
+                .padding(top = 4.dp)
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }) {
+                    openSheet()
+                },
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                modifier = Modifier.padding(end = 5.dp),
-                text = "الكل", //TODO ToDo: Get Fund Name State.
-                color = colorScheme.onBackground,
-                style = MyFontStyle.medium()
+            HideTextData(
+                modifier = modifier.weight(1f),
+                isHideData = isHideData,
+                text = selectedValue.ifEmpty { stringResource(R.string.ReportsScreen_AllSelected) },
+                color = colorScheme.primary,
+                style = MyFontStyle.mediumBold(),
+                textAlign = TextAlign.End
             )
             MyIcons.Arrow(
+                modifier = modifier.offset(y = (-2.5).dp),
                 autoMirroredState = false,
-                angle = 90f,
-                size = 25.dp,
+                angle = 180f,
+                size = 20.dp,
                 color = colorScheme.onBackground,
             )
         }
@@ -221,68 +387,330 @@ private fun FundSelector(onFundSelectorClick: () -> Unit) {
 }
 
 @Composable
-private fun DateSelector(onDateSelectorClick: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
+fun SelectAllValues(
+    modifier: Modifier = Modifier,
+    selectedValue: String,
+    onSelectAll: () -> Unit
+) {
+    Box(
+        modifier = modifier
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }) {
-                onDateSelectorClick()
-            },
-        horizontalArrangement = Arrangement.SpaceBetween,
+                if (selectedValue != "") onSelectAll()
+            }
+//            .padding(horizontal = 5.dp)
+            .clip(CircleShape)
+            .border(
+                color = if (selectedValue.isEmpty()) colorScheme.outline else colorScheme.primary,
+                shape = CircleShape,
+                width = (0.5).dp
+            ),
+        contentAlignment = Alignment.Center
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            MyIcons.Time_Zone(color = colorScheme.onBackground, size = 30.dp)
-            Text(
-                modifier = Modifier.padding(start = 5.dp, top = 4.dp),
-                text = stringResource(id = R.string.ReportsScreen_FundSelection),
-                color = colorScheme.onBackground,
-                style = MyFontStyle.medium()
-            )
-        }
-
-        Row(
-            modifier = Modifier.padding(top = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                modifier = Modifier.padding(end = 5.dp),
-                text = "الكل", //TODO ToDo: Get Date State.
-                color = colorScheme.onBackground,
-                style = MyFontStyle.medium()
-            )
-            MyIcons.Arrow(
-                autoMirroredState = false,
-                angle = 90f,
-                size = 25.dp,
-                color = colorScheme.onBackground,
-            )
-        }
+        Text(
+            modifier = Modifier.padding(10.dp),
+            text = stringResource(R.string.ReportsScreen_SelectAll),
+            color = if (selectedValue.isEmpty()) colorScheme.outline else colorScheme.onBackground,
+            style = MyFontStyle.medium()
+        )
     }
 }
 
 /**.....( Report Type Selector ).....**/
 @Composable
-//TODO ToDo: Make it Private (Fun).
-fun ReportTypeSelector(
+private fun ReportTypeSelector(
+    modifier: Modifier = Modifier,
     selectedType: ReportType,
-    onTypeSelected: (ReportType) -> Unit
+    expensesSum: Double,
+    incomeSum: Double,
+    onTypeSelected: (ReportType) -> Unit,
+    isHideData: Boolean
 ){
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clip(MyRoundedCornerShape.medium)
             .background(colorScheme.primary)
-            .padding(5.dp),
+            .padding(4.dp),
     ) {
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .background(colorScheme.surface),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        // Expenses
+        ReportTab(
+            modifier = Modifier.weight(1f),
+            title = stringResource(id = R.string.ReportsScreen_Expense_Identifier),
+            value = expensesSum,
+            isSelected = selectedType == ReportType.Expenses,
+            onClick = {
+                if (selectedType != ReportType.Expenses) onTypeSelected(ReportType.Expenses)
+            },
+            isHideData = isHideData
+        )
+
+        // Income
+        ReportTab(
+            modifier = Modifier.weight(1f),
+            title = stringResource(id = R.string.ReportsScreen_Income_Identifier),
+            value = incomeSum,
+            isSelected = selectedType == ReportType.Income,
+            onClick = {
+                if (selectedType != ReportType.Income) onTypeSelected(ReportType.Income)
+            },
+            isHideData = isHideData
+        )
+    }
+}
+
+@Composable
+private fun ReportTab(
+    modifier: Modifier,
+    title: String,
+    value: Double,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    isHideData: Boolean
+) {
+    val tabColor by animateColorAsState(
+        targetValue = if (isSelected) colorScheme.surface else colorScheme.primary,
+        animationSpec = tween(durationMillis = 300)
+    )
+    val textColor by animateColorAsState(
+        targetValue = if (isSelected) colorScheme.onBackground else colorScheme.onPrimary,
+        animationSpec = tween(durationMillis = 300)
+    )
+    Column(
+        modifier = modifier
+            .fillMaxHeight()
+            .clip(MyRoundedCornerShape.medium)
+            .background(tabColor)
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }) {
+                onClick()
+            },
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = title,
+            color = textColor,
+            style = MyFontStyle.large()
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            HideTextData(
+                isHideData = isHideData,
+                text = myDoubleFormat(value),
+                color = textColor,
+                style = MyFontStyle.large()
+            )
+            Spacer(modifier = Modifier.width(5.dp))
+            AppCurrency(textColor = textColor)
 
         }
+    }
+}
+
+/**.....( Screen Components ).....**/
+@Composable
+private fun ReportsPageState(
+    modifier: Modifier = Modifier,
+    expenses: List<TransactionWithFund>,
+    income: List<TransactionWithFund>,
+    selectedType: ReportType,
+    onEvent: (ReportsEvent) -> Unit,
+    isHideData: Boolean
+) {
+    when (selectedType) {
+        ReportType.Expenses -> {
+            if (expenses.isEmpty()) {
+                EmptyPage()
+            } else {
+                TransactionsList(
+                    transactionsList = expenses,
+                    isHideData = isHideData,
+                    onEvent = onEvent
+                )
+            }
+        }
+
+        ReportType.Income -> {
+            if (income.isEmpty()) {
+                EmptyPage()
+            } else {
+                TransactionsList(
+                    transactionsList = income,
+                    isHideData = isHideData,
+                    onEvent = onEvent
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun EmptyPage() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 15.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(50.dp))
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = stringResource(id = R.string.ReportsScreen_NoReports_Title),
+            style = MyFontStyle.largeBold(),
+            textAlign = TextAlign.Center,
+            color = colorScheme.onBackground,
+            lineHeight = 28.sp
+        )
+
+        Image(
+            modifier = Modifier
+                .fillMaxWidth()
+                .scale(1.1f)
+                .size(280.dp),
+            painter = painterResource(id = R.drawable.img_reports_noreports),
+            contentDescription = "comfort"
+        )
+
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp),
+            text = stringResource(id = R.string.ReportsScreen_NoReports_Description),
+            style = MyFontStyle.medium(),
+            lineHeight = 20.sp,
+            textAlign = TextAlign.Center,
+            color = colorScheme.onSecondary
+        )
+    }
+}
+
+@Composable
+private fun TransactionsList(
+    transactionsList: List<TransactionWithFund>,
+    isHideData: Boolean,
+    onEvent: (ReportsEvent) -> Unit,
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxSize()
+            .border(
+                color = colorScheme.primary.copy(alpha = 0.7f),
+                shape = MyRoundedCornerShape.extraLarge,
+                width = (0.5).dp
+            ),
+        shape = MyRoundedCornerShape.extraLarge,
+        colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
+    ) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            item { Spacer(modifier = Modifier.height(20.dp)) }
+            itemsIndexed(
+                items = transactionsList,
+                key = { _, transaction -> transaction.transaction.id },
+                contentType = { _, _ -> "TransactionItem" }) { index, transaction ->
+                TransactionItem(
+                    isHideData = isHideData,
+                    transaction = transaction,
+                    onEvent = onEvent
+                )
+                if (index != transactionsList.lastIndex) {
+                    Spacer(modifier = Modifier.height(15.dp))
+                }
+            }
+            item { Spacer(modifier = Modifier.height(125.dp)) }
+        }
+    }
+}
+
+@Composable
+private fun TransactionItem(
+    modifier: Modifier = Modifier,
+    isHideData: Boolean,
+    transaction: TransactionWithFund,
+    onEvent: (ReportsEvent) -> Unit,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(100.dp)
+            .clip(MyRoundedCornerShape.medium)
+            .clickable(
+                indication = null, interactionSource = remember { MutableInteractionSource() }) {
+                onEvent(ReportsEvent.SheetDisplayed(ReportsSheets.EditTransaction(transaction)))
+            }
+            .border(
+                color = colorScheme.primary.copy(alpha = 0.7f),
+                shape = MyRoundedCornerShape.medium,
+                width = (0.5).dp
+            )
+            .background(colorScheme.background)
+            .padding(15.dp)
+            .padding(vertical = 5.dp)
+    ) {
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .align(Alignment.TopCenter),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                modifier = Modifier.padding(end = 10.dp),
+                text = formatDate(transaction.transaction.date),
+                color = colorScheme.onSecondary,
+                style = MyFontStyle.small()
+            )
+            HideTextData(
+                isHideData = isHideData,
+                text = transaction.fund.name,
+                color = colorScheme.onSecondary,
+                style = MyFontStyle.small()
+            )
+        }
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(20f), contentAlignment = Alignment.CenterStart) {
+                HideTextData(
+                    isHideData = isHideData,
+                    text = transaction.transaction.description,
+                    color = colorScheme.onBackground,
+                    style = MyFontStyle.large()
+                )
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            Box(modifier = Modifier.weight(10f), contentAlignment = Alignment.CenterEnd) {
+                HideTextData(
+                    isHideData = isHideData,
+                    text = myDoubleFormat(transaction.transaction.amount),
+                    color = colorScheme.onBackground,
+                    style = MyFontStyle.xxLargeBold()
+                )
+            }
+        }
+    }
+}
+
+/** --------------------[ Helpers ]-------------------- **/
+fun formatDate(timestamp: Long?): String {
+    return if (timestamp == null) {
+        ""
+    } else {
+        val cal = Calendar.getInstance().apply { timeInMillis = timestamp }
+        val sdf = SimpleDateFormat("MMMM، yyyy", Locale.forLanguageTag("ar"))
+        sdf.format(cal.time)
     }
 }

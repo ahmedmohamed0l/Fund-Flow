@@ -496,7 +496,7 @@ private fun ExpensesList(
 }
 
 @Composable
-fun ExpenseItem(
+private fun ExpenseItem(
     isHideData: Boolean,
     expense: TransactionWithFund,
     selectedDate: Long,
@@ -562,7 +562,7 @@ fun ExpenseItem(
                     isHideData = isHideData,
                     text = myDoubleFormat(expense.transaction.amount),
                     color = MaterialTheme.colorScheme.onBackground,
-                    style = MyFontStyle.extraLargeBold()
+                    style = MyFontStyle.xxLargeBold()
                 )
             }
         }

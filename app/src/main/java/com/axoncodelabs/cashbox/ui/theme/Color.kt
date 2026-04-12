@@ -14,6 +14,7 @@ object MyColors {
     val LightBlack = Color(0xFF1E1F22)
     val SoftBlack = Color(0xFF121212)
     val Black = Color(0xFF000000)
+    val Transparent = Color(0x00000000)
 
     val CyanOff = Color(0xFF5B7C96)
     val LightSkyBlue = Color(0xFFEBF6FA)

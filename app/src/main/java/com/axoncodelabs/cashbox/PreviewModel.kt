@@ -6,7 +6,6 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import com.axoncodelabs.cashbox.ui.screens.reports.ReportType
-import com.axoncodelabs.cashbox.ui.screens.reports.ReportTypeSelector
 import com.axoncodelabs.cashbox.ui.screens.reports.ReportsScreenRoot
 import com.axoncodelabs.cashbox.ui.theme.CashBoxTheme
 
@@ -24,11 +23,17 @@ private fun Preview() {
             darkTheme = darkMode
         ) {
             /**--------- Content ---------**/
-//            ReportsScreenRoot()
-            ReportTypeSelector(
+            /*ReportsScreenRoot(
+                onFundSelectorClick = {},
+                onDateSelectorClick = {},
+                selectedFund = "",
+                selectedDate = "",
                 selectedType = ReportType.Expenses,
-                onTypeSelected = {}
-            )
+                expensesSum = 0.0,
+                incomeSum = 0.0,
+                onTypeSelected = {},
+                isHideData = false
+            )*/
         }
     }
 }

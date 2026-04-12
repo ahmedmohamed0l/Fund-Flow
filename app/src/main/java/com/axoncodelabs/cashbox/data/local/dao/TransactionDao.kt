@@ -42,15 +42,17 @@ interface TransactionDao {
     ): Flow<List<TransactionWithFund>>
 
     @Query("SELECT SUM(amount) FROM transactions WHERE type = 'EXPENSE' AND isTransfer = 0 AND date BETWEEN :startDate AND :endDate")
-    fun getExpensesSumByDateAndType(
+    fun getExpensesSumByDate(
         startDate: Long,
         endDate: Long,
     ): Flow<Double>
     /*---------------------------------*/
 
     /*-----( For Reports_Screen )-----*/
-    @Query("SELECT date FROM TRANSACTIONS ORDER BY date ASC")
-    fun getAllDates(): Flow<List<Long>>
+    data class DateRange(val firstDate: Long?, val lastDate: Long?)
+    @Query("SELECT MIN(date) AS firstDate, MAX(date) AS lastDate FROM transactions")
+    fun getFirstAndLastDate(): Flow<DateRange>
+
 
     @Query("SELECT * FROM transactions WHERE type = :type AND date BETWEEN :startDate AND :endDate ORDER BY date ASC")
     fun getTransactionsByDateAndType(

@@ -6,8 +6,8 @@ import java.time.LocalDate
 
 sealed class ReportsSheets {
     object None : ReportsSheets()
-    object EditTransaction : ReportsSheets()
     object FundSelection : ReportsSheets()
+    data class EditTransaction(val transaction: TransactionWithFund) : ReportsSheets()
 }
 
 sealed class ReportsPopups {
@@ -33,16 +33,15 @@ data class ReportsState(
     val currentSheet: ReportsSheets = ReportsSheets.None,
     val popupState: ReportsPopups = ReportsPopups.None,
 
-    val fundsList: List<FundEntity> = emptyList(),
-    val selectedFund: FundEntity? = null,
-
-    val datesList: List<Long> = emptyList(),
-    val selectedDate: Long? = null,
-
+    var selectedFund: FundEntity? = null,
+    var selectedDate: Long? = System.currentTimeMillis(),
     val selectedReportType: ReportType = ReportType.Expenses,
-//    val expensesList: List<DayTransactions> = emptyList(),
-//    val incomeList: List<DayTransactions> = emptyList(),
-//    val expensesSum: Double = 0.0,
-//    val incomeSum: Double = 0.0,
+
+    val expensesSum: Double = 0.0,
+    val incomeSum: Double = 0.0,
+
+    val expensesList: List<TransactionWithFund> = emptyList(),
+    val incomeList: List<TransactionWithFund> = emptyList(),
+
     val isHideData: Boolean = false,
     )

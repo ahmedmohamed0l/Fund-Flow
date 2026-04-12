@@ -94,15 +94,39 @@ object MyFontStyle {
         fontSize = 20.sp
     )
 
-    fun extraLarge() = TextStyle(
+    fun xLarge() = TextStyle(
+        fontFamily = mainFont,
+        fontWeight = FontWeight.Normal,
+        fontSize = 22.sp
+    )
+
+    fun xLargeBold() = TextStyle(
+        fontFamily = mainFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 22.sp
+    )
+
+    fun xxLarge() = TextStyle(
         fontFamily = mainFont,
         fontWeight = FontWeight.Normal,
         fontSize = 24.sp
     )
 
-    fun extraLargeBold() = TextStyle(
+    fun xxLargeBold() = TextStyle(
         fontFamily = mainFont,
         fontWeight = FontWeight.Bold,
         fontSize = 24.sp
+    )
+
+    fun xxxLarge() = TextStyle(
+        fontFamily = mainFont,
+        fontWeight = FontWeight.Normal,
+        fontSize = 26.sp
+    )
+
+    fun xxxLargeSimiBold() = TextStyle(
+        fontFamily = mainFont,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 26.sp
     )
 }

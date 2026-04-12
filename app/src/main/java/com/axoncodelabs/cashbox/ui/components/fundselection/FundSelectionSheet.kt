@@ -47,7 +47,8 @@ fun FundSelectionSheet(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(20.dp),
+            .padding(horizontal = 20.dp)
+            .padding(bottom = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LazyColumn(modifier = Modifier.fillMaxWidth()) {

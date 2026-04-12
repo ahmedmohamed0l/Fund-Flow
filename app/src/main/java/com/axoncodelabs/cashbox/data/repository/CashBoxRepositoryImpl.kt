@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.room.Transaction
 import com.axoncodelabs.cashbox.data.local.dao.FundDao
 import com.axoncodelabs.cashbox.data.local.dao.TransactionDao
+import com.axoncodelabs.cashbox.data.local.dao.TransactionDao.DateRange
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionType
@@ -152,13 +153,13 @@ class CashBoxRepositoryImpl @Inject constructor(
         startDate: Long,
         endDate: Long,
     ): Flow<Double>{
-        return transactionDao.getExpensesSumByDateAndType(startDate, endDate)
+        return transactionDao.getExpensesSumByDate(startDate, endDate)
     }
     /*---------------------------------*/
 
     /*-----( For Reports_Screen )-----*/
-    override fun getAllDates(): Flow<List<Long>>{
-        return transactionDao.getAllDates()
+    override fun getFirstAndLastDate(): Flow<DateRange>{
+        return transactionDao.getFirstAndLastDate()
     }
 
     override fun getTransactionsByDateAndType(

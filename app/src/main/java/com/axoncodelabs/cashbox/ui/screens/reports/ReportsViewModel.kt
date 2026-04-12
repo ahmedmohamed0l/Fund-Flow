@@ -1,13 +1,22 @@
 package com.axoncodelabs.cashbox.ui.screens.reports
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.axoncodelabs.cashbox.data.local.entity.TransactionType
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jakarta.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import java.util.Calendar
+import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
@@ -17,25 +26,6 @@ class ReportsViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(ReportsState())
     val state = _state.asStateFlow()
-/*  //Brake_1
-    /**.....( Data Flow ).....**/
-    private val fundsListFlow = state
-        .flatMapLatest { repository.getAllFunds() }
-        .filterNotNull()
-        .distinctUntilChanged()
-
-    private val datesListFlow = state
-        .flatMapLatest { repository.getAllDates() }
-        .filterNotNull()
-        .distinctUntilChanged()
-
-    private val fundsAndDatesListsFlow = combine(
-        fundsListFlow,
-        datesListFlow
-    ) { fundsList, datesList ->
-        fundsList to datesList
-    }
-
 
     private val selectedFundFlow = state
         .map { it.selectedFund }
@@ -48,9 +38,9 @@ class ReportsViewModel @Inject constructor(
     private val selectedFundAndDateFlow = combine(
         selectedFundFlow,
         selectedDateFlow
-    ) { selectedFund, selectedDate ->
-        selectedFund to selectedDate
-    }
+    ) { fund, date ->
+        fund to date
+    }.distinctUntilChanged()
 
     /**.....( Expenses Flow ).....**/
     private val expensesListFlow = selectedFundAndDateFlow
@@ -140,36 +130,31 @@ class ReportsViewModel @Inject constructor(
         incomeList to sum
     }
 
-
     init {
         combine(
-            fundsAndDatesListsFlow,
             selectedFundAndDateFlow,
+            repository.hideDataFlow,
             expensesWithSumFlow,
             incomeWithSumFlow,
-            repository.hideDataFlow
-        ) { (funds, dates),
-            (selectedFund, selectedDate),
+        ) { (selectedFund, selectedDate),
+            isHideData,
             (expenses, expensesSum),
-            (income, incomeSum),
-            isHideData ->
+            (income, incomeSum) ->
 
             _state.value.copy(
-                fundsList = funds,
-                datesList = dates,
                 selectedFund = selectedFund,
                 selectedDate = selectedDate,
+                isHideData = isHideData,
                 expensesList = expenses,
                 expensesSum = expensesSum,
                 incomeList = income,
-                incomeSum = incomeSum,
-                isHideData = isHideData
+                incomeSum = incomeSum
             )
         }.onEach { newState ->
             _state.value = newState
         }.launchIn(viewModelScope)
     }
-*/
+
     fun onEvent(event: ReportsEvent) {
         when (event) {
             is ReportsEvent.SheetDisplayed -> {
@@ -195,14 +180,45 @@ class ReportsViewModel @Inject constructor(
             }
 
             is ReportsEvent.OnFundChanged -> {}
-            is ReportsEvent.OnDateChange -> {}
-//            is ReportsEvent.OnReportTypeChange -> {}
+            ReportsEvent.OnSelectAllFunds -> {
+                _state.update {
+                    it.copy(
+                        selectedFund = null,
+                        currentSheet = ReportsSheets.None
+                    )
+                }
+            }
+
+            is ReportsEvent.OnDateChange -> {
+                _state.update {
+                    it.copy(
+                        selectedDate = event.date,
+                        popupState = ReportsPopups.None
+                    )
+                }
+            }
+
+            ReportsEvent.OnSelectAllDates -> {
+                _state.update {
+                    it.copy(
+                        selectedDate = null,
+                        popupState = ReportsPopups.None
+                    )
+                }
+            }
+
+            is ReportsEvent.OnReportTypeChange -> {
+                _state.update {
+                    it.copy(
+                        selectedReportType = event.reportType
+                    )
+                }
+            }
 
 //            is ReportsEvent.OnTransactionClick -> {}
         }
     }
 
-/*  //Brake_2
     /**.....( Date Helper ).....**/
     fun Long.startOfMonth(): Long {
         val cal = Calendar.getInstance().apply { timeInMillis = this@startOfMonth }
@@ -222,5 +238,4 @@ class ReportsViewModel @Inject constructor(
         cal.set(Calendar.MILLISECOND, 999)
         return cal.timeInMillis
     }
- */
 }

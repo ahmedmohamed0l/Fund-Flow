@@ -7,7 +7,9 @@
     <string name="Popups_DeleteTransactionConfirm_Message">هل أنت متأكد من حذف المعاملة</string>
 
     <string name="Popups_DatePickerConfirm_Bttn">إختيار</string>
-    <!--    <string name="Popups_Delete_Bttn">حذف</string>-->
-    <!--    <string name="Popups_Cancel_Bttn">إلغاء</string>-->
+
+    <string name="Popups_MonthPickerTitle">إختر فترة التقارير</string>
+    <string name="Popups_MonthPicker_Year">السنة</string>
+    <string name="Popups_MonthPicker_Month">الشهر</string>
 
 </resources>

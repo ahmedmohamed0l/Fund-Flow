@@ -1,5 +1,6 @@
 package com.axoncodelabs.cashbox.data.repository
 
+import com.axoncodelabs.cashbox.data.local.dao.TransactionDao.DateRange
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionType
@@ -44,7 +45,7 @@ interface CashBoxRepository {
     /*---------------------------------*/
 
     /*-----( For Reports_Screen )-----*/
-    fun getAllDates(): Flow<List<Long>>
+    fun getFirstAndLastDate(): Flow<DateRange>
 
     fun getTransactionsByDateAndType(
         type: TransactionType,
