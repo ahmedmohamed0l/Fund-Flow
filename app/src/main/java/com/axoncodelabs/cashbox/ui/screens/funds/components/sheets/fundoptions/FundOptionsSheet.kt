@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -158,15 +159,14 @@ private fun FundOptionsSheetRoot(
                     )
                 }
             } else {
-                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
                     HideTextData(
-                        modifier = Modifier.padding(vertical = 15.dp),
+                        modifier = Modifier.weight(1f).padding(vertical = 15.dp),
                         isHideData = isHideData,
                         text = (name),
                         color = MaterialTheme.colorScheme.onBackground,
-                        style = MyFontStyle.medium()
+                        style = MyFontStyle.medium(),
+                        textAlign = TextAlign.Start
                     )
-                }
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier

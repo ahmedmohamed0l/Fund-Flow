@@ -20,6 +20,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
@@ -67,13 +68,14 @@ fun MyRoundedLabel(
         modifier = modifier
             .border(1.dp, borderColor, RoundedCornerShape(10.dp))
             .padding(vertical = 15.dp, horizontal = 15.dp),
+        contentAlignment = Alignment.CenterStart
     ) {
         HideTextData(
-            modifier = Modifier.align(Alignment.CenterStart),
             isHideData = isHideData,
             text = lapel,
             color = textColor,
-            style = MyFontStyle.medium()
+            style = MyFontStyle.medium(),
+            textAlign = TextAlign.End
         )
     }
 }

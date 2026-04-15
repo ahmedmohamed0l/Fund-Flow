@@ -538,7 +538,8 @@ private fun ExpenseItem(
                 isHideData = isHideData,
                 text = expense.fund.name,
                 color = MaterialTheme.colorScheme.onSecondary,
-                style = MyFontStyle.small()
+                style = MyFontStyle.small(),
+                textAlign = TextAlign.End
             )
         }
         Row(
@@ -548,23 +549,22 @@ private fun ExpenseItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(modifier = Modifier.weight(20f), contentAlignment = Alignment.CenterStart) {
                 HideTextData(
+                    modifier = Modifier.weight(2f).padding(end = 5.dp),
                     isHideData = isHideData,
                     text = expense.transaction.description,
                     color = MaterialTheme.colorScheme.onBackground,
-                    style = MyFontStyle.large()
+                    style = MyFontStyle.large(),
+                    textAlign = TextAlign.Start
                 )
-            }
-            Spacer(modifier = Modifier.weight(1f))
-            Box(modifier = Modifier.weight(10f), contentAlignment = Alignment.CenterEnd) {
                 HideTextData(
+                    modifier = Modifier.weight(1f),
                     isHideData = isHideData,
                     text = myDoubleFormat(expense.transaction.amount),
                     color = MaterialTheme.colorScheme.onBackground,
-                    style = MyFontStyle.xxLargeBold()
+                    style = MyFontStyle.xxLargeBold()                    ,
+                    textAlign = TextAlign.End
                 )
-            }
         }
     }
 }

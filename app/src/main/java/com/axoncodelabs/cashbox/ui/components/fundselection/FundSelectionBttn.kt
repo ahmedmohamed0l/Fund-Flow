@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
@@ -78,17 +79,16 @@ fun FundSelectionBttn(
                 .padding(horizontal = 15.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
                 HideTextData(
                     modifier = Modifier
-                        .align(Alignment.CenterStart)
+                        .weight(1f)
                         .padding(vertical = 15.dp),
                     isHideData = isHideData,
                     text = (fund?.name ?: stringResource(R.string.Sheet_FundSelection)),
                     color = fund?.let { textColor } ?: finalBorderColor,
-                    style = MyFontStyle.medium()
+                    style = MyFontStyle.medium(),
+                    textAlign = TextAlign.End
                 )
-            }
             MyIcons.Arrow(
                 autoMirroredState = false,
                 size = 25.dp, color = finalBorderColor, angle = 180f

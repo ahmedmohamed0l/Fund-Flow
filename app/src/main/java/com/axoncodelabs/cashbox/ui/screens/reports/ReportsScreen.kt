@@ -368,7 +368,6 @@ private fun SelectorBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             HideTextData(
-                modifier = modifier.weight(1f),
                 isHideData = isHideData,
                 text = selectedValue.ifEmpty { stringResource(R.string.ReportsScreen_AllSelected) },
                 color = colorScheme.primary,
@@ -673,7 +672,8 @@ private fun TransactionItem(
                 isHideData = isHideData,
                 text = transaction.fund.name,
                 color = colorScheme.onSecondary,
-                style = MyFontStyle.small()
+                style = MyFontStyle.small(),
+                textAlign = TextAlign.End
             )
         }
         Row(
@@ -683,23 +683,21 @@ private fun TransactionItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(modifier = Modifier.weight(20f), contentAlignment = Alignment.CenterStart) {
                 HideTextData(
+                    modifier = Modifier.weight(2f).padding(end = 5.dp),
                     isHideData = isHideData,
                     text = transaction.transaction.description,
                     color = colorScheme.onBackground,
                     style = MyFontStyle.large()
                 )
-            }
-            Spacer(modifier = Modifier.weight(1f))
-            Box(modifier = Modifier.weight(10f), contentAlignment = Alignment.CenterEnd) {
                 HideTextData(
+                    modifier = Modifier.weight(1f),
                     isHideData = isHideData,
                     text = myDoubleFormat(transaction.transaction.amount),
                     color = colorScheme.onBackground,
-                    style = MyFontStyle.xxLargeBold()
+                    style = MyFontStyle.xxLargeBold(),
+                    textAlign = TextAlign.End
                 )
-            }
         }
     }
 }

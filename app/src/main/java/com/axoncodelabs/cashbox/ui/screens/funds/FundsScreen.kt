@@ -254,19 +254,17 @@ private fun TotalFundsValue(
                 .padding(start = 30.dp)
                 .weight(5f)
         )
-        Box(modifier = Modifier.weight(5f), contentAlignment = Alignment.CenterEnd) {
             HideTextData(
                 modifier = Modifier
-                    .align(Alignment.CenterEnd)
+                    .weight(5f)
                     .padding(end = 30.dp),
                 isHideData = isHideData,
                 text = (myDoubleFormat(fundsTotalBalance)),
                 color = MaterialTheme.colorScheme.onBackground,
-                style = MyFontStyle.large()
+                style = MyFontStyle.large(),
+                textAlign = TextAlign.End
             )
-        }
     }
-
 }
 
 @Composable
@@ -428,17 +426,18 @@ fun FundItem(
                             isHideData = isHideData,
                             text = (fund.name),
                             color = MaterialTheme.colorScheme.onBackground,
-                            style = MyFontStyle.medium()
+                            style = MyFontStyle.medium(),
+                            textAlign = TextAlign.Start
                         )
                     }
-                    Box(modifier = Modifier.weight(10f), contentAlignment = Alignment.CenterEnd) {
                         HideTextData(
+                            modifier = Modifier.weight(10f),
                             isHideData = isHideData,
                             text = (myDoubleFormat(fund.balance)),
                             color = MaterialTheme.colorScheme.onBackground,
-                            style = MyFontStyle.large()
+                            style = MyFontStyle.large(),
+                            textAlign = TextAlign.End
                         )
-                    }
                 }
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,

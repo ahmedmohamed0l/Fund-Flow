@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
@@ -103,16 +104,17 @@ private fun FundItem(
                 isHideData = isHideData,
                 text = (fund.name),
                 color = MaterialTheme.colorScheme.onBackground,
-                style = MyFontStyle.medium()
+                style = MyFontStyle.medium(),
+                textAlign = TextAlign.Start
             )
         }
-        Box(modifier = Modifier.weight(10f), contentAlignment = Alignment.CenterEnd) {
             HideTextData(
+                modifier = Modifier.weight(10f),
                 isHideData = isHideData,
                 text = (myDoubleFormat(fund.balance)),
                 color = MaterialTheme.colorScheme.onBackground,
-                style = MyFontStyle.large()
+                style = MyFontStyle.large(),
+                textAlign = TextAlign.End
             )
-        }
     }
 }
