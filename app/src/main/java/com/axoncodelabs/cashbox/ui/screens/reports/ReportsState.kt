@@ -2,7 +2,6 @@ package com.axoncodelabs.cashbox.ui.screens.reports
 
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
-import java.time.LocalDate
 
 sealed class ReportsSheets {
     object None : ReportsSheets()
@@ -44,4 +43,4 @@ data class ReportsState(
     val incomeList: List<TransactionWithFund> = emptyList(),
 
     val isHideData: Boolean = false,
-    )
+)

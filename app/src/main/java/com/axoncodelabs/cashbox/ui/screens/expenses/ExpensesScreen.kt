@@ -106,6 +106,7 @@ fun ExpensesScreen(
                     )
                 }
             }
+
             is ExpensesSheets.EditExpense -> {
                 ModalBottomSheet(
                     onDismissRequest = { viewModel.onEvent(ExpensesEvent.CloseSheet) },
@@ -119,6 +120,7 @@ fun ExpensesScreen(
                     )
                 }
             }
+
             ExpensesSheets.None -> Unit
         }
     }

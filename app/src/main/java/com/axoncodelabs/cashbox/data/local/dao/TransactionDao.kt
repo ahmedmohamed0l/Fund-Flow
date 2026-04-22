@@ -52,6 +52,7 @@ interface TransactionDao {
 
     /*-----( For Reports_Screen )-----*/
     data class DateRange(val firstDate: Long?, val lastDate: Long?)
+
     @Query("SELECT MIN(date) AS firstDate, MAX(date) AS lastDate FROM transactions")
     fun getFirstAndLastDate(): Flow<DateRange>
 

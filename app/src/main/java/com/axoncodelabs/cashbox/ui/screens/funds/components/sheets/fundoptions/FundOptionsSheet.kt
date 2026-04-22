@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Edit
@@ -159,16 +158,16 @@ private fun FundOptionsSheetRoot(
                     )
                 }
             } else {
-                    HideTextData(
-                        modifier = Modifier
-                            .padding(vertical = 15.dp)
-                            .weight(1f),
-                        isHideData = isHideData,
-                        text = (name),
-                        color = MaterialTheme.colorScheme.onBackground,
-                        style = MyFontStyle.medium(),
-                        align = Alignment.CenterStart
-                    )
+                HideTextData(
+                    modifier = Modifier
+                        .padding(vertical = 15.dp)
+                        .weight(1f),
+                    isHideData = isHideData,
+                    text = (name),
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MyFontStyle.medium(),
+                    align = Alignment.CenterStart
+                )
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier

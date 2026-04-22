@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
@@ -29,7 +28,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
@@ -74,7 +72,7 @@ fun ReportsScreen(
     onTopBarChange: (TopBarState) -> Unit
 ) {
     //.....( State & ViewModel Setup ).....
-    val state = viewModel.state.collectAsState().value
+    val state by viewModel.state.collectAsState()
     val sheet = state.currentSheet
     val popup = state.popupState
     val isHideData = state.isHideData
@@ -168,6 +166,7 @@ fun ReportsScreen(
                     }
                 }
             }
+
             ReportsPopups.None -> Unit
         }
     }
@@ -428,7 +427,7 @@ private fun ReportTypeSelector(
     incomeSum: Double,
     onTypeSelected: (ReportType) -> Unit,
     isHideData: Boolean
-){
+) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -669,7 +668,7 @@ private fun TransactionItem(
                 color = colorScheme.onSecondary,
                 style = MyFontStyle.small()
             )
-           HideTextData(
+            HideTextData(
                 isHideData = isHideData,
                 text = transaction.fund.name,
                 color = colorScheme.onSecondary,
@@ -684,24 +683,24 @@ private fun TransactionItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-                HideTextData(
-                    modifier = Modifier
-                        .weight(2f)
-                        .padding(end = 5.dp),
-                    isHideData = isHideData,
-                    text = transaction.transaction.description,
-                    color = colorScheme.onBackground,
-                    style = MyFontStyle.large(),
-                    align = Alignment.CenterStart
-                )
-                HideTextData(
-                    modifier = Modifier.weight(1f),
-                    isHideData = isHideData,
-                    text = myDoubleFormat(transaction.transaction.amount),
-                    color = colorScheme.onBackground,
-                    style = MyFontStyle.xxLargeBold(),
-                    align = Alignment.CenterEnd
-                )
+            HideTextData(
+                modifier = Modifier
+                    .weight(2f)
+                    .padding(end = 5.dp),
+                isHideData = isHideData,
+                text = transaction.transaction.description,
+                color = colorScheme.onBackground,
+                style = MyFontStyle.large(),
+                align = Alignment.CenterStart
+            )
+            HideTextData(
+                modifier = Modifier.weight(1f),
+                isHideData = isHideData,
+                text = myDoubleFormat(transaction.transaction.amount),
+                color = colorScheme.onBackground,
+                style = MyFontStyle.xxLargeBold(),
+                align = Alignment.CenterEnd
+            )
             AppCurrency(textColor = colorScheme.onBackground)
         }
     }

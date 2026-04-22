@@ -2,8 +2,8 @@ package com.axoncodelabs.cashbox.data.util
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
 import java.text.DecimalFormat
+import javax.inject.Inject
 
 interface MyStringProvider {
     fun getString(resId: Int): String

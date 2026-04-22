@@ -430,14 +430,14 @@ fun FundItem(
                             align = Alignment.CenterStart
                         )
                     }
-                        HideTextData(
-                            modifier = Modifier.weight(10f),
-                            isHideData = isHideData,
-                            text = (myDoubleFormat(fund.balance)),
-                            color = MaterialTheme.colorScheme.onBackground,
-                            style = MyFontStyle.large(),
-                            align = Alignment.CenterEnd
-                        )
+                    HideTextData(
+                        modifier = Modifier.weight(10f),
+                        isHideData = isHideData,
+                        text = (myDoubleFormat(fund.balance)),
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MyFontStyle.large(),
+                        align = Alignment.CenterEnd
+                    )
                     AppCurrency(textColor = MaterialTheme.colorScheme.onBackground)
                 }
                 Row(

@@ -145,20 +145,20 @@ class CashBoxRepositoryImpl @Inject constructor(
     override fun getExpensesByDateAndType(
         startDate: Long,
         endDate: Long,
-    ): Flow<List<TransactionWithFund>>{
+    ): Flow<List<TransactionWithFund>> {
         return transactionDao.getExpensesByDateAndType(startDate, endDate)
     }
 
     override fun getExpensesSumByDateAndType(
         startDate: Long,
         endDate: Long,
-    ): Flow<Double>{
+    ): Flow<Double> {
         return transactionDao.getExpensesSumByDate(startDate, endDate)
     }
     /*---------------------------------*/
 
     /*-----( For Reports_Screen )-----*/
-    override fun getFirstAndLastDate(): Flow<DateRange>{
+    override fun getFirstAndLastDate(): Flow<DateRange> {
         return transactionDao.getFirstAndLastDate()
     }
 

@@ -73,7 +73,7 @@ fun MyTopAppBar(
                             painter = painterResource(id = state.actionIconRes),
                             contentDescription = "Action",
                             tint = onBarColor,
-                            )
+                        )
                     }
                     VerticalDivider(
                         modifier = Modifier

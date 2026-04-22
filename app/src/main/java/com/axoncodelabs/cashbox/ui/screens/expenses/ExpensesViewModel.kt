@@ -89,6 +89,7 @@ class ExpensesViewModel @Inject constructor(
                     it.copy(currentSheet = event.sheet)
                 }
             }
+
             ExpensesEvent.CloseSheet -> {
                 _state.update {
                     it.copy(currentSheet = ExpensesSheets.None)

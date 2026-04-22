@@ -21,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddExpenseVM @Inject constructor(
     private val repository: CashBoxRepository,
-) : ViewModel(){
+) : ViewModel() {
     var fund by mutableStateOf<FundEntity?>(null)
         private set
     var fundName by mutableStateOf("")
@@ -64,7 +64,7 @@ class AddExpenseVM @Inject constructor(
     private val _expensesEvent = Channel<ExpensesEvent>()
     val expensesEvent = _expensesEvent.receiveAsFlow()
 
-    fun onEvent(event: AddExpenseEvent){
+    fun onEvent(event: AddExpenseEvent) {
         when (event) {
             is AddExpenseEvent.OnFundSelected -> {
                 fund = event.fund

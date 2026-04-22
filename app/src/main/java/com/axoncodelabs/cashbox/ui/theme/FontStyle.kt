@@ -67,6 +67,7 @@ object MyFontStyle {
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp
     )
+
     fun small() = TextStyle(
         fontFamily = mainFont,
         fontWeight = FontWeight.Normal,

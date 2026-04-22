@@ -162,6 +162,7 @@ class ReportsViewModel @Inject constructor(
                     it.copy(currentSheet = event.sheet)
                 }
             }
+
             ReportsEvent.CloseSheet -> {
                 _state.update {
                     it.copy(currentSheet = ReportsSheets.None)
@@ -173,6 +174,7 @@ class ReportsViewModel @Inject constructor(
                     it.copy(popupState = event.popup)
                 }
             }
+
             ReportsEvent.ClosePopup -> {
                 _state.update {
                     it.copy(popupState = ReportsPopups.None)
