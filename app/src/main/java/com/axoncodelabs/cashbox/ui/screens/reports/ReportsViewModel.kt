@@ -1,16 +1,20 @@
 package com.axoncodelabs.cashbox.ui.screens.reports
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.axoncodelabs.cashbox.data.local.dao.TransactionDao.DateRange
 import com.axoncodelabs.cashbox.data.local.entity.TransactionType
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -27,55 +31,132 @@ class ReportsViewModel @Inject constructor(
     private val _state = MutableStateFlow(ReportsState())
     val state = _state.asStateFlow()
 
-    private val selectedFundFlow = state
+    private val selectedFundFlow = _state
         .map { it.selectedFund }
         .distinctUntilChanged()
 
-    private val selectedDateFlow = state
+    private val selectedDateFlow = _state
         .map { it.selectedDate }
         .distinctUntilChanged()
 
-    private val selectedFundAndDateFlow = combine(
-        selectedFundFlow,
-        selectedDateFlow
-    ) { fund, date ->
-        fund to date
-    }.distinctUntilChanged()
+    private val initialDateRange: Flow<DateRange> = repository.getFirstAndLastDate()
 
-    /**.....( Expenses Flow ).....**/
-    private val expensesListFlow = selectedFundAndDateFlow
-        .flatMapLatest { (fund, date) ->
-            if (fund == null) {
-                repository.getTransactionsByDateAndType(
-                    type = TransactionType.EXPENSE,
-                    startDate = date!!.startOfMonth(),
-                    endDate = date.endOfMonth()
-                )
-            } else {
-                repository.getTransactionsByFundAndTypeAndDate(
-                    fundId = fund.id,
-                    type = TransactionType.EXPENSE,
-                    startDate = date!!.startOfMonth(),
-                    endDate = date.endOfMonth()
-                )
+    private val queryFilterFlow = combine(
+        selectedFundFlow,
+        selectedDateFlow,
+        initialDateRange
+    ) { fund, selectedDate, dbRange ->
+
+        val startDate: Long?
+        val endDate: Long?
+
+        when {
+            selectedDate != null -> {
+                startDate = selectedDate.startOfMonth()
+                endDate = selectedDate.endOfMonth()
+
+            }
+
+            dbRange.firstDate != null && dbRange.lastDate != null -> {
+                startDate = dbRange.firstDate.startOfMonth()
+                endDate = dbRange.lastDate.endOfMonth()
+            }
+
+            else -> {
+                startDate = null
+                endDate = null
             }
         }
 
-    private val expensesSumFlow = selectedFundAndDateFlow
-        .flatMapLatest { (fund, date) ->
-            if (fund == null) {
-                repository.getTransactionsSumByDateAndType(
-                    type = TransactionType.EXPENSE,
-                    startDate = date!!.startOfMonth(),
-                    endDate = date.endOfMonth()
-                )
-            } else {
-                repository.getTransactionsSumByFundAndTypeAndDate(
-                    fundId = fund.id,
-                    type = TransactionType.EXPENSE,
-                    startDate = date!!.startOfMonth(),
-                    endDate = date.endOfMonth()
-                )
+        QueryFilter(
+            fund = fund,
+            startDate = startDate,
+            endDate = endDate
+        )
+
+    }.distinctUntilChanged()
+
+    /*private val effectiveDateRangeFlow = combine(
+        dateRangeFlow,
+        selectedDateFlow
+    ) { dbRange, selectedDate ->
+        when {
+            selectedDate != null -> {
+                selectedDate.startOfMonth() to selectedDate.endOfMonth()
+            }
+
+            dbRange.firstDate != null && dbRange.lastDate != null -> {
+                dbRange.firstDate to dbRange.lastDate
+            }
+
+            else -> {
+                0L to Long.MAX_VALUE
+            }
+        }
+    }.distinctUntilChanged()
+
+    private val selectedFundAndDateFlow = combine(
+        selectedFundFlow,
+        effectiveDateRangeFlow
+    ) { fund, date ->
+        fund to date
+    }.distinctUntilChanged()*/
+
+
+    /**.....( Expenses Flow ).....**/
+    private val expensesListFlow = queryFilterFlow
+        .flatMapLatest { filter ->
+            Log.d(
+                "MY_TEST",
+                "Selected Date = ${formatDate(filter.startDate)} to ${formatDate(filter.endDate)}"
+            )
+            when {
+                filter.startDate == null || filter.endDate == null -> {
+                    flowOf(emptyList())
+                }
+
+                filter.fund == null -> {
+                    repository.getTransactionsByDateAndType(
+                        type = TransactionType.EXPENSE,
+                        startDate = filter.startDate,
+                        endDate = filter.endDate
+                    )
+                }
+
+                else -> {
+                    repository.getTransactionsByFundAndTypeAndDate(
+                        fundId = filter.fund.id,
+                        type = TransactionType.EXPENSE,
+                        startDate = filter.startDate,
+                        endDate = filter.endDate
+                    )
+                }
+            }
+        }
+
+    private val expensesSumFlow = queryFilterFlow
+        .flatMapLatest { filter ->
+            when {
+                filter.startDate == null || filter.endDate == null -> {
+                    flowOf(0.0)
+                }
+
+                filter.fund == null -> {
+                    repository.getTransactionsSumByDateAndType(
+                        type = TransactionType.EXPENSE,
+                        startDate = filter.startDate,
+                        endDate = filter.endDate
+                    )
+                }
+
+                else -> {
+                    repository.getTransactionsSumByFundAndTypeAndDate(
+                        fundId = filter.fund.id,
+                        type = TransactionType.EXPENSE,
+                        startDate = filter.startDate,
+                        endDate = filter.endDate
+                    )
+                }
             }
         }
 
@@ -87,39 +168,55 @@ class ReportsViewModel @Inject constructor(
     }
 
     /**.....( Income Flow ).....**/
-    private val incomeListFlow = selectedFundAndDateFlow
-        .flatMapLatest { (fund, date) ->
-            if (fund == null) {
-                repository.getTransactionsByDateAndType(
-                    type = TransactionType.INCOME,
-                    startDate = date!!.startOfMonth(),
-                    endDate = date.endOfMonth()
-                )
-            } else {
-                repository.getTransactionsByFundAndTypeAndDate(
-                    fundId = fund.id,
-                    type = TransactionType.INCOME,
-                    startDate = date!!.startOfMonth(),
-                    endDate = date.endOfMonth()
-                )
+    private val incomeListFlow = queryFilterFlow
+        .flatMapLatest { filter ->
+            when {
+                filter.startDate == null || filter.endDate == null -> {
+                    flowOf(emptyList())
+                }
+
+                filter.fund == null -> {
+                    repository.getTransactionsByDateAndType(
+                        type = TransactionType.INCOME,
+                        startDate = filter.startDate,
+                        endDate = filter.endDate
+                    )
+                }
+
+                else -> {
+                    repository.getTransactionsByFundAndTypeAndDate(
+                        fundId = filter.fund.id,
+                        type = TransactionType.INCOME,
+                        startDate = filter.startDate,
+                        endDate = filter.endDate
+                    )
+                }
             }
         }
 
-    private val incomeSumFlow = selectedFundAndDateFlow
-        .flatMapLatest { (fund, date) ->
-            if (fund == null) {
-                repository.getTransactionsSumByDateAndType(
-                    type = TransactionType.INCOME,
-                    startDate = date!!.startOfMonth(),
-                    endDate = date.endOfMonth()
-                )
-            } else {
-                repository.getTransactionsSumByFundAndTypeAndDate(
-                    fundId = fund.id,
-                    type = TransactionType.INCOME,
-                    startDate = date!!.startOfMonth(),
-                    endDate = date.endOfMonth()
-                )
+    private val incomeSumFlow = queryFilterFlow
+        .flatMapLatest { filter ->
+            when {
+                filter.startDate == null || filter.endDate == null -> {
+                    flowOf(0.0)
+                }
+
+                filter.fund == null -> {
+                    repository.getTransactionsSumByDateAndType(
+                        type = TransactionType.INCOME,
+                        startDate = filter.startDate,
+                        endDate = filter.endDate
+                    )
+                }
+
+                else -> {
+                    repository.getTransactionsSumByFundAndTypeAndDate(
+                        fundId = filter.fund.id,
+                        type = TransactionType.INCOME,
+                        startDate = filter.startDate,
+                        endDate = filter.endDate
+                    )
+                }
             }
         }
 
@@ -132,7 +229,7 @@ class ReportsViewModel @Inject constructor(
 
     init {
         combine(
-            selectedFundAndDateFlow,
+            queryFilterFlow,
             repository.hideDataFlow,
             expensesWithSumFlow,
             incomeWithSumFlow,
@@ -181,11 +278,21 @@ class ReportsViewModel @Inject constructor(
                 }
             }
 
-            is ReportsEvent.OnFundChanged -> {}
+            is ReportsEvent.OnFundChanged -> {
+                _state.update {
+                    it.copy(
+                        selectedFund = event.fund,
+                        isSelectAllFunds = false,
+                        currentSheet = ReportsSheets.None
+                    )
+                }
+            }
+
             ReportsEvent.OnSelectAllFunds -> {
                 _state.update {
                     it.copy(
                         selectedFund = null,
+                        isSelectAllFunds = true,
                         currentSheet = ReportsSheets.None
                     )
                 }
@@ -195,7 +302,8 @@ class ReportsViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         selectedDate = event.date,
-                        popupState = ReportsPopups.None
+                        isSelectAllDates = false,
+                        currentSheet = ReportsSheets.None
                     )
                 }
             }
@@ -204,6 +312,7 @@ class ReportsViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         selectedDate = null,
+                        isSelectAllDates = true,
                         popupState = ReportsPopups.None
                     )
                 }

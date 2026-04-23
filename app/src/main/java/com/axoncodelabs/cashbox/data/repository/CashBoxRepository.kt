@@ -47,6 +47,8 @@ interface CashBoxRepository {
     /*-----( For Reports_Screen )-----*/
     fun getFirstAndLastDate(): Flow<DateRange>
 
+    fun getAllDates(): Flow<List<Long>>
+
     fun getTransactionsByDateAndType(
         type: TransactionType,
         startDate: Long,

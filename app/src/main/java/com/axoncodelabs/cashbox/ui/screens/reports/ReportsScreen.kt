@@ -1,5 +1,6 @@
 package com.axoncodelabs.cashbox.ui.screens.reports
 
+import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -22,7 +23,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,7 +30,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -56,7 +55,7 @@ import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.components.editTransaction.EditTransactionSheet
 import com.axoncodelabs.cashbox.ui.components.fundselection.FundSelectionSheet
 import com.axoncodelabs.cashbox.ui.components.topAppBar.TopBarState
-import com.axoncodelabs.cashbox.ui.screens.reports.componants.monthPickerPopup.ScrollableMonthPicker
+import com.axoncodelabs.cashbox.ui.screens.reports.componants.monthSelectionSheet.MonthSelectionSheet
 import com.axoncodelabs.cashbox.ui.theme.AppCurrency
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
@@ -90,6 +89,8 @@ fun ReportsScreen(
     fun sheetsHandle() {
         when (sheet) {
             ReportsSheets.FundSelection -> {
+                Log.d("MY_TEST", "AllFund = ${state.isSelectAllFunds}")
+
                 ModalBottomSheet(
                     onDismissRequest = { viewModel.onEvent(ReportsEvent.CloseSheet) },
                     containerColor = colorScheme.background,
@@ -100,18 +101,42 @@ fun ReportsScreen(
                     ) {
                         SelectAllValues(
                             modifier = Modifier.padding(start = 20.dp),
-                            selectedValue = state.selectedFund?.name.orEmpty(),
+                            isEnable = state.isSelectAllFunds,
                             onSelectAll = { viewModel.onEvent(ReportsEvent.OnSelectAllFunds) }
                         )
                         FundSelectionSheet(
                             isHideData = isHideData,
                             onSelect = {
-                                state.selectedFund = it
-                                viewModel.onEvent(ReportsEvent.CloseSheet)
+                                viewModel.onEvent(ReportsEvent.OnFundChanged(it))
                             }
                         )
                     }
                 }
+            }
+
+            ReportsSheets.DateSelection -> {
+                Log.d("MY_TEST", "AllDates = ${state.isSelectAllDates}")
+                ModalBottomSheet(
+                    onDismissRequest = { viewModel.onEvent(ReportsEvent.CloseSheet) },
+                    containerColor = colorScheme.background,
+                    sheetState = sheetState
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        SelectAllValues(
+                            modifier = Modifier.padding(start = 20.dp),
+                            isEnable = state.isSelectAllDates,
+                            onSelectAll = { viewModel.onEvent(ReportsEvent.OnSelectAllDates) }
+                        )
+                        MonthSelectionSheet(
+                            onSelect = {
+                                viewModel.onEvent(ReportsEvent.OnDateChange(it))
+                            }
+                        )
+                    }
+                }
+
             }
 
             is ReportsSheets.EditTransaction -> {
@@ -136,7 +161,7 @@ fun ReportsScreen(
     @Composable
     fun popupsHandle() {
         when (popup) {
-            ReportsPopups.DateSelection -> {
+            /*ReportsPopups.DateSelection -> {
                 BasicAlertDialog(onDismissRequest = { viewModel.onEvent(ReportsEvent.ClosePopup) }) {
                     Surface(
                         shape = MyRoundedCornerShape.extraLarge,
@@ -165,7 +190,7 @@ fun ReportsScreen(
                         }
                     }
                 }
-            }
+            }*/
 
             ReportsPopups.None -> Unit
         }
@@ -175,11 +200,14 @@ fun ReportsScreen(
     //.....( Screen Layout ).....
     ReportsScreenRoot(
         onFundSelectorClick = { viewModel.onEvent(ReportsEvent.SheetDisplayed(ReportsSheets.FundSelection)) },
-        onDateSelectorClick = { viewModel.onEvent(ReportsEvent.PopupDisplayed(ReportsPopups.DateSelection)) },
+        onDateSelectorClick = { viewModel.onEvent(ReportsEvent.SheetDisplayed(ReportsSheets.DateSelection)) },
 
-        //TODO CHECKPOINT: continue from here (Start to handle the data)
         selectedFund = state.selectedFund?.name.orEmpty(),
+        isSelectAllFunds = state.isSelectAllFunds,
+
         selectedDate = formatDate(state.selectedDate),
+        isSelectAllDates = state.isSelectAllDates,
+
         selectedType = state.selectedReportType,
         onTypeSelected = { viewModel.onEvent(ReportsEvent.OnReportTypeChange(it)) },
 
@@ -199,9 +227,11 @@ fun ReportsScreen(
 private fun ReportsScreenRoot(
     onFundSelectorClick: () -> Unit,
     selectedFund: String,
+    isSelectAllFunds: Boolean,
 
     onDateSelectorClick: () -> Unit,
     selectedDate: String,
+    isSelectAllDates: Boolean,
 
     selectedType: ReportType,
     expensesSum: Double,
@@ -226,11 +256,14 @@ private fun ReportsScreenRoot(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp),
+
             onFundSelectorClick = { onFundSelectorClick() },
             selectedFund = selectedFund,
+            isSelectAllFunds = isSelectAllFunds,
 
             onDateSelectorClick = { onDateSelectorClick() },
             selectedDate = selectedDate,
+            isSelectAllDates = isSelectAllDates,
 
             isHideData = isHideData
         )
@@ -269,11 +302,14 @@ private fun ReportsScreenRoot(
 @Composable
 private fun DataSelectors(
     modifier: Modifier = Modifier,
+
     onFundSelectorClick: () -> Unit,
     selectedFund: String,
+    isSelectAllFunds: Boolean,
 
     onDateSelectorClick: () -> Unit,
     selectedDate: String,
+    isSelectAllDates: Boolean,
 
     isHideData: Boolean
 ) {
@@ -295,6 +331,7 @@ private fun DataSelectors(
             title = stringResource(id = R.string.ReportsScreen_FundSelection),
             openSheet = { onFundSelectorClick() },
             selectedValue = selectedFund,
+            isSelectAll = isSelectAllFunds,
             isHideData = isHideData
         )
 
@@ -313,6 +350,7 @@ private fun DataSelectors(
             title = stringResource(id = R.string.ReportsScreen_ZoneSelection),
             openSheet = { onDateSelectorClick() },
             selectedValue = selectedDate,
+            isSelectAll = isSelectAllDates,
             isHideData = isHideData
         )
     }
@@ -325,6 +363,7 @@ private fun SelectorBar(
     title: String,
     openSheet: () -> Unit,
     selectedValue: String,
+    isSelectAll: Boolean,
     isHideData: Boolean,
 ) {
     Row(
@@ -371,7 +410,7 @@ private fun SelectorBar(
             HideTextData(
                 modifier = Modifier.weight(1f),
                 isHideData = isHideData,
-                text = selectedValue.ifEmpty { stringResource(R.string.ReportsScreen_AllSelected) },
+                text = if (isSelectAll) stringResource(R.string.ReportsScreen_AllSelected) else selectedValue,
                 color = colorScheme.primary,
                 style = MyFontStyle.mediumBold(),
                 align = Alignment.CenterEnd
@@ -390,20 +429,20 @@ private fun SelectorBar(
 @Composable
 fun SelectAllValues(
     modifier: Modifier = Modifier,
-    selectedValue: String,
+    isEnable: Boolean,
     onSelectAll: () -> Unit
 ) {
+    val isEnable = !isEnable
     Box(
         modifier = modifier
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }) {
-                if (selectedValue != "") onSelectAll()
+                if (isEnable) onSelectAll()
             }
-//            .padding(horizontal = 5.dp)
             .clip(CircleShape)
             .border(
-                color = if (selectedValue.isEmpty()) colorScheme.outline else colorScheme.primary,
+                color = if (isEnable) colorScheme.primary else colorScheme.outline,
                 shape = CircleShape,
                 width = (0.5).dp
             ),
@@ -412,7 +451,7 @@ fun SelectAllValues(
         Text(
             modifier = Modifier.padding(10.dp),
             text = stringResource(R.string.ReportsScreen_SelectAll),
-            color = if (selectedValue.isEmpty()) colorScheme.outline else colorScheme.onBackground,
+            color = if (isEnable) colorScheme.onBackground else colorScheme.outline,
             style = MyFontStyle.medium()
         )
     }

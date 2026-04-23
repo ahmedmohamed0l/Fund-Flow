@@ -6,12 +6,13 @@ import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
 sealed class ReportsSheets {
     object None : ReportsSheets()
     object FundSelection : ReportsSheets()
+    object DateSelection : ReportsSheets()
     data class EditTransaction(val transaction: TransactionWithFund) : ReportsSheets()
 }
 
 sealed class ReportsPopups {
     object None : ReportsPopups()
-    object DateSelection : ReportsPopups()
+//    object DateSelection : ReportsPopups()
 }
 
 enum class ReportType {
@@ -19,6 +20,13 @@ enum class ReportType {
     Income
 }
 
+data class QueryFilter(
+    val fund: FundEntity?,
+//    val isSelectAllFunds: Boolean,
+    val startDate: Long?,
+    val endDate: Long?,
+//    val isSelectAllDates: Boolean
+)
 /*data class DayTransactions(
     val date: Long,
     val dayName: String,
@@ -32,8 +40,12 @@ data class ReportsState(
     val currentSheet: ReportsSheets = ReportsSheets.None,
     val popupState: ReportsPopups = ReportsPopups.None,
 
-    var selectedFund: FundEntity? = null,
-    var selectedDate: Long? = null,
+    val selectedFund: FundEntity? = null,
+    var isSelectAllFunds: Boolean = true,
+
+    val selectedDate: Long? = null,
+    var isSelectAllDates: Boolean = true,
+
     val selectedReportType: ReportType = ReportType.Expenses,
 
     val expensesSum: Double = 0.0,
