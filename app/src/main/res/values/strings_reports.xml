@@ -9,6 +9,7 @@
     <string name="ReportsScreen_Expense_Identifier">المصروفات</string>
 
     <string name="ReportsScreen_SelectAll">إختيار الكل</string>
+    <string name="ReportsScreen_SelectCurrentMonth">إختيار الشهر الحالي</string>
     <string name="ReportsScreen_AllSelected">الكل</string>
 
     <string name="ReportsScreen_NoReports_Title">لا توجد تقارير في هذه الفترة</string>

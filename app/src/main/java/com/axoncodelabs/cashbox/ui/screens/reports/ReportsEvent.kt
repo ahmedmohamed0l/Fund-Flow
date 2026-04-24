@@ -1,7 +1,6 @@
 package com.axoncodelabs.cashbox.ui.screens.reports
 
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
-import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
 
 sealed class ReportsEvent {
     // Sheet
@@ -17,7 +16,9 @@ sealed class ReportsEvent {
 
     data class OnDateChange(val date: Long?) : ReportsEvent()
     object OnSelectAllDates : ReportsEvent()
+    object OnSelectCurrentMonth : ReportsEvent()
 
+    object OnToggleTransfers : ReportsEvent()
     data class OnReportTypeChange(val reportType: ReportType) : ReportsEvent()
 
 //    data class OnTransactionClick(val transaction: TransactionWithFund) : ReportsEvent()

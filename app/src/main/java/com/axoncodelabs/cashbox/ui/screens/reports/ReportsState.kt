@@ -22,10 +22,8 @@ enum class ReportType {
 
 data class QueryFilter(
     val fund: FundEntity?,
-//    val isSelectAllFunds: Boolean,
     val startDate: Long?,
-    val endDate: Long?,
-//    val isSelectAllDates: Boolean
+    val endDate: Long?
 )
 /*data class DayTransactions(
     val date: Long,
@@ -41,12 +39,14 @@ data class ReportsState(
     val popupState: ReportsPopups = ReportsPopups.None,
 
     val selectedFund: FundEntity? = null,
-    var isSelectAllFunds: Boolean = true,
+    val isSelectAllFunds: Boolean = true,
 
     val selectedDate: Long? = null,
-    var isSelectAllDates: Boolean = true,
+    val isSelectAllDates: Boolean = true,
+    val isSelectCurrentMonth: Boolean = false,
 
     val selectedReportType: ReportType = ReportType.Expenses,
+    val includeTransfers: Boolean = true,
 
     val expensesSum: Double = 0.0,
     val incomeSum: Double = 0.0,
