@@ -9,7 +9,9 @@ import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -19,6 +21,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -31,6 +34,15 @@ class ReportsViewModel @Inject constructor(
     private val _state = MutableStateFlow(ReportsState())
     val state = _state.asStateFlow()
 
+    private val _clearExpandedDaysEvent = MutableSharedFlow<Unit>()
+    val clearExpandedDaysEvent: SharedFlow<Unit> = _clearExpandedDaysEvent
+
+    fun clearExpandedDays() {
+        viewModelScope.launch {
+            _clearExpandedDaysEvent.emit(Unit)
+        }
+    }
+
     private val selectedFundFlow = _state
         .map { it.selectedFund }
         .distinctUntilChanged()
@@ -42,8 +54,8 @@ class ReportsViewModel @Inject constructor(
     private val initialDateRange: Flow<DateRange> = repository.getFirstAndLastDate()
         .distinctUntilChanged()
 
-    private val includeTransfersFlow = _state
-        .map { it.includeTransfers }
+    private val exceptTransfersFlow = _state
+        .map { it.exceptTransfers }
         .distinctUntilChanged()
 
     private val queryFilterFlow = combine(
@@ -51,6 +63,8 @@ class ReportsViewModel @Inject constructor(
         selectedDateFlow,
         initialDateRange
     ) { fund, selectedDate, dbRange ->
+
+        clearExpandedDays()
 
         val startDate: Long?
         val endDate: Long?
@@ -108,10 +122,10 @@ class ReportsViewModel @Inject constructor(
 
     private val expensesWithSumFlow = combine(
         expensesListFlow,
-        includeTransfersFlow
-    ) { list, includeTransfers ->
+        exceptTransfersFlow
+    ) { list, exceptTransfers ->
         val sum = list
-            .filter { includeTransfers || !it.transaction.isTransfer }
+            .filter { !exceptTransfers || !it.transaction.isTransfer }
             .sumOf { it.transaction.amount }
         list to sum
     }
@@ -122,10 +136,10 @@ class ReportsViewModel @Inject constructor(
 
     private val incomeWithSumFlow = combine(
         incomeListFlow,
-        includeTransfersFlow
-    ) { list, includeTransfers ->
+        exceptTransfersFlow
+    ) { list, exceptTransfers ->
         val sum = list
-            .filter { includeTransfers || !it.transaction.isTransfer }
+            .filter { !exceptTransfers || !it.transaction.isTransfer }
             .sumOf { it.transaction.amount }
         list to sum
     }
@@ -230,12 +244,13 @@ class ReportsViewModel @Inject constructor(
                         currentSheet = ReportsSheets.None
                     )
                 }
+
             }
 
             ReportsEvent.OnToggleTransfers -> {
                 _state.update {
                     it.copy(
-                        includeTransfers = !it.includeTransfers
+                        exceptTransfers = !it.exceptTransfers
                     )
                 }
             }
@@ -246,9 +261,8 @@ class ReportsViewModel @Inject constructor(
                         selectedReportType = event.reportType
                     )
                 }
+                clearExpandedDays()
             }
-
-//            is ReportsEvent.OnTransactionClick -> {}
         }
     }
 

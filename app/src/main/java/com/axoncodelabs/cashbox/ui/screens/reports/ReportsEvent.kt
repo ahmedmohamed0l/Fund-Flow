@@ -20,6 +20,4 @@ sealed class ReportsEvent {
 
     object OnToggleTransfers : ReportsEvent()
     data class OnReportTypeChange(val reportType: ReportType) : ReportsEvent()
-
-//    data class OnTransactionClick(val transaction: TransactionWithFund) : ReportsEvent()
 }

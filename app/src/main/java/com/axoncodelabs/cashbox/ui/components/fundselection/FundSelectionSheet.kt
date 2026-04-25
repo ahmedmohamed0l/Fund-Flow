@@ -2,7 +2,6 @@ package com.axoncodelabs.cashbox.ui.components.fundselection
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -87,11 +86,10 @@ private fun FundItem(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
             ) { onSelect() },
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Row(
-            modifier = Modifier.weight(20f),
+            modifier = Modifier.weight(2f),
             verticalAlignment = Alignment.CenterVertically
         ) {
             MyIcons.CreditCard(
@@ -108,7 +106,7 @@ private fun FundItem(
             )
         }
         HideTextData(
-            modifier = Modifier.weight(10f),
+            modifier = Modifier.weight(1f),
             isHideData = isHideData,
             text = (myDoubleFormat(fund.balance)),
             color = MaterialTheme.colorScheme.onBackground,

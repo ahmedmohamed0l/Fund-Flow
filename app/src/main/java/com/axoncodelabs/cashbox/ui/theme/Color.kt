@@ -26,5 +26,5 @@ object MyColors {
     val LightRed = Color(0xFFCD2C2C)
     val MidRed = Color(0xFFA00000)
     val DarkRed = Color(0xFF5F0000)
-    val LightOrange = Color(0xFFFFA500)
+    val Orange = Color(0xFFEB842B)
 }

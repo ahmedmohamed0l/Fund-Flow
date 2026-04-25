@@ -48,6 +48,7 @@ private val LightColorScheme = lightColorScheme(
 
     outline = MyColors.MidLightGray,
 
+    surfaceContainerHigh = MyColors.Orange,
 
     //Nav Shadow
     scrim = MyColors.Black,
@@ -78,6 +79,8 @@ private val DarkColorScheme = darkColorScheme(
     inversePrimary = MyColors.MidGreen,
 
     outline = MyColors.Gray,
+
+    surfaceContainerHigh = MyColors.Orange,
 
     //Nav Shadow
     scrim = MyColors.Gray,

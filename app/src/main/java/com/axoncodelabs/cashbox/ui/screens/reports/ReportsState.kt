@@ -46,7 +46,7 @@ data class ReportsState(
     val isSelectCurrentMonth: Boolean = false,
 
     val selectedReportType: ReportType = ReportType.Expenses,
-    val includeTransfers: Boolean = true,
+    val exceptTransfers: Boolean = false,
 
     val expensesSum: Double = 0.0,
     val incomeSum: Double = 0.0,

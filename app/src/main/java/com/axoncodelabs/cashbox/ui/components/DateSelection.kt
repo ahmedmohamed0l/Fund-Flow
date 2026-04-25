@@ -47,7 +47,7 @@ fun DateSelection(
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
-                    ) { onDateIncrease() }
+                    ) { onDateDecrease() }
             )
             Text(
                 text = date,
@@ -61,7 +61,7 @@ fun DateSelection(
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
-                    ) { onDateDecrease() }
+                    ) { onDateIncrease() }
             )
         }
     }

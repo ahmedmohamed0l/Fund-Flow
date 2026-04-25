@@ -5,12 +5,15 @@
     <string name="ReportsScreen_FundSelection">الصندوق</string>
     <string name="ReportsScreen_ZoneSelection">الفترة</string>
 
-    <string name="ReportsScreen_Income_Identifier">الإيرادات</string>
-    <string name="ReportsScreen_Expense_Identifier">المصروفات</string>
-
     <string name="ReportsScreen_SelectAll">إختيار الكل</string>
     <string name="ReportsScreen_SelectCurrentMonth">إختيار الشهر الحالي</string>
     <string name="ReportsScreen_AllSelected">الكل</string>
+
+    <string name="ReportsScreen_ExceptTransfer">استثناء عمليات التحويل من المجموع</string>
+    <string name="ReportsScreen_Income_Identifier">الإيرادات</string>
+    <string name="ReportsScreen_Expense_Identifier">المصروفات</string>
+
+    <string name="ReportsScreen_TransferTransaction">عملية تحويل بين الصناديق</string>
 
     <string name="ReportsScreen_NoReports_Title">لا توجد تقارير في هذه الفترة</string>
     <string name="ReportsScreen_NoReports_Description">يمكنك تغيير الفترة أو الصندوق لمشاهدة نتائج مختلفة</string>

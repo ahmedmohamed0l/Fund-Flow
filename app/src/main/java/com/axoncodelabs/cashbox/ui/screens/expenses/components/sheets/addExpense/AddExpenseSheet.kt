@@ -114,9 +114,11 @@ private fun AddExpenseSheetRoot(
         HideTextData(
             modifier = Modifier.align(Alignment.End),
             isHideData = isHideData,
-            text = (stringResource(R.string.Sheet_FundFromBalance) + " " + myDoubleFormat(
-                availableBalance
-            )),
+            text = (stringResource(R.string.Sheet_FundFromBalance) + " (${
+                myDoubleFormat(
+                    availableBalance
+                )
+            })"),
             color = if (isAvailableNegative) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.inversePrimary,
             style = MyFontStyle.small(),
             align = Alignment.CenterEnd

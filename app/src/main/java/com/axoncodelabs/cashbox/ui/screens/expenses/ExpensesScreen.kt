@@ -469,10 +469,10 @@ private fun ExpensesList(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 20.dp),
+                .padding(horizontal = 15.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            item { Spacer(modifier = Modifier.height(20.dp)) }
+            item { Spacer(modifier = Modifier.height(15.dp)) }
             itemsIndexed(
                 items = expenses,
                 key = { _, expense -> expense.transaction.id },
