@@ -1,7 +1,12 @@
 package com.axoncodelabs.cashbox
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
@@ -25,7 +30,9 @@ private fun Preview() {
             darkTheme = darkMode
         ) {
             /**--------- Content ---------**/
+            Column(Modifier.fillMaxWidth(), Arrangement.Center, Alignment.CenterHorizontally) {
 
+            }
         }
     }
 }
@@ -40,11 +47,11 @@ object Full {
 
     val mockTransaction = TransactionEntity(
         id = 1,
-        amount = (-99.9),
+        amount = (-999999999999.9),
         description = "معاملة جديدة معاملة جديدة معاملة جديدة معاملة جديدة معاملة جديدة",
         type = TransactionType.EXPENSE,
         fundId = 1,
-        isTransfer = false
+        isTransfer = true
     )
 
     val mockTransactionWithFund = TransactionWithFund(
@@ -67,7 +74,7 @@ object Normal {
         description = "معاملة جديدة",
         type = TransactionType.EXPENSE,
         fundId = 1,
-        isTransfer = false
+        isTransfer = true
     )
 
     val mockTransactionWithFund = TransactionWithFund(
@@ -76,7 +83,6 @@ object Normal {
     )
 }
 
-/*  Mock Data
 private fun mockExpenseList(count: Int): List<TransactionWithFund> {
     return List(count) { index ->
         TransactionWithFund(
@@ -86,9 +92,7 @@ private fun mockExpenseList(count: Int): List<TransactionWithFund> {
                 description = "مصروف رقم ${index + 1}",
                 type = TransactionType.EXPENSE,
                 fundId = 1
-            ), fund = FundEntity(
-                id = 1, name = "صندوق البيت", balance = 0.0
-            )
+            ), fund = Normal.mockFund
         )
     }
-}*/
+}

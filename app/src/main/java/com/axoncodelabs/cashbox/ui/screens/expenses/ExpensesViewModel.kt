@@ -38,12 +38,10 @@ class ExpensesViewModel @Inject constructor(
             )
         }
 
-    private val expensesSumFlow = selectedDateFlow
-        .flatMapLatest { date ->
-            repository.getExpensesSumByDateAndType(
-                startDate = date.startOfDay(),
-                endDate = date.endOfDay()
-            )
+    private val expensesSumFlow = expensesFlow
+        .map { list ->
+            list
+                .sumOf { it.transaction.amount }
         }
 
     init {

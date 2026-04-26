@@ -5,6 +5,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,6 +45,7 @@ fun DateSelection(
                 autoMirroredState = true,
                 size = 25.dp, angle = 180f, color = arrowColor,
                 modifier = Modifier
+                    .offset(y = (-2.5).dp)
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
@@ -58,6 +60,7 @@ fun DateSelection(
                 autoMirroredState = true,
                 size = 25.dp, color = arrowColor,
                 modifier = Modifier
+                    .offset(y = (-2.5).dp)
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }

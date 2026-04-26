@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
@@ -126,7 +127,11 @@ private fun EditTransactionSheetRoot(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            MyIcons.TransactionWallet(color = MaterialTheme.colorScheme.onBackground, size = 30.dp)
+            MyIcons.TransactionWallet(
+                modifier = Modifier.offset(y = (-2.5).dp),
+                color = MaterialTheme.colorScheme.onBackground,
+                size = 30.dp
+            )
             Spacer(modifier = Modifier.width(10.dp))
             FundSelectionBttn(
                 isHideData = isHideData,

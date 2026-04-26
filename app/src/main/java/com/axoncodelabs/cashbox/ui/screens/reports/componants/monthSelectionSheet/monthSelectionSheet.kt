@@ -4,6 +4,7 @@ package com.axoncodelabs.cashbox.ui.screens.reports.componants.monthSelectionShe
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,8 +23,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.ui.screens.reports.formatDate
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
@@ -42,27 +45,42 @@ fun MonthSelectionSheet(
         dates.value
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp)
-            .padding(bottom = 20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        LazyColumn(modifier = Modifier.fillMaxWidth()) {
-            items(displayedDates) { date ->
-                DateItem(
-                    date = date,
-                    onSelect = { onSelect(date) }
-                )
-                if (date != displayedDates.last()) {
-                    HorizontalDivider(
-                        modifier = Modifier
-                            .padding(vertical = 5.dp)
-                            .clip(MyRoundedCornerShape.large),
-                        thickness = 1.dp,
-                        color = MaterialTheme.colorScheme.outline
+    if (dates.value.isEmpty()) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = stringResource(R.string.Sheet_EmptyDateList),
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MyFontStyle.medium()
+            )
+        }
+    } else {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+                .padding(bottom = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                items(displayedDates) { date ->
+                    DateItem(
+                        date = date,
+                        onSelect = { onSelect(date) }
                     )
+                    if (date != displayedDates.last()) {
+                        HorizontalDivider(
+                            modifier = Modifier
+                                .padding(vertical = 5.dp)
+                                .clip(MyRoundedCornerShape.large),
+                            thickness = 1.dp,
+                            color = MaterialTheme.colorScheme.outline
+                        )
+                    }
                 }
             }
         }

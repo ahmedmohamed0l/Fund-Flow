@@ -13,13 +13,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DatePicker
@@ -180,20 +181,22 @@ private fun ExpensesScreenRoot(
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Card(
                 modifier = Modifier
-                    .padding(vertical = 20.dp),
+                    .fillMaxWidth()
+                    .padding(15.dp),
                 shape = MyRoundedCornerShape.medium,
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
             ) {
                 Column(
                     modifier = Modifier
-                        .wrapContentSize()
+                        .fillMaxWidth()
                         .padding(horizontal = 5.dp, vertical = 15.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
                     DateSelect(
                         onPreviousDayClick = { onPreviousDayClick() },
@@ -328,10 +331,12 @@ private fun DateSelect(
             angle = 180f,
             size = 25.dp,
             color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() }
-            ) { onPreviousDayClick() }
+            modifier = Modifier
+                .offset(y = (-2.5).dp)
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) { onPreviousDayClick() }
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -348,6 +353,7 @@ private fun DateSelect(
             )
             Spacer(modifier = Modifier.width(5.dp))
             MyIcons.Calendar(
+                modifier = Modifier.offset(y = (-2.5).dp),
                 size = 27.dp,
                 color = MaterialTheme.colorScheme.primary,
             )
@@ -356,10 +362,12 @@ private fun DateSelect(
             autoMirroredState = true,
             size = 25.dp,
             color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() }
-            ) { onNextDayClick() }
+            modifier = Modifier
+                .offset(y = (-2.5).dp)
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) { onNextDayClick() }
         )
     }
 }
@@ -394,8 +402,7 @@ private fun ExpensesPageState(
     expenses: List<TransactionWithFund>,
     isHideData: Boolean,
     onEvent: (ExpensesEvent) -> Unit,
-
-    ) {
+) {
     if (expenses == emptyList()) {
         EmptyExpensesPage()
     } else {
@@ -406,7 +413,6 @@ private fun ExpensesPageState(
         )
     }
 }
-
 
 @Composable
 private fun EmptyExpensesPage() {
@@ -454,40 +460,27 @@ private fun ExpensesList(
     isHideData: Boolean,
     onEvent: (ExpensesEvent) -> Unit,
 ) {
-    Card(
+    LazyColumn(
         modifier = Modifier
-            .fillMaxSize()
-            .border(
-                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
-                shape = MyRoundedCornerShape.extraLarge,
-                width = (0.5).dp
-            ),
-        shape = MyRoundedCornerShape.extraLarge,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+            .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 15.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            item { Spacer(modifier = Modifier.height(15.dp)) }
-            itemsIndexed(
-                items = expenses,
-                key = { _, expense -> expense.transaction.id },
-                contentType = { _, _ -> "ExpenseItem" }) { index, expense ->
-                ExpenseItem(
-                    isHideData = isHideData,
-                    expense = expense,
-                    onEvent = onEvent
-                )
-                if (index != expenses.lastIndex) {
-                    Spacer(modifier = Modifier.height(15.dp))
-                }
+        itemsIndexed(
+            items = expenses,
+            key = { _, expense -> expense.transaction.id },
+            contentType = { _, _ -> "ExpenseItem" }) { index, expense ->
+            ExpenseItem(
+                isHideData = isHideData,
+                expense = expense,
+                onEvent = onEvent
+            )
+            if (index != expenses.lastIndex) {
+                Spacer(modifier = Modifier.height(15.dp))
             }
-            item { Spacer(modifier = Modifier.height(125.dp)) }
         }
+        item { Spacer(modifier = Modifier.height(125.dp)) }
     }
 }
 
@@ -511,7 +504,7 @@ private fun ExpenseItem(
                 shape = MyRoundedCornerShape.medium,
                 width = (0.5).dp
             )
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.surface)
             .padding(15.dp)
             .padding(vertical = 5.dp)
     ) {

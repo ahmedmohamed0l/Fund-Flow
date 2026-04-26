@@ -411,15 +411,18 @@ fun FundItem(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         MyIcons.Settings(
+                            modifier = modifier
+                                .offset(y = (-2.5).dp)
+                                .clickable(
+                                    indication = null,
+                                    interactionSource = remember { MutableInteractionSource() }
+                                ) {
+                                    onEvent(FundsEvent.SheetDisplayed(FundsSheets.FundOptions(fund)))
+                                },
                             filledState = false,
                             size = 25.dp,
-                            color = MaterialTheme.colorScheme.primary,
-                            modifier = modifier.clickable(
-                                indication = null,
-                                interactionSource = remember { MutableInteractionSource() }
-                            ) {
-                                onEvent(FundsEvent.SheetDisplayed(FundsSheets.FundOptions(fund)))
-                            })
+                            color = MaterialTheme.colorScheme.primary
+                        )
                         Spacer(modifier = modifier.width(15.dp))
 
                         HideTextData(

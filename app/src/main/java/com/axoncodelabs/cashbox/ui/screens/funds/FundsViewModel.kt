@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -19,10 +20,19 @@ class FundsViewModel @Inject constructor(
     private val _state = MutableStateFlow(FundsState())
     val state = _state.asStateFlow()
 
+    private val fundsFlow = repository.getAllFunds()
+
+    private val fundsSumFlow = fundsFlow
+        .map { list ->
+            list
+                .filter { !it.isExcepted }
+                .sumOf { it.balance }
+        }
+
     init {
         combine(
-            repository.getAllFunds(),
-            repository.getFundsSUM(),
+            fundsFlow,
+            fundsSumFlow,
             repository.hideDataFlow
         ) { funds, totalBalance, isHideData ->
             _state.update {

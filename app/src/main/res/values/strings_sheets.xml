@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="Sheet_EmptyFundList">قم بإضافة الصناديق حتى تستطيع استخدامها</string>
+    <string name="Sheet_EmptyDateList">قم بإضافة المصاريف حتى يتم عرض فترات التقارير</string>
+
     <string name="Sheet_Fund_From_Name">تحويل من صندوق</string>
     <string name="Sheet_Fund_To_Name">تحويل إلى صندوق</string>
     <string name="Sheet_FundSelection">إختر صندوق</string>

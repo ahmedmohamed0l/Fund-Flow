@@ -18,6 +18,11 @@ class MyStringProviderImpl @Inject constructor(
 }
 
 fun myDoubleFormat(double: Double): String {
-    val formatter = DecimalFormat("#,##0.##")
+    val formatter = DecimalFormat("#,##0.##;'(-'#,##0.##')'")
     return formatter.format(double)
 }
+
+/*fun Double.toFormattedStringAmount(): String {
+    val formatter = DecimalFormat("#,##0.##")
+    return formatter.format(this)
+}*/

@@ -124,7 +124,11 @@ private fun SwitchTheme(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            MyIcons.ThemeIcon(size = 25.dp, color = MaterialTheme.colorScheme.onBackground)
+            MyIcons.ThemeIcon(
+                modifier = Modifier.offset(y = (-2.5).dp),
+                size = 25.dp,
+                color = MaterialTheme.colorScheme.onBackground
+            )
             Spacer(modifier = modifier.width(10.dp))
             Text(
                 text = stringResource(R.string.SettingsScreen_ChangeTheme),
