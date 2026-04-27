@@ -16,56 +16,52 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
-import com.axoncodelabs.cashbox.ui.components.MyButton
-import com.axoncodelabs.cashbox.ui.components.MyLabel
-import com.axoncodelabs.cashbox.ui.components.MyNumField
-import com.axoncodelabs.cashbox.ui.components.MyTextField
-import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
+import com.axoncodelabs.cashbox.ui.components.MainBttn
+import com.axoncodelabs.cashbox.ui.components.SheetFieldLabel
+import com.axoncodelabs.cashbox.ui.components.SheetNumField
+import com.axoncodelabs.cashbox.ui.components.SheetTextField
 
 @Composable
 fun AddFundSheet(
     viewModel: AddFundVM = hiltViewModel(),
     onClose: () -> Unit,
-    /*Disable ShowSnackbar
-    snackbarHostState: SnackbarHostState,*/
 ) {
-    /*Disable ShowSnackbar
-    val context = LocalContext.current*/
-    LaunchedEffect(key1 = true) {
-        viewModel.initData()
-        viewModel.fundsEvent.collect { event ->
-            when (event) {
-                FundsEvent.CloseSheet -> {
-                    onClose()
-                }
-
-                else -> Unit
-            }
+    // Send Close Event
+    LaunchedEffect(Unit) {
+        viewModel.closeEvent.collect {
+            onClose()
         }
     }
 
     AddFundSheetRoot(
         name = viewModel.name,
-        amount = viewModel.amount,
-        description = viewModel.description,
         onNameChange = { viewModel.onEvent(AddFundEvent.OnNameChange(it)) },
+        isNameEmpty = viewModel.isNameEmpty,
+
+        amount = viewModel.amount,
         onAmountChange = { viewModel.onEvent(AddFundEvent.OnAmountChange(it)) },
+
+        description = viewModel.description,
         onDescriptionChange = { viewModel.onEvent(AddFundEvent.OnDescriptionChange(it)) },
-        onSaveClick = { viewModel.onEvent(AddFundEvent.OnSaveClick) },
-        isNameEmpty = viewModel.isNameEmpty
+
+        onSaveClick = { viewModel.onEvent(AddFundEvent.OnSaveClick) }
     )
 }
 
+// ────────────────{ Sheet Layout }────────────────
 @Composable
 private fun AddFundSheetRoot(
     name: String,
-    amount: String,
-    description: String,
     onNameChange: (String) -> Unit,
-    onAmountChange: (String) -> Unit,
-    onDescriptionChange: (String) -> Unit,
-    onSaveClick: () -> Unit,
     isNameEmpty: Boolean,
+
+    amount: String,
+    onAmountChange: (String) -> Unit,
+
+    description: String,
+    onDescriptionChange: (String) -> Unit,
+
+    onSaveClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -73,24 +69,17 @@ private fun AddFundSheetRoot(
             .background(MaterialTheme.colorScheme.background)
             .padding(25.dp), horizontalAlignment = Alignment.Start
     ) {
-        MyLabel(stringResource(R.string.Sheet_FundName))
-        Spacer(modifier = Modifier.height(10.dp))
-        MyTextField(
+        FundNameSection(
             modifier = Modifier.fillMaxWidth(),
-            value = name,
-            onValueChange = onNameChange,
-            hintText = stringResource(R.string.Sheet_FundName),
-            keyboardType = KeyboardType.Text,
-            singleLine = true,
-            isError = isNameEmpty,
-            errorMsg = stringResource(R.string.Sheet_FundNameError)
+            name = name,
+            onNameChange = onNameChange,
+            isNameEmpty = isNameEmpty
         )
-
         Spacer(modifier = Modifier.height(20.dp))
 
-        MyLabel(stringResource(R.string.Sheet_Amount_Lapel))
+        SheetFieldLabel(stringResource(R.string.Sheet_Amount_Lapel))
         Spacer(modifier = Modifier.height(10.dp))
-        MyNumField(
+        SheetNumField(
             modifier = Modifier.fillMaxWidth(),
             value = amount,
             onValueChange = onAmountChange,
@@ -101,9 +90,9 @@ private fun AddFundSheetRoot(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        MyLabel(stringResource(R.string.Sheet_DescriptionLapel))
+        SheetFieldLabel(stringResource(R.string.Sheet_DescriptionLapel))
         Spacer(modifier = Modifier.height(10.dp))
-        MyTextField(
+        SheetTextField(
             modifier = Modifier.fillMaxWidth(),
             value = description,
             onValueChange = onDescriptionChange,
@@ -115,9 +104,35 @@ private fun AddFundSheetRoot(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        MyButton(
+        MainBttn(
             text = stringResource(R.string.Sheet_Save_Bttn),
             onClick = onSaveClick
+        )
+    }
+}
+
+// ────────────────{ Components }────────────────
+@Composable
+private fun FundNameSection(
+    modifier: Modifier = Modifier,
+    name: String,
+    onNameChange: (String) -> Unit,
+    isNameEmpty: Boolean,
+) {
+    Column(
+        modifier = modifier
+    ) {
+        SheetFieldLabel(stringResource(R.string.Sheet_FundName))
+        Spacer(modifier = Modifier.height(10.dp))
+        SheetTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = name,
+            onValueChange = onNameChange,
+            hintText = stringResource(R.string.Sheet_FundName),
+            keyboardType = KeyboardType.Text,
+            singleLine = true,
+            isError = isNameEmpty,
+            errorMsg = stringResource(R.string.Sheet_FundNameError)
         )
     }
 }

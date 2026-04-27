@@ -10,6 +10,6 @@ sealed class EditTransactionEvent {
     object OnSaveClick : EditTransactionEvent()
     object OnCancelClick : EditTransactionEvent()
 
-    //Delete Transaction Popup events
+    // Delete Transaction Popup events
     object OnDeleteClick : EditTransactionEvent()
 }

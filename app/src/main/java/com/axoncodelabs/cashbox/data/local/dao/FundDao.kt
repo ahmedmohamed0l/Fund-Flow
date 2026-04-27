@@ -19,17 +19,11 @@ interface FundDao {
     @Delete
     suspend fun deleteFund(fund: FundEntity)
 
-    /**.....( Data Flow ).....**/
+    //────────────────{ DATA FLOW }────────────────
 
-    // For All App Sheets
     @Query("SELECT * FROM funds WHERE id = :id")
     suspend fun getFundById(id: Int): FundEntity?
 
-    /*-----( For Funds_Screen )-----*/
     @Query("SELECT * FROM funds ORDER BY createdAt ASC")
     fun getAllFunds(): Flow<List<FundEntity>>
-
-    @Query("SELECT SUM(balance) FROM funds WHERE isExcepted = 0")
-    fun getFundsSUM(): Flow<Double>
-    /*------------------------------*/
 }

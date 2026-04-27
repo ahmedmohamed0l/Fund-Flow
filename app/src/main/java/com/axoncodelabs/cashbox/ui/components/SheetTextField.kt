@@ -24,23 +24,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 
-/*          ----------(Usage)----------
-
-
-    val textState = rememberSaveable { mutableStateOf("") }
-    MyTextField(
-        modifier = Modifier.align(Alignment.Center),
-        value = textState.value,
-        onValueChange = { textState.value = it },
-        hintText = "Hint",
-        keyboardType = KeyboardType.Number,
-        singleLine = true,
-        /**--[if {singleLine = false} modify ur custom maxLines]--**/
-        //maxLines = 10 )
-
-*/
 @Composable
-fun MyLabel(
+fun SheetFieldLabel(
     lapel: String,
     modifier: Modifier = Modifier,
     textColor: Color = MaterialTheme.colorScheme.onSecondary,
@@ -57,7 +42,7 @@ fun MyLabel(
 
 /** @param textAlign > **controls Text position inside the Label Frame by {contentAlignment: Alignment}** */
 @Composable
-fun MyRoundedLabel(
+fun SheetRoundedLabel(
     modifier: Modifier = Modifier,
     lapel: String,
     isHideData: Boolean,
@@ -83,7 +68,7 @@ fun MyRoundedLabel(
 }
 
 @Composable
-fun MyTextField(
+fun SheetTextField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
@@ -139,7 +124,7 @@ fun MyTextField(
 }
 
 @Composable
-fun MyNumField(
+fun SheetNumField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,

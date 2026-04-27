@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.components.topAppBar
+package com.axoncodelabs.cashbox.ui.components.appTopBar
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -29,8 +29,8 @@ import androidx.compose.ui.unit.dp
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 
 @Composable
-fun MyTopAppBar(
-    state: TopBarState,
+fun AppTopBar(
+    state: AppTopBarState,
     barColor: Color = MaterialTheme.colorScheme.primary,
     onBarColor: Color = MaterialTheme.colorScheme.onPrimary,
 ) {

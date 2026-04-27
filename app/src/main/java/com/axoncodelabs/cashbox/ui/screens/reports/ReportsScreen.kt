@@ -62,16 +62,16 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
-import com.axoncodelabs.cashbox.data.util.myDoubleFormat
+import com.axoncodelabs.cashbox.ui.components.AppCurrency
 import com.axoncodelabs.cashbox.ui.components.HideTextData
+import com.axoncodelabs.cashbox.ui.components.appTopBar.AppTopBarState
 import com.axoncodelabs.cashbox.ui.components.editTransaction.EditTransactionSheet
 import com.axoncodelabs.cashbox.ui.components.fundselection.FundSelectionSheet
-import com.axoncodelabs.cashbox.ui.components.topAppBar.TopBarState
 import com.axoncodelabs.cashbox.ui.screens.reports.componants.monthSelectionSheet.MonthSelectionSheet
-import com.axoncodelabs.cashbox.ui.theme.AppCurrency
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
+import com.axoncodelabs.cashbox.ui.util.doubleFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -80,7 +80,7 @@ import java.util.Locale
 @Composable
 fun ReportsScreen(
     viewModel: ReportsViewModel = hiltViewModel(),
-    onTopBarChange: (TopBarState) -> Unit
+    onTopBarChange: (AppTopBarState) -> Unit
 ) {
     //.....( State & ViewModel Setup ).....
     val state by viewModel.state.collectAsState()
@@ -99,7 +99,7 @@ fun ReportsScreen(
     //.....( TopAppBar Data ).....
     LaunchedEffect(Unit) {
         onTopBarChange(
-            TopBarState(titleRes = R.string.ReportsScreen_Identifier)
+            AppTopBarState(titleRes = R.string.ReportsScreen_Identifier)
         )
     }
 
@@ -664,7 +664,7 @@ private fun ReportTab(
         Row(verticalAlignment = Alignment.CenterVertically) {
             HideTextData(
                 isHideData = isHideData,
-                text = myDoubleFormat(value),
+                text = doubleFormat(value),
                 color = textColor,
                 style = MyFontStyle.large()
             )
@@ -731,10 +731,9 @@ private fun EmptyPage() {
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 15.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Spacer(modifier = Modifier.height(20.dp))
-
         Image(
             modifier = Modifier
                 .fillMaxWidth()
@@ -765,6 +764,8 @@ private fun EmptyPage() {
             textAlign = TextAlign.Center,
             color = colorScheme.onSecondary
         )
+
+        Spacer(modifier = Modifier.height(80.dp))
     }
 }
 
@@ -1025,7 +1026,7 @@ private fun TransactionItem(
         HideTextData(
             modifier = Modifier.weight(1f),
             isHideData = isHideData,
-            text = myDoubleFormat(transaction.transaction.amount),
+            text = doubleFormat(transaction.transaction.amount),
             color = colorScheme.onBackground,
             style = MyFontStyle.xLarge(),
             align = Alignment.CenterEnd

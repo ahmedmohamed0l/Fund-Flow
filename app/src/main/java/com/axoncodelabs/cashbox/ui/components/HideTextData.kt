@@ -12,29 +12,6 @@ import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
-/** [ Quick Use ] **/
-// hideDataMask(isHideData = ,text = )
-
-fun hideDataMask(isHide: Boolean, text: String): String {
-    return if (isHide) {
-        "x".repeat(text.length)
-    } else {
-        text
-    }
-}
-
-/** [ Quick Use ] **/
-/*
-        HideTextData(
-            modifier = Modifier,
-            isHideData = ,
-            text = ,
-            color = ,
-            style =
-        )
-*/
-
-/** @param align > **controls Text position inside the Box by {contentAlignment: Alignment}** */
 @Composable
 fun HideTextData(
     modifier: Modifier = Modifier,
@@ -61,5 +38,13 @@ fun HideTextData(
             maxLines = maxLines,
             overflow = TextOverflow.Ellipsis
         )
+    }
+}
+
+fun hideDataMask(isHide: Boolean, text: String): String {
+    return if (isHide) {
+        "x".repeat(text.length)
+    } else {
+        text
     }
 }

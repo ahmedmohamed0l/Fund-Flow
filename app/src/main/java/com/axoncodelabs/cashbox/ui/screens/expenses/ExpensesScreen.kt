@@ -45,22 +45,23 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.protobuf.LazyStringArrayList.emptyList
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
-import com.axoncodelabs.cashbox.data.util.myDoubleFormat
+import com.axoncodelabs.cashbox.ui.components.AppCurrency
 import com.axoncodelabs.cashbox.ui.components.HideTextData
-import com.axoncodelabs.cashbox.ui.components.MyBlurredButton
+import com.axoncodelabs.cashbox.ui.components.MainBttn
+import com.axoncodelabs.cashbox.ui.components.appTopBar.AppTopBarState
 import com.axoncodelabs.cashbox.ui.components.editTransaction.EditTransactionSheet
-import com.axoncodelabs.cashbox.ui.components.topAppBar.TopBarState
 import com.axoncodelabs.cashbox.ui.screens.expenses.components.sheets.addExpense.AddExpenseSheet
-import com.axoncodelabs.cashbox.ui.theme.AppCurrency
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
+import com.axoncodelabs.cashbox.ui.util.doubleFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -70,7 +71,7 @@ import java.util.Locale
 @Composable
 fun ExpensesScreen(
     viewModel: ExpensesViewModel = hiltViewModel(),
-    onTopBarChange: (TopBarState) -> Unit
+    onTopBarChange: (AppTopBarState) -> Unit
 ) {
     //.....( State & ViewModel Setup ).....
     val state = viewModel.state.collectAsState().value
@@ -86,7 +87,7 @@ fun ExpensesScreen(
     //.....( TopAppBar Data ).....
     LaunchedEffect(Unit) {
         onTopBarChange(
-            TopBarState(titleRes = R.string.ExpensesScreen_Identifier)
+            AppTopBarState(titleRes = R.string.ExpensesScreen_Identifier)
         )
     }
 
@@ -225,11 +226,12 @@ private fun ExpensesScreenRoot(
             )
         }
 
-        MyBlurredButton(
+        MainBttn(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(bottom = 70.dp)
                 .padding(horizontal = 40.dp),
+            clipShape = MyRoundedCornerShape.large,
             text = stringResource(R.string.ExpensesScreen_AddExpenses_Butt),
             onClick = {
                 onEvent(ExpensesEvent.SheetDisplayed(ExpensesSheets.AddExpense))
@@ -323,7 +325,8 @@ private fun DateSelect(
     selectedDate: Long,
 ) {
     Row(
-        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         MyIcons.Arrow(
@@ -338,26 +341,31 @@ private fun DateSelect(
                     interactionSource = remember { MutableInteractionSource() }
                 ) { onPreviousDayClick() }
         )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() }
-            ) { onToggleDatePicker() }
-        ) {
-            Text(
-                text = (stringResource(R.string.ExpensesScreen_DateSelect) +
-                        " " + formatDate(selectedDate)),
-                style = MyFontStyle.medium(),
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            Spacer(modifier = Modifier.width(5.dp))
-            MyIcons.Calendar(
-                modifier = Modifier.offset(y = (-2.5).dp),
-                size = 27.dp,
-                color = MaterialTheme.colorScheme.primary,
-            )
-        }
+        Text(
+            modifier = Modifier
+                .weight(1f)
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) { onToggleDatePicker() },
+            text = (stringResource(R.string.ExpensesScreen_DateSelect) +
+                    " " + formatDate(selectedDate)),
+            style = MyFontStyle.medium(),
+            color = MaterialTheme.colorScheme.onBackground,
+            textAlign = TextAlign.Center,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1
+        )
+        MyIcons.Calendar(
+            modifier = Modifier
+                .offset(y = (-2.5).dp)
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) { onToggleDatePicker() },
+            size = 27.dp,
+            color = MaterialTheme.colorScheme.primary,
+        )
         MyIcons.Arrow(
             autoMirroredState = true,
             size = 25.dp,
@@ -388,7 +396,7 @@ private fun DayExpensesTotalValue(
         Spacer(modifier = Modifier.width(3.dp))
         HideTextData(
             isHideData = isHideData,
-            text = (myDoubleFormat(expensesTotalValue)),
+            text = (doubleFormat(expensesTotalValue)),
             color = MaterialTheme.colorScheme.primary,
             style = MyFontStyle.largeBold(),
         )
@@ -420,9 +428,9 @@ private fun EmptyExpensesPage() {
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 15.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Spacer(modifier = Modifier.height(50.dp))
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(id = R.string.ExpensesScreen_EmptyExpensesPage_Title),
@@ -451,6 +459,8 @@ private fun EmptyExpensesPage() {
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSecondary
         )
+
+        Spacer(modifier = Modifier.height(125.dp))
     }
 }
 
@@ -546,7 +556,7 @@ private fun ExpenseItem(
             HideTextData(
                 modifier = Modifier.weight(1f),
                 isHideData = isHideData,
-                text = myDoubleFormat(expense.transaction.amount),
+                text = doubleFormat(expense.transaction.amount),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MyFontStyle.xxLargeBold(),
                 align = Alignment.CenterEnd

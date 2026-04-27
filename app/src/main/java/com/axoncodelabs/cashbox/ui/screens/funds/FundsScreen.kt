@@ -50,24 +50,24 @@ import androidx.datastore.preferences.protobuf.LazyStringArrayList.emptyList
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
-import com.axoncodelabs.cashbox.data.util.myDoubleFormat
+import com.axoncodelabs.cashbox.ui.components.AppCurrency
 import com.axoncodelabs.cashbox.ui.components.HideTextData
-import com.axoncodelabs.cashbox.ui.components.topAppBar.TopBarState
+import com.axoncodelabs.cashbox.ui.components.appTopBar.AppTopBarState
 import com.axoncodelabs.cashbox.ui.screens.funds.components.deletepopup.DeleteFundConfirm
 import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addamount.AddAmountSheet
 import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addfund.AddFundSheet
 import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.fundoptions.FundOptionsSheet
 import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.transfer.TransferSheet
-import com.axoncodelabs.cashbox.ui.theme.AppCurrency
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
+import com.axoncodelabs.cashbox.ui.util.doubleFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FundsScreen(
     viewModel: FundsViewModel = hiltViewModel(),
-    onTopBarChange: (TopBarState) -> Unit,
+    onTopBarChange: (AppTopBarState) -> Unit,
 ) {
     //.....( State & ViewModel Setup ).....
     val state = viewModel.state.collectAsState()
@@ -85,7 +85,7 @@ fun FundsScreen(
     //.....( TopAppBar Data ).....
     LaunchedEffect(Unit) {
         onTopBarChange(
-            TopBarState(
+            AppTopBarState(
                 titleRes = R.string.FundsScreen_Identifier,
                 showAction = true,
                 actionIconRes = R.drawable.ic_add_card,
@@ -257,7 +257,7 @@ private fun TotalFundsValue(
         )
         HideTextData(
             isHideData = isHideData,
-            text = (myDoubleFormat(fundsTotalBalance)),
+            text = (doubleFormat(fundsTotalBalance)),
             color = MaterialTheme.colorScheme.primary,
             style = MyFontStyle.large(),
             align = Alignment.CenterEnd
@@ -290,9 +290,10 @@ private fun EmptyFundsPage() {
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 15.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Spacer(modifier = Modifier.height(130.dp))
+        Spacer(modifier = Modifier.height(70.dp))
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(id = R.string.FundsScreen_EmptyFundsPage_Title),
@@ -321,6 +322,8 @@ private fun EmptyFundsPage() {
             lineHeight = 20.sp,
             color = MaterialTheme.colorScheme.onSecondary
         )
+
+        Spacer(modifier = Modifier.height(75.dp))
     }
 }
 
@@ -436,7 +439,7 @@ fun FundItem(
                     HideTextData(
                         modifier = Modifier.weight(10f),
                         isHideData = isHideData,
-                        text = (myDoubleFormat(fund.balance)),
+                        text = (doubleFormat(fund.balance)),
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MyFontStyle.large(),
                         align = Alignment.CenterEnd

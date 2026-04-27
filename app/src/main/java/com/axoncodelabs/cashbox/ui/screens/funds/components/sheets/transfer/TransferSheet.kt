@@ -19,17 +19,17 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
-import com.axoncodelabs.cashbox.data.util.myDoubleFormat
 import com.axoncodelabs.cashbox.ui.components.DateSelection
 import com.axoncodelabs.cashbox.ui.components.HideTextData
-import com.axoncodelabs.cashbox.ui.components.MyButton
-import com.axoncodelabs.cashbox.ui.components.MyLabel
-import com.axoncodelabs.cashbox.ui.components.MyNumField
-import com.axoncodelabs.cashbox.ui.components.MyRoundedLabel
-import com.axoncodelabs.cashbox.ui.components.MyTextField
+import com.axoncodelabs.cashbox.ui.components.MainBttn
+import com.axoncodelabs.cashbox.ui.components.SheetFieldLabel
+import com.axoncodelabs.cashbox.ui.components.SheetNumField
+import com.axoncodelabs.cashbox.ui.components.SheetRoundedLabel
+import com.axoncodelabs.cashbox.ui.components.SheetTextField
 import com.axoncodelabs.cashbox.ui.components.fundselection.FundSelectionBttn
 import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
+import com.axoncodelabs.cashbox.ui.util.doubleFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -102,9 +102,9 @@ private fun TransferSheetRoot(
             .background(MaterialTheme.colorScheme.background)
             .padding(25.dp), horizontalAlignment = Alignment.Start
     ) {
-        MyLabel(stringResource(R.string.Sheet_Fund_From_Name))
+        SheetFieldLabel(stringResource(R.string.Sheet_Fund_From_Name))
         Spacer(modifier = Modifier.height(10.dp))
-        MyRoundedLabel(
+        SheetRoundedLabel(
             modifier = Modifier.fillMaxWidth(),
             isHideData = isHideData,
             lapel = fromName,
@@ -115,7 +115,7 @@ private fun TransferSheetRoot(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        MyLabel(stringResource(R.string.Sheet_Fund_To_Name))
+        SheetFieldLabel(stringResource(R.string.Sheet_Fund_To_Name))
         Spacer(modifier = Modifier.height(10.dp))
         FundSelectionBttn(
             isHideData = isHideData,
@@ -134,11 +134,11 @@ private fun TransferSheetRoot(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            MyLabel(stringResource(R.string.Sheet_Amount_Lapel))
+            SheetFieldLabel(stringResource(R.string.Sheet_Amount_Lapel))
             HideTextData(
                 isHideData = isHideData,
                 text = (stringResource(R.string.Sheet_FundFromBalance) + " (${
-                    myDoubleFormat(
+                    doubleFormat(
                         availableBalance
                     )
                 })"),
@@ -148,7 +148,7 @@ private fun TransferSheetRoot(
             )
         }
         Spacer(modifier = Modifier.height(10.dp))
-        MyNumField(
+        SheetNumField(
             modifier = Modifier.fillMaxWidth(),
             value = amount,
             onValueChange = onAmountChange,
@@ -161,9 +161,9 @@ private fun TransferSheetRoot(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        MyLabel(stringResource(R.string.Sheet_DescriptionLapel))
+        SheetFieldLabel(stringResource(R.string.Sheet_DescriptionLapel))
         Spacer(modifier = Modifier.height(10.dp))
-        MyTextField(
+        SheetTextField(
             modifier = Modifier.fillMaxWidth(),
             value = description,
             onValueChange = onDescriptionChange,
@@ -191,7 +191,7 @@ private fun TransferSheetRoot(
         )
         Spacer(modifier = Modifier.height(15.dp))
 
-        MyButton(
+        MainBttn(
             text = stringResource(R.string.Sheet_AddTransaction_Bttn),
             onClick = onSaveClick
         )

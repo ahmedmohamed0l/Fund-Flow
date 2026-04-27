@@ -1,6 +1,6 @@
-package com.axoncodelabs.cashbox.ui.components.topAppBar
+package com.axoncodelabs.cashbox.ui.components.appTopBar
 
-data class TopBarState(
+data class AppTopBarState(
     val titleRes: Int,
     val showAction: Boolean = false,
     val actionIconRes: Int? = null,

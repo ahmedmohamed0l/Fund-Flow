@@ -12,8 +12,8 @@ import com.axoncodelabs.cashbox.data.local.dao.TransactionDao
 import com.axoncodelabs.cashbox.data.local.migration.MIGRATION_1_2
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepositoryImpl
-import com.axoncodelabs.cashbox.data.util.MyStringProvider
-import com.axoncodelabs.cashbox.data.util.MyStringProviderImpl
+import com.axoncodelabs.cashbox.data.util.StringProvider
+import com.axoncodelabs.cashbox.data.util.StringProviderImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -66,5 +66,5 @@ object AppModule {
     @Singleton
     fun provideStringProvider(
         @ApplicationContext context: Context,
-    ): MyStringProvider = MyStringProviderImpl(context)
+    ): StringProvider = StringProviderImpl(context)
 }

@@ -107,7 +107,7 @@ class ReportsViewModel @Inject constructor(
                 endDate = filter.endDate
             )
 
-            else -> repository.getTransactionsByFundAndTypeAndDate(
+            else -> repository.getTransactionsByFundAndDateAndType(
                 fundId = filter.fund.id,
                 type = type,
                 startDate = filter.startDate,

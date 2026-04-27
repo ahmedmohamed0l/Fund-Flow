@@ -29,7 +29,7 @@ private fun Preview() {
         CashBoxTheme(
             darkTheme = darkMode
         ) {
-            /**--------- Content ---------**/
+            //──── Content ────
             Column(Modifier.fillMaxWidth(), Arrangement.Center, Alignment.CenterHorizontally) {
 
             }
@@ -37,49 +37,28 @@ private fun Preview() {
     }
 }
 
-object Full {
-    val mockFund = FundEntity(
+object Mock {
+    var isFull = false
+
+    val fund = FundEntity(
         id = 1,
-        name = "صندوق جديد صندوق جديد صندوق جديد صندوق جديد صندوق جديد",
-        balance = (-9999999999999.99),
+        name = if (isFull) "معاملة جديدة معاملة جديدة معاملة جديدة معاملة جديدة معاملة جديدة" else "صندوق جديد",
+        balance = if (isFull) (-9999999999999.99) else 22.0,
         isExcepted = false
     )
 
-    val mockTransaction = TransactionEntity(
+    val transaction = TransactionEntity(
         id = 1,
-        amount = (-999999999999.9),
-        description = "معاملة جديدة معاملة جديدة معاملة جديدة معاملة جديدة معاملة جديدة",
+        amount = if (isFull) (-999999999999.9) else 22.0,
+        description = if (isFull) "معاملة جديدة معاملة جديدة معاملة جديدة معاملة جديدة معاملة جديدة" else "معاملة جديدة",
         type = TransactionType.EXPENSE,
         fundId = 1,
         isTransfer = true
     )
 
     val mockTransactionWithFund = TransactionWithFund(
-        transaction = mockTransaction,
-        fund = mockFund
-    )
-}
-
-object Normal {
-    val mockFund = FundEntity(
-        id = 1,
-        name = "صندوق جديد",
-        balance = 22.0,
-        isExcepted = false
-    )
-
-    val mockTransaction = TransactionEntity(
-        id = 1,
-        amount = 22.0,
-        description = "معاملة جديدة",
-        type = TransactionType.EXPENSE,
-        fundId = 1,
-        isTransfer = true
-    )
-
-    val mockTransactionWithFund = TransactionWithFund(
-        transaction = mockTransaction,
-        fund = mockFund
+        fund = fund,
+        transaction = transaction
     )
 }
 
@@ -92,7 +71,7 @@ private fun mockExpenseList(count: Int): List<TransactionWithFund> {
                 description = "مصروف رقم ${index + 1}",
                 type = TransactionType.EXPENSE,
                 fundId = 1
-            ), fund = Normal.mockFund
+            ), fund = Mock.fund
         )
     }
 }

@@ -18,13 +18,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-
 class CashBoxRepositoryImpl @Inject constructor(
     private val fundDao: FundDao,
     private val transactionDao: TransactionDao,
     private val dataStore: DataStore<Preferences>,
 ) : CashBoxRepository {
-    /**...............( Throw Exception )...............**/
+
+    // ────────────────{ Throw Exception }────────────────
     private suspend fun getFundOrThrow(id: Int): FundEntity {
         return fundDao.getFundById(id)
             ?: throw IllegalArgumentException("Fund with id $id not found")
@@ -35,7 +35,7 @@ class CashBoxRepositoryImpl @Inject constructor(
             ?: throw IllegalArgumentException("Transaction with id $id not found")
     }
 
-    /**...............( Helpers )...............**/
+    //──── Helpers ────
     // helper: sign of transaction for balance calculation
     private fun signForType(type: TransactionType): Int =
         when (type) {
@@ -43,7 +43,7 @@ class CashBoxRepositoryImpl @Inject constructor(
             TransactionType.EXPENSE -> -1
         }
 
-    /**...............( Fund Actions )...............**/
+    // ────────────────{ Fund Actions }────────────────
     override suspend fun insertFund(fund: FundEntity): Long {
         return fundDao.insertFund(fund)
     }
@@ -52,39 +52,25 @@ class CashBoxRepositoryImpl @Inject constructor(
         fundDao.updateFund(fund)
     }
 
+    @Transaction
     override suspend fun deleteFund(fund: FundEntity) {
         fundDao.deleteFund(fund)
+        transactionDao.deleteAllTransactionsByFundId(fund.id)
     }
 
-    // For All App Sheets
-    override suspend fun getFundById(id: Int): FundEntity? {
-        return fundDao.getFundById(id)
-    }
-
-    /*-----( For Funds_Screen )-----*/
+    //──── For (Funds_Screen) ────
     override fun getAllFunds(): Flow<List<FundEntity>> {
         return fundDao.getAllFunds()
-    }
-
-    override fun getFundsSUM(): Flow<Double> {
-        return fundDao.getFundsSUM()
     }
 
     override suspend fun deleteAllFundTransactions(fundId: Int) {
         val fund = getFundOrThrow(fundId)
 
-        /*val transactions = transactionDao.getTransactionsByFundId(fundId).first()
-
-        var correctedBalance = fund.balance
-        transactions.forEach { t -> correctedBalance -= (signForType(t.type) * t.amount) }*/
-
         fundDao.updateFund(fund.copy(balance = 0.0))
-
-        transactionDao.deleteTransactionsByFundId(fundId)
+        transactionDao.deleteAllTransactionsByFundId(fundId)
     }
-    /*------------------------------*/
 
-    /**...............( Transaction Actions )...............**/
+    // ────────────────{ Transaction Actions }────────────────
     @Transaction
     override suspend fun insertTransaction(transaction: TransactionEntity) {
         val fund = getFundOrThrow(transaction.fundId)
@@ -136,12 +122,7 @@ class CashBoxRepositoryImpl @Inject constructor(
         transactionDao.deleteTransaction(transaction)
     }
 
-    // For (Transaction_Edit)
-    override suspend fun getTransactionById(id: Int): TransactionEntity? {
-        return transactionDao.getTransactionById(id)
-    }
-
-    /*-----( For Expenses_Screen )-----*/
+    //──── For (Expenses_Screen) ────
     override fun getExpensesByDateAndType(
         startDate: Long,
         endDate: Long,
@@ -149,15 +130,7 @@ class CashBoxRepositoryImpl @Inject constructor(
         return transactionDao.getExpensesByDateAndType(startDate, endDate)
     }
 
-    override fun getExpensesSumByDateAndType(
-        startDate: Long,
-        endDate: Long,
-    ): Flow<Double> {
-        return transactionDao.getExpensesSumByDate(startDate, endDate)
-    }
-    /*---------------------------------*/
-
-    /*-----( For Reports_Screen )-----*/
+    //──── For (Reports_Screen) ────
     override fun getFirstAndLastDate(): Flow<DateRange> {
         return transactionDao.getFirstAndLastDate()
     }
@@ -175,39 +148,16 @@ class CashBoxRepositoryImpl @Inject constructor(
 
     }
 
-    override fun getTransactionsSumByDateAndType(
-        type: TransactionType,
-        startDate: Long,
-        endDate: Long,
-    ): Flow<Double> {
-        return transactionDao.getTransactionsSumByDateAndType(type, startDate, endDate)
-    }
-
-    override fun getTransactionsByFundAndTypeAndDate(
+    override fun getTransactionsByFundAndDateAndType(
         fundId: Int,
         type: TransactionType,
         startDate: Long,
         endDate: Long,
     ): Flow<List<TransactionWithFund>> {
-        return transactionDao.getTransactionsByFundAndTypeAndDate(fundId, type, startDate, endDate)
+        return transactionDao.getTransactionsByFundAndDateAndType(fundId, type, startDate, endDate)
     }
 
-    override fun getTransactionsSumByFundAndTypeAndDate(
-        fundId: Int,
-        type: TransactionType,
-        startDate: Long,
-        endDate: Long,
-    ): Flow<Double> {
-        return transactionDao.getTransactionsSumByFundAndTypeAndDate(
-            fundId,
-            type,
-            startDate,
-            endDate
-        )
-    }
-    /*--------------------------------*/
-
-    /**...............( Funds Transfer )...............**/
+    // ────────────────{ Funds Transfer }────────────────
     @Transaction
     override suspend fun transferBetweenFunds(
         fromFundId: Int,
@@ -236,88 +186,14 @@ class CashBoxRepositoryImpl @Inject constructor(
         insertTransaction(incomeTransaction)
     }
 
-    /*
-    override fun getExpensesWithFundByDate(
-        startDate: Long,
-        endDate: Long
-    ): Flow<List<TransactionWithFund>> {
-        return transactionDao.getExpensesWithFundByDate(startDate, endDate)
-    }
-
-    override fun getAllTransactionsByFundAndDate(
-        fundId: Int,
-        startDate: Long,
-        endDate: Long,
-    ): Flow<List<TransactionEntity>> {
-        return transactionDao.getAllTransactionsByFundAndDate(fundId, startDate, endDate)
-    }
-
-    override fun getExpensesSumByDate(
-        startDate: Long, endDate: Long,
-    ): Flow<Double> {
-        return transactionDao.getTransactionsSumByDateAndType(startDate, endDate)
-    }
-
-    override fun getTransactionsByType(
-        fundId: Int,
-        type: TransactionType,
-        startDate: Long,
-        endDate: Long,
-    ): Flow<List<TransactionEntity>> {
-        return transactionDao.getTransactionsByFundAndTypeAndDate(fundId, type, startDate, endDate)
-    }
-
-    override fun getTransactionsSumByType(
-        fundId: Int,
-        type: TransactionType,
-        startDate: Long,
-        endDate: Long,
-    ): Flow<Double> {
-        return transactionDao.getTransactionsSumByFundAndTypeAndDate(
-            fundId,
-            type,
-            startDate,
-            endDate
-        )
-    }
-
-    override fun getFundIncomeSumFlow(
-        fundId: Int,
-        startDate: Long,
-        endDate: Long,
-    ): Flow<Double> {
-        return transactionDao.getTransactionsSumByFundAndTypeAndDate(
-            fundId,
-            TransactionType.INCOME,
-            startDate,
-            endDate
-        )
-    }
-
-    override fun getFundExpenseSumFlow(
-        fundId: Int,
-        startDate: Long,
-        endDate: Long,
-    ): Flow<Double> {
-        return transactionDao.getTransactionsSumByFundAndTypeAndDate(
-            fundId,
-            TransactionType.EXPENSE,
-            startDate,
-            endDate
-        )
-    }*/
-
-
-    /**...............( Preferences )...............**/
-
-    //......( Keys )......
+    // ────────────────{ Preferences }────────────────
+    //──── Keys ────
     private object Keys {
         val THEME_KEY = stringPreferencesKey("theme")
         val HIDE_KEY = booleanPreferencesKey("is_hide")
     }
 
-
-    //......( Read Flow Impl )......
+    //──── Read Flow ────
     override val themeFlow: Flow<Theme> = dataStore.data.map {
         when (it[Keys.THEME_KEY]) {
             "dark" -> Theme.Dark
@@ -329,7 +205,7 @@ class CashBoxRepositoryImpl @Inject constructor(
         it[Keys.HIDE_KEY] ?: false
     }
 
-    //......( Save Impl )......
+    //──── Save ────
     override suspend fun saveTheme(theme: Theme) {
         dataStore.edit { it[Keys.THEME_KEY] = theme.value }
     }

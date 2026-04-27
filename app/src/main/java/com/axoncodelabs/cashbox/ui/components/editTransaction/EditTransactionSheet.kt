@@ -17,12 +17,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -31,10 +30,9 @@ import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
 import com.axoncodelabs.cashbox.ui.components.DateSelection
-import com.axoncodelabs.cashbox.ui.components.MyNumField
-import com.axoncodelabs.cashbox.ui.components.MyTextField
+import com.axoncodelabs.cashbox.ui.components.IconAmountSection
+import com.axoncodelabs.cashbox.ui.components.IconDescriptionSection
 import com.axoncodelabs.cashbox.ui.components.fundselection.FundSelectionBttn
-import com.axoncodelabs.cashbox.ui.screens.expenses.ExpensesEvent
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import java.text.SimpleDateFormat
@@ -49,67 +47,87 @@ fun EditTransactionSheet(
     viewModel: EditTransactionVM = hiltViewModel(),
     onClose: () -> Unit,
 ) {
+    val showDeletePopup = remember { mutableStateOf(false) }
+
     LaunchedEffect(key1 = transaction.transaction.id) {
         viewModel.initTransaction(transaction)
     }
-    LaunchedEffect(key1 = true) {
-        viewModel.expensesEvent.collect { event ->
-            when (event) {
-                ExpensesEvent.CloseSheet -> {
-                    viewModel.updateSaveBttnState()
-                    onClose()
-                }
 
-                else -> Unit
-            }
+    // Send Close Event
+    LaunchedEffect(Unit) {
+        viewModel.closeEvent.collect {
+            onClose()
         }
     }
 
-    if (viewModel.showDeleteTransactionPopup) {
-        Dialog(onDismissRequest = { viewModel.showDeleteTransactionPopup = false }) {
-            DeleteTransactionPopup(
-                onDelete = {
-                    viewModel.onEvent(EditTransactionEvent.OnDeleteClick)
-                    viewModel.showDeleteTransactionPopup = false
-                },
-                onCancel = { viewModel.showDeleteTransactionPopup = false }
-            )
-        }
-    }
+    DeleteConfirmationDialog(
+        show = showDeletePopup.value,
+        onDelete = {
+            viewModel.onEvent(EditTransactionEvent.OnDeleteClick)
+            showDeletePopup.value = false
+        },
+        onClosePop = { showDeletePopup.value = false }
+    )
 
     EditTransactionSheetRoot(
         isHideData = isHideData,
+
         fund = viewModel.fund,
         onFundChanged = { viewModel.onEvent(EditTransactionEvent.OnFundChanged(it)) },
+
         amount = viewModel.amount,
         onAmountChange = { viewModel.onEvent(EditTransactionEvent.OnAmountChange(it)) },
         isAmountEmpty = viewModel.isAmountEmpty,
+
         description = viewModel.description,
         onDescriptionChange = { viewModel.onEvent(EditTransactionEvent.OnDescriptionChange(it)) },
         isDescriptionEmpty = viewModel.isDescriptionEmpty,
+
         selectedDate = viewModel.selectedDate,
         onDateChange = { viewModel.onEvent(EditTransactionEvent.OnDateChange(it)) },
+
         isSaveEnabled = viewModel.isSaveBttnEnabled,
         onSaveClick = { viewModel.onEvent(EditTransactionEvent.OnSaveClick) },
-        onDeleteClick = { viewModel.showDeleteTransactionPopup = true },
-        onCancelClick = { onClose() },
+        onDeleteClick = { showDeletePopup.value = true },
+        onCancelClick = { viewModel.onEvent(EditTransactionEvent.OnCancelClick) },
     )
 }
 
-/**.....( Screen Layout ).....**/
+@Composable
+private fun DeleteConfirmationDialog(
+    show: Boolean,
+    onDelete: () -> Unit,
+    onClosePop: () -> Unit
+) {
+    if (show) {
+        Dialog(onDismissRequest = onClosePop) {
+            DeleteTransactionPopup(
+                onDelete = onDelete,
+                onCancel = onClosePop
+            )
+        }
+    }
+}
+
+// ────────────────{ Sheet Layout }────────────────
 @Composable
 private fun EditTransactionSheetRoot(
     isHideData: Boolean,
+
     fund: FundEntity?,
     onFundChanged: (FundEntity) -> Unit,
+
     amount: String,
     onAmountChange: (String) -> Unit,
     isAmountEmpty: Boolean,
+
     description: String,
     onDescriptionChange: (String) -> Unit,
     isDescriptionEmpty: Boolean,
+
     selectedDate: Long,
     onDateChange: (Long) -> Unit,
+
     isSaveEnabled: Boolean,
     onSaveClick: () -> Unit,
     onDeleteClick: () -> Unit,
@@ -119,75 +137,33 @@ private fun EditTransactionSheetRoot(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background)
-            .padding(25.dp), horizontalAlignment = Alignment.Start
+            .padding(25.dp),
+        horizontalAlignment = Alignment.Start
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            MyIcons.TransactionWallet(
-                modifier = Modifier.offset(y = (-2.5).dp),
-                color = MaterialTheme.colorScheme.onBackground,
-                size = 30.dp
-            )
-            Spacer(modifier = Modifier.width(10.dp))
-            FundSelectionBttn(
-                isHideData = isHideData,
-                fund = fund,
-                onFundSelected = onFundChanged,
-            )
-        }
-
+        FundSelectionSection(
+            modifier = Modifier.fillMaxWidth(),
+            isHideData = isHideData,
+            fund = fund,
+            onFundChanged = onFundChanged
+        )
         Spacer(modifier = Modifier.height(20.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            MyIcons.Money(color = MaterialTheme.colorScheme.onBackground, size = 30.dp)
-            Spacer(modifier = Modifier.width(10.dp))
-            MyNumField(
-                modifier = Modifier.fillMaxWidth(),
-                value = amount,
-                onValueChange = onAmountChange,
-                hintText = stringResource(R.string.Sheet_Amount_Hint),
-                singleLine = true,
-                isEmptyValue = isAmountEmpty,
-                emptyValueMsg = stringResource(R.string.Sheet_AddFundAmountError),
-                wrongValueMsg = stringResource(R.string.Sheet_FundAmountError),
-            )
-        }
+        IconAmountSection(
+            modifier = Modifier.fillMaxWidth(),
+            amount = amount,
+            onAmountChange = onAmountChange,
+            isAmountEmpty = isAmountEmpty
+        )
         Spacer(modifier = Modifier.height(20.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            MyIcons.Description(
-                color = MaterialTheme.colorScheme.onBackground,
-                size = 30.dp,
-                modifier = Modifier.scale(scaleX = -1f, scaleY = 1f)
-            )
-            Spacer(modifier = Modifier.width(10.dp))
-            MyTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = description,
-                onValueChange = onDescriptionChange,
-                hintText = stringResource(R.string.Sheet_Description_Hint),
-                keyboardType = KeyboardType.Text,
-                singleLine = false,
-                maxLines = 3,
-                isError = isDescriptionEmpty,
-                errorMsg = stringResource(R.string.Sheet_AddFundDescriptionError)
-            )
-        }
+        IconDescriptionSection(
+            modifier = Modifier.fillMaxWidth(),
+            description = description,
+            onDescriptionChange = onDescriptionChange,
+            isDescriptionEmpty = isDescriptionEmpty
+        )
         Spacer(modifier = Modifier.height(10.dp))
+
         DateSelection(
             onDateDecrease = {
                 val cal = Calendar.getInstance().apply { timeInMillis = selectedDate }
@@ -202,6 +178,7 @@ private fun EditTransactionSheetRoot(
             },
         )
         Spacer(modifier = Modifier.height(10.dp))
+
         HorizontalDivider(
             Modifier
                 .fillMaxWidth()
@@ -210,51 +187,94 @@ private fun EditTransactionSheetRoot(
         )
         Spacer(modifier = Modifier.height(15.dp))
 
-        Row(
+        ActionsBttns(
+            modifier = Modifier.fillMaxWidth(),
+            isSaveEnabled = isSaveEnabled,
+            onSaveClick = onSaveClick,
+            onDeleteClick = onDeleteClick,
+            onCancelClick = onCancelClick
+        )
+    }
+}
+
+// ────────────────{ Components }────────────────
+@Composable
+private fun FundSelectionSection(
+    modifier: Modifier = Modifier,
+    isHideData: Boolean,
+    fund: FundEntity?,
+    onFundChanged: (FundEntity) -> Unit,
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        MyIcons.TransactionWallet(
+            modifier = Modifier.offset(y = (-2.5).dp),
+            color = MaterialTheme.colorScheme.onBackground,
+            size = 30.dp
+        )
+        Spacer(modifier = Modifier.width(10.dp))
+        FundSelectionBttn(
+            isHideData = isHideData,
+            fund = fund,
+            onFundSelected = onFundChanged,
+        )
+    }
+}
+
+@Composable
+private fun ActionsBttns(
+    modifier: Modifier = Modifier,
+    isSaveEnabled: Boolean,
+    onSaveClick: () -> Unit,
+    onDeleteClick: () -> Unit,
+    onCancelClick: () -> Unit,
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
             modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                modifier = Modifier
-                    .weight(3f)
-                    .clickable(
-                        enabled = isSaveEnabled,
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) { onSaveClick() },
-                text = stringResource(R.string.Sheet_EditTransaction_Bttn),
-                textAlign = TextAlign.Start,
-                color = if (isSaveEnabled)
-                    MaterialTheme.colorScheme.primary
-                else
-                    MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
-                style = MyFontStyle.medium()
-            )
-            Text(
-                modifier = Modifier
-                    .weight(1f)
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) { onDeleteClick() },
-                text = stringResource(R.string.Delete_Bttn),
-                color = MaterialTheme.colorScheme.error,
-                style = MyFontStyle.medium()
-            )
-            Text(
-                modifier = Modifier
-                    .weight(1f)
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) { onCancelClick() },
-                text = stringResource(R.string.Cancel_Bttn),
-                textAlign = TextAlign.End,
-                color = MaterialTheme.colorScheme.onBackground,
-                style = MyFontStyle.medium()
-            )
-        }
+                .weight(3f)
+                .clickable(
+                    enabled = isSaveEnabled,
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) { onSaveClick() },
+            text = stringResource(R.string.Sheet_EditTransaction_Bttn),
+            textAlign = TextAlign.Start,
+            color = if (isSaveEnabled)
+                MaterialTheme.colorScheme.primary
+            else
+                MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+            style = MyFontStyle.medium()
+        )
+        Text(
+            modifier = Modifier
+                .weight(1f)
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) { onDeleteClick() },
+            text = stringResource(R.string.Delete_Bttn),
+            color = MaterialTheme.colorScheme.error,
+            style = MyFontStyle.medium()
+        )
+        Text(
+            modifier = Modifier
+                .weight(1f)
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) { onCancelClick() },
+            text = stringResource(R.string.Cancel_Bttn),
+            textAlign = TextAlign.End,
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MyFontStyle.medium()
+        )
     }
 }

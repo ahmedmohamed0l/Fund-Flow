@@ -11,8 +11,7 @@ import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionType
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
-import com.axoncodelabs.cashbox.data.util.MyStringProvider
-import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
+import com.axoncodelabs.cashbox.data.util.StringProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -22,9 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AddAmountVM @Inject constructor(
     private val repository: CashBoxRepository,
-    private val myStringProvider: MyStringProvider,
+    private val stringProvider: StringProvider,
 ) : ViewModel() {
-
     var fund by mutableStateOf<FundEntity?>(null)
         private set
     var name by mutableStateOf("")
@@ -39,6 +37,13 @@ class AddAmountVM @Inject constructor(
     var selectedDate by mutableLongStateOf(System.currentTimeMillis())
         private set
 
+    fun clearSheetData() {
+        amount = ""
+        description = ""
+        isAmountEmpty = false
+        selectedDate = System.currentTimeMillis()
+    }
+
     fun initData(fund: FundEntity) {
         //Set new
         this.fund = fund
@@ -48,8 +53,8 @@ class AddAmountVM @Inject constructor(
         clearSheetData()
     }
 
-    private val _fundsEvent = Channel<FundsEvent>()
-    val fundsEvent = _fundsEvent.receiveAsFlow()
+    private val _closeEvent = Channel<Unit>(Channel.CONFLATED)
+    val closeEvent = _closeEvent.receiveAsFlow()
 
     fun onEvent(event: AddAmountEvent) {
         when (event) {
@@ -76,7 +81,7 @@ class AddAmountVM @Inject constructor(
 
                     if (description.isBlank()) {
                         description =
-                            (myStringProvider.getString(R.string.Sheet_AddFundDescription) + "" + name)
+                            (stringProvider.getString(R.string.Sheet_AddFundDescription) + "" + name)
                     }
 
                     fund?.let {
@@ -91,22 +96,9 @@ class AddAmountVM @Inject constructor(
                         )
                     }
                     clearSheetData()
-                    sendFundsEvent(FundsEvent.CloseSheet)
+                    _closeEvent.send(Unit)
                 }
             }
-        }
-    }
-
-    fun clearSheetData() {
-        amount = ""
-        description = ""
-        isAmountEmpty = false
-        selectedDate = System.currentTimeMillis()
-    }
-
-    private fun sendFundsEvent(event: FundsEvent) {
-        viewModelScope.launch {
-            _fundsEvent.send(event)
         }
     }
 }

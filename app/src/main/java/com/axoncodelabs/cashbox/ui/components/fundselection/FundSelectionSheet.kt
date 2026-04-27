@@ -27,12 +27,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
-import com.axoncodelabs.cashbox.data.util.myDoubleFormat
+import com.axoncodelabs.cashbox.ui.components.AppCurrency
 import com.axoncodelabs.cashbox.ui.components.HideTextData
-import com.axoncodelabs.cashbox.ui.theme.AppCurrency
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
+import com.axoncodelabs.cashbox.ui.util.doubleFormat
 
 @Composable
 fun FundSelectionSheet(
@@ -129,7 +129,7 @@ private fun FundItem(
         HideTextData(
             modifier = Modifier.weight(1f),
             isHideData = isHideData,
-            text = (myDoubleFormat(fund.balance)),
+            text = (doubleFormat(fund.balance)),
             color = MaterialTheme.colorScheme.onBackground,
             style = MyFontStyle.large(),
             align = Alignment.CenterEnd

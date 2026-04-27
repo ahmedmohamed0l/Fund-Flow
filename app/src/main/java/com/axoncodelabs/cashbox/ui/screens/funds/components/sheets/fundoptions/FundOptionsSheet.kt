@@ -36,7 +36,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.ui.components.HideTextData
-import com.axoncodelabs.cashbox.ui.components.MyTextField
+import com.axoncodelabs.cashbox.ui.components.SheetTextField
 import com.axoncodelabs.cashbox.ui.components.hideDataMask
 import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
@@ -126,7 +126,7 @@ private fun FundOptionsSheetRoot(
                         .weight(1f)
                         .blur(if (isHideData) (1.5).dp else 0.dp)
                 ) {
-                    MyTextField(
+                    SheetTextField(
                         modifier = Modifier.fillMaxWidth(1f),
                         value = hideDataMask(isHideData, text = (name)),
                         onValueChange = onNameChange,

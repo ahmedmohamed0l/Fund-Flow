@@ -9,7 +9,6 @@ import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionType
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
-import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -30,13 +29,20 @@ class AddFundVM @Inject constructor(
     var isNameEmpty by mutableStateOf(false)
         private set
 
+    fun clearSheetData() {
+        name = ""
+        amount = ""
+        description = ""
+        isNameEmpty = false
+    }
+
     fun initData() {
         //Clear old
         clearSheetData()
     }
 
-    private val _fundsEvent = Channel<FundsEvent>()
-    val fundsEvent = _fundsEvent.receiveAsFlow()
+    private val _closeEvent = Channel<Unit>(Channel.CONFLATED)
+    val closeEvent = _closeEvent.receiveAsFlow()
 
     fun onEvent(event: AddFundEvent) {
         when (event) {
@@ -58,14 +64,6 @@ class AddFundVM @Inject constructor(
                     val initialAmount = amount.toDoubleOrNull() ?: 0.0
                     if (name.isBlank()) {
                         isNameEmpty = true
-                        /*Disable ShowSnackbar
-                        sendUiEvent(
-                            UiEvent.ShowSnackbar(
-                                message = R.string.Sheet_FundNameError
-                            )
-                        )
-                        Log.d("AddFundVM", "hi im VM Snake")
-                        */
                         return@launch
                     }
 
@@ -84,22 +82,9 @@ class AddFundVM @Inject constructor(
                         )
                     )
                     clearSheetData()
-                    sendFundsEvent(FundsEvent.CloseSheet)
+                    _closeEvent.send(Unit)
                 }
             }
-        }
-    }
-
-    fun clearSheetData() {
-        name = ""
-        amount = ""
-        description = ""
-        isNameEmpty = false
-    }
-
-    private fun sendFundsEvent(event: FundsEvent) {
-        viewModelScope.launch {
-            _fundsEvent.send(event)
         }
     }
 }

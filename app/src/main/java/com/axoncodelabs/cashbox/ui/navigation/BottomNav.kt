@@ -52,13 +52,6 @@ fun BottomBar(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 10.dp)
-            /*.shadow(
-                elevation = (3.5).dp,
-                shape = CircleShape,
-                clip = true,
-                ambientColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f),
-                spotColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f)
-            )*/
             .clip(CircleShape)
             .background(MaterialTheme.colorScheme.secondary)
             .border(

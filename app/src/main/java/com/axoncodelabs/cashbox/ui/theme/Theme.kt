@@ -91,7 +91,6 @@ private val DarkColorScheme = darkColorScheme(
 @Composable
 fun CashBoxTheme(
     darkTheme: Boolean = false,
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit,
 ) {
@@ -104,14 +103,6 @@ fun CashBoxTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
-    /*val activity = LocalActivity.current as Activity
-    SideEffect {
-        val window = activity.window
-        WindowCompat.getInsetsController(window, window.decorView).apply {
-            isAppearanceLightStatusBars = !darkTheme
-            isAppearanceLightNavigationBars = !darkTheme
-        }
-    }*/
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,

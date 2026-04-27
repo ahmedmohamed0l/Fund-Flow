@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
-import com.axoncodelabs.cashbox.ui.screens.expenses.ExpensesEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -20,7 +19,6 @@ import javax.inject.Inject
 class EditTransactionVM @Inject constructor(
     private val repository: CashBoxRepository,
 ) : ViewModel() {
-
     var transaction by mutableStateOf<TransactionWithFund?>(null)
         private set
 
@@ -43,8 +41,6 @@ class EditTransactionVM @Inject constructor(
     var isSaveBttnEnabled by mutableStateOf(false)
         private set
 
-    var showDeleteTransactionPopup by mutableStateOf(false)
-
     private data class EditableTransaction(
         val fund: FundEntity?,
         val amount: String,
@@ -62,6 +58,10 @@ class EditTransactionVM @Inject constructor(
         )
     }
 
+    fun updateSaveBttnState() {
+        isSaveBttnEnabled = originalEditableTransaction != currentEditableTransaction()
+    }
+
     fun initTransaction(transaction: TransactionWithFund) {
         this.transaction = transaction
         fund = transaction.fund
@@ -74,8 +74,8 @@ class EditTransactionVM @Inject constructor(
         updateSaveBttnState()
     }
 
-    private val _expensesEvent = Channel<ExpensesEvent>()
-    val expensesEvent = _expensesEvent.receiveAsFlow()
+    private val _closeEvent = Channel<Unit>(Channel.CONFLATED)
+    val closeEvent = _closeEvent.receiveAsFlow()
 
     fun onEvent(event: EditTransactionEvent) {
         when (event) {
@@ -114,17 +114,19 @@ class EditTransactionVM @Inject constructor(
                         isDescriptionEmpty = true
                         return@launch
                     }
+
+                    val selectedFund = fund ?: return@launch
                     transaction?.transaction?.let {
                         repository.updateTransaction(
                             it.copy(
-                                fundId = fund!!.id,
+                                fundId = selectedFund.id,
                                 amount = amountDouble,
                                 description = description,
                                 date = selectedDate
                             )
                         )
                     }
-                    sendExpensesEvent(ExpensesEvent.CloseSheet)
+                    _closeEvent.send(Unit)
                 }
             }
 
@@ -133,24 +135,15 @@ class EditTransactionVM @Inject constructor(
                     transaction?.transaction?.let { transaction ->
                         repository.deleteTransaction(transaction)
                     }
+                    _closeEvent.send(Unit)
                 }
-                sendExpensesEvent(ExpensesEvent.ClosePopup)
-                sendExpensesEvent(ExpensesEvent.CloseSheet)
             }
 
             EditTransactionEvent.OnCancelClick -> {
-                sendExpensesEvent(ExpensesEvent.CloseSheet)
+                viewModelScope.launch {
+                    _closeEvent.send(Unit)
+                }
             }
-        }
-    }
-
-    fun updateSaveBttnState() {
-        isSaveBttnEnabled = originalEditableTransaction != currentEditableTransaction()
-    }
-
-    private fun sendExpensesEvent(event: ExpensesEvent) {
-        viewModelScope.launch {
-            _expensesEvent.send(event)
         }
     }
 }

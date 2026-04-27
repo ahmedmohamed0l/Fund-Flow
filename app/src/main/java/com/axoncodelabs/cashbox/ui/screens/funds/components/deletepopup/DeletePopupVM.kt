@@ -35,7 +35,6 @@ class DeletePopupVM @Inject constructor(
                 viewModelScope.launch {
                     fund?.let {
                         repository.deleteFund(it)
-                        repository.deleteAllFundTransactions(it.id)
                     }
                     sendFundsEvent(FundsEvent.ClosePopup)
                 }

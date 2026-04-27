@@ -11,7 +11,6 @@ import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionType
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
-import com.axoncodelabs.cashbox.ui.screens.expenses.ExpensesEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -34,7 +33,6 @@ class AddExpenseVM @Inject constructor(
 
     var availableBalance by mutableDoubleStateOf(0.00)
         private set
-
     var isAvailableNegative by mutableStateOf(false)
         private set
 
@@ -49,6 +47,18 @@ class AddExpenseVM @Inject constructor(
     var selectedDate by mutableLongStateOf(System.currentTimeMillis())
         private set
 
+    fun clearSheetData() {
+        fund = null
+        fundName = ""
+        fundBalance = 0.0
+        isNoFundSelected = false
+        amount = ""
+        description = ""
+        isAmountEmpty = false
+        isDescriptionEmpty = false
+        updateAvailableBalance()
+    }
+
     private fun updateAvailableBalance() {
         val amount = amount.toDoubleOrNull() ?: 0.0
         val delta = fundBalance - amount
@@ -61,8 +71,8 @@ class AddExpenseVM @Inject constructor(
         clearSheetData()
     }
 
-    private val _expensesEvent = Channel<ExpensesEvent>()
-    val expensesEvent = _expensesEvent.receiveAsFlow()
+    private val _closeEvent = Channel<Unit>(Channel.CONFLATED)
+    val closeEvent = _closeEvent.receiveAsFlow()
 
     fun onEvent(event: AddExpenseEvent) {
         when (event) {
@@ -114,27 +124,9 @@ class AddExpenseVM @Inject constructor(
                         )
                     )
                     clearSheetData()
-                    sendExpensesEvent(ExpensesEvent.CloseSheet)
+                    _closeEvent.send(Unit)
                 }
             }
-        }
-    }
-
-    fun clearSheetData() {
-        fund = null
-        fundName = ""
-        fundBalance = 0.0
-        isNoFundSelected = false
-        amount = ""
-        description = ""
-        isAmountEmpty = false
-        isDescriptionEmpty = false
-        updateAvailableBalance()
-    }
-
-    private fun sendExpensesEvent(event: ExpensesEvent) {
-        viewModelScope.launch {
-            _expensesEvent.send(event)
         }
     }
 }

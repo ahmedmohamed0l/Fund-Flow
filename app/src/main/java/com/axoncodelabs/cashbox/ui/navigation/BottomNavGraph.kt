@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.axoncodelabs.cashbox.ui.components.topAppBar.TopBarState
+import com.axoncodelabs.cashbox.ui.components.appTopBar.AppTopBarState
 import com.axoncodelabs.cashbox.ui.screens.expenses.ExpensesScreen
 import com.axoncodelabs.cashbox.ui.screens.funds.FundsScreen
 import com.axoncodelabs.cashbox.ui.screens.reports.ReportsScreen
@@ -19,14 +19,13 @@ import com.axoncodelabs.cashbox.ui.screens.settings.SettingsScreen
 fun BottomNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    onTopBarChange: (TopBarState) -> Unit
+    onTopBarChange: (AppTopBarState) -> Unit
 ) {
     NavHost(
         modifier = modifier.fillMaxSize(),
         navController = navController,
         startDestination = BottomBarScreen.Expenses.route,
-//        enterTransition = { EnterTransition.None },
-//        exitTransition = { ExitTransition.None },
+        // To disable it, use = { EnterTransition.None }
         enterTransition = { fadeIn(animationSpec = tween(300)) },
         exitTransition = { fadeOut(animationSpec = tween(300)) },
     ) {

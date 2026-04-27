@@ -21,8 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
-import com.axoncodelabs.cashbox.ui.components.topAppBar.MyTopAppBar
-import com.axoncodelabs.cashbox.ui.components.topAppBar.TopBarState
+import com.axoncodelabs.cashbox.ui.components.appTopBar.AppTopBar
+import com.axoncodelabs.cashbox.ui.components.appTopBar.AppTopBarState
 import com.axoncodelabs.cashbox.ui.navigation.BottomBar
 import com.axoncodelabs.cashbox.ui.navigation.BottomNavGraph
 import com.axoncodelabs.cashbox.ui.screens.settings.SettingsViewModel
@@ -54,8 +54,8 @@ fun Root() {
     val viewModel: SettingsViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
     val navController = rememberNavController()
-    var topBarState by remember {
-        mutableStateOf(TopBarState(titleRes = R.string.ExpensesScreen_Identifier))
+    var appTopBarState by remember {
+        mutableStateOf(AppTopBarState(titleRes = R.string.ExpensesScreen_Identifier))
     }
 
     state.darkMode?.let { dark ->
@@ -63,7 +63,7 @@ fun Root() {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 topBar = {
-                    MyTopAppBar(state = topBarState)
+                    AppTopBar(state = appTopBarState)
                 }
             ) { innerPadding ->
                 Box(
@@ -76,7 +76,7 @@ fun Root() {
                         modifier = Modifier
                             .fillMaxSize(),
                         navController = navController,
-                        onTopBarChange = { topBarState = it }
+                        onTopBarChange = { appTopBarState = it }
                     )
 
                     BottomBar(

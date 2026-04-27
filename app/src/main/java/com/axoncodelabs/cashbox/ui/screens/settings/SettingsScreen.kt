@@ -44,7 +44,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
-import com.axoncodelabs.cashbox.ui.components.topAppBar.TopBarState
+import com.axoncodelabs.cashbox.ui.components.appTopBar.AppTopBarState
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
@@ -53,7 +53,7 @@ import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
-    onTopBarChange: (TopBarState) -> Unit,
+    onTopBarChange: (AppTopBarState) -> Unit,
 ) {
     //.....( State Section ).....
     val state by viewModel.state.collectAsState()
@@ -61,7 +61,7 @@ fun SettingsScreen(
     //.....( TopAppBar Data ).....
     LaunchedEffect(Unit) {
         onTopBarChange(
-            TopBarState(titleRes = R.string.SettingsScreen_Identifier)
+            AppTopBarState(titleRes = R.string.SettingsScreen_Identifier)
         )
     }
 

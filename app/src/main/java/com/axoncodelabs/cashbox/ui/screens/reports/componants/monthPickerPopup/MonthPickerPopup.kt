@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
-import com.axoncodelabs.cashbox.ui.components.MyButton
+import com.axoncodelabs.cashbox.ui.components.MainBttn
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -195,7 +195,7 @@ fun ScrollableMonthPickerRoot(
 
         //── Confirm button ────
         Spacer(Modifier.height(15.dp))
-        MyButton(
+        MainBttn(
             text = stringResource(R.string.Popups_DatePickerConfirm_Bttn),
             onClick = onConfirmBttnClicked
         )

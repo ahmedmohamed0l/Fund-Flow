@@ -15,14 +15,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.axoncodelabs.cashbox.R
 
-/*
-Usage of this file:
-Ic_Name(
-                size = 30.dp,
-                color = MyColors.LightRed,
-                modifier = Modifier.clickable { })
-*/
-
+// Usage of this file: Ic_Name( size = 30.dp, color = MyColors.LightRed, modifier = Modifier.clickable { })
 object MyIcons {
 
     @Composable
@@ -31,7 +24,7 @@ object MyIcons {
         size: Dp = 48.dp,
         angle: Float = 0f,
         color: Color = MyColors.Black,
-        /** [1f] = No transparency, [0f] = Fully transparent **/
+        /** > **[1f] = No transparency, [0f] = Fully transparent** */
         alphaValue: Float = 1f,
     ) {
         Icon(
