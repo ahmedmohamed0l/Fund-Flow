@@ -9,17 +9,18 @@ sealed class ExpensesSheets {
 }
 
 sealed class ExpensesPopup {
-    object Close : ExpensesPopup()
+    object None : ExpensesPopup()
+    data class DatePicker(val initialDate: Long) : ExpensesPopup()
 }
 
 data class ExpensesState(
     val currentSheet: ExpensesSheets = ExpensesSheets.None,
-    val popupState: ExpensesPopup = ExpensesPopup.Close,
-    val expenses: List<TransactionWithFund> = emptyList(),
-    val expensesTotalValue: Double = 0.0,
+    val currentPopup: ExpensesPopup = ExpensesPopup.None,
+
     val isHideData: Boolean = false,
 
-    //DatePickerData
     val selectedDate: Long = System.currentTimeMillis(),
-    val isDatePickerOpen: Boolean = false
+
+    val expenses: List<TransactionWithFund> = emptyList(),
+    val expensesTotalValue: Double = 0.0,
 )

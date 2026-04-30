@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.components.fundselection
+package com.axoncodelabs.cashbox.ui.components.sheets.fundSelection
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

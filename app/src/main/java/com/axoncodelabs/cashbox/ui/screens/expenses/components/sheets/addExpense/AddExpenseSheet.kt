@@ -2,13 +2,10 @@ package com.axoncodelabs.cashbox.ui.screens.expenses.components.sheets.addExpens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,14 +16,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
-import com.axoncodelabs.cashbox.ui.components.HideTextData
-import com.axoncodelabs.cashbox.ui.components.IconAmountSection
-import com.axoncodelabs.cashbox.ui.components.IconDescriptionSection
 import com.axoncodelabs.cashbox.ui.components.MainBttn
-import com.axoncodelabs.cashbox.ui.components.fundselection.FundSelectionBttn
-import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
-import com.axoncodelabs.cashbox.ui.theme.MyIcons
-import com.axoncodelabs.cashbox.ui.util.doubleFormat
+import com.axoncodelabs.cashbox.ui.components.sheets.AvailableBalanceSection
+import com.axoncodelabs.cashbox.ui.components.sheets.IconAmountSection
+import com.axoncodelabs.cashbox.ui.components.sheets.IconDescriptionSection
+import com.axoncodelabs.cashbox.ui.components.sheets.IconFundSelectionSection
 
 @Composable
 fun AddExpenseSheet(
@@ -99,7 +93,7 @@ private fun AddExpenseSheetRoot(
             .padding(25.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        FundSelectionSection(
+        IconFundSelectionSection(
             modifier = Modifier.fillMaxWidth(),
             isHideData = isHideData,
             fund = fund,
@@ -137,54 +131,4 @@ private fun AddExpenseSheetRoot(
             onClick = onSaveClick
         )
     }
-}
-
-// ────────────────{ Components }────────────────
-@Composable
-private fun FundSelectionSection(
-    modifier: Modifier = Modifier,
-    isHideData: Boolean,
-    fund: FundEntity?,
-    onFundSelected: (FundEntity) -> Unit,
-    isNoFundSelected: Boolean,
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        MyIcons.TransactionWallet(
-            modifier = Modifier.offset(y = (-2.5).dp),
-            color = MaterialTheme.colorScheme.onBackground,
-            size = 30.dp
-        )
-        Spacer(modifier = Modifier.width(10.dp))
-        FundSelectionBttn(
-            isHideData = isHideData,
-            fund = fund,
-            onFundSelected = onFundSelected,
-            isUnSelected = isNoFundSelected,
-            unSelectedErrorMsg = stringResource(R.string.Sheet_NoFundSelected)
-        )
-    }
-}
-
-@Composable
-private fun AvailableBalanceSection(
-    modifier: Modifier = Modifier,
-    isHideData: Boolean,
-    availableBalance: Double,
-    isAvailableNegative: Boolean,
-) {
-    HideTextData(
-        modifier = modifier,
-        isHideData = isHideData,
-        text = (stringResource(R.string.Sheet_FundFromBalance) + " (${
-            doubleFormat(
-                availableBalance
-            )
-        })"),
-        color = if (isAvailableNegative) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.inversePrimary,
-        style = MyFontStyle.small(),
-        align = Alignment.CenterEnd
-    )
 }

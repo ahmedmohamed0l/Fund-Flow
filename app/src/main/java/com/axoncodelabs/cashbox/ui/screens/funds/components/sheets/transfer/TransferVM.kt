@@ -11,7 +11,6 @@ import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
 import com.axoncodelabs.cashbox.data.util.StringProvider
-import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -23,23 +22,18 @@ class TransferVM @Inject constructor(
     private val repository: CashBoxRepository,
     private val stringProvider: StringProvider,
 ) : ViewModel() {
+
+    //──── UI State ────
     var fromFund by mutableStateOf<FundEntity?>(null)
-        private set
-    var fromName by mutableStateOf("")
-        private set
-    var fromBalance by mutableDoubleStateOf(0.0)
         private set
 
     var toFund by mutableStateOf<FundEntity?>(null)
-        private set
-    var toName by mutableStateOf("")
         private set
     var isNoFundSelected by mutableStateOf(false)
         private set
 
     var availableBalance by mutableDoubleStateOf(0.00)
         private set
-
     var isAvailableNegative by mutableStateOf(false)
         private set
 
@@ -53,29 +47,38 @@ class TransferVM @Inject constructor(
     var selectedDate by mutableLongStateOf(System.currentTimeMillis())
         private set
 
+    //──── Helpers ────
     private fun updateAvailableBalance() {
         val amount = amount.toDoubleOrNull() ?: 0.0
-        val delta = fromBalance - amount
+        val delta = (fromFund?.balance ?: 0.0) - amount
         availableBalance = delta
         isAvailableNegative = delta < 0
     }
 
+    fun clearSheetData() {
+        toFund = null
+        isNoFundSelected = false
+        amount = ""
+        description = ""
+        isAmountEmpty = false
+        selectedDate = System.currentTimeMillis()
+        updateAvailableBalance()
+    }
+
+    //──── Init ────
     fun initTransaction(fundFrom: FundEntity) {
         this.fromFund = fundFrom
-        fromName = fundFrom.name
-        fromBalance = fundFrom.balance
         clearSheetData()
     }
 
-
-    private val _fundsEvent = Channel<FundsEvent>()
-    val fundsEvent = _fundsEvent.receiveAsFlow()
+    //──── Events ────
+    private val _closeEvent = Channel<Unit>(Channel.CONFLATED)
+    val closeEvent = _closeEvent.receiveAsFlow()
 
     fun onEvent(event: TransferEvent) {
         when (event) {
             is TransferEvent.OnToFundSelected -> {
                 toFund = event.fund
-                toName = event.fund.name
                 isNoFundSelected = false
             }
 
@@ -102,15 +105,15 @@ class TransferVM @Inject constructor(
                     }
 
                     val amountDouble = amount.toDoubleOrNull()
-                    if (amount.isBlank() || amountDouble == null) {
+                    if (amount.isBlank() || amountDouble == null || amountDouble == 0.0) {
                         isAmountEmpty = true
                         return@launch
                     }
 
                     if (description.isBlank()) {
                         description =
-                            (stringProvider.getString(R.string.Sheet_TransferFromDescription)) + " " + source.name +
-                                    (stringProvider.getString(R.string.Sheet_TransferToDescription)) + " " + target.name
+                            (stringProvider.getString(R.string.Sheet_TransferFromDescription)) + " " + "(${source.name})" +
+                                    (stringProvider.getString(R.string.Sheet_TransferToDescription)) + " " + "(${target.name})"
                     }
 
                     repository.transferBetweenFunds(
@@ -122,26 +125,9 @@ class TransferVM @Inject constructor(
                     )
 
                     clearSheetData()
-                    sendFundsEvent(FundsEvent.CloseSheet)
+                    _closeEvent.send(Unit)
                 }
             }
-        }
-    }
-
-    fun clearSheetData() {
-        toFund = null
-        toName = ""
-        isNoFundSelected = false
-        amount = ""
-        description = ""
-        isAmountEmpty = false
-        selectedDate = System.currentTimeMillis()
-        updateAvailableBalance()
-    }
-
-    private fun sendFundsEvent(event: FundsEvent) {
-        viewModelScope.launch {
-            _fundsEvent.send(event)
         }
     }
 }

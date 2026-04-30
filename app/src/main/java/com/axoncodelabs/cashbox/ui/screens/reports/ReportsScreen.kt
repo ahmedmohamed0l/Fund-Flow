@@ -13,8 +13,6 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -65,14 +63,18 @@ import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
 import com.axoncodelabs.cashbox.ui.components.AppCurrency
 import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.components.appTopBar.AppTopBarState
-import com.axoncodelabs.cashbox.ui.components.editTransaction.EditTransactionSheet
-import com.axoncodelabs.cashbox.ui.components.fundselection.FundSelectionSheet
+import com.axoncodelabs.cashbox.ui.components.noRippleClickable
+import com.axoncodelabs.cashbox.ui.components.sheets.editTransaction.EditTransactionSheet
+import com.axoncodelabs.cashbox.ui.components.sheets.fundSelection.FundSelectionSheet
 import com.axoncodelabs.cashbox.ui.screens.reports.componants.monthSelectionSheet.MonthSelectionSheet
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
-import com.axoncodelabs.cashbox.ui.util.doubleFormat
+import com.axoncodelabs.cashbox.ui.util.formatAmount
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Locale
 
@@ -418,7 +420,7 @@ private fun DataSelectors(
             openSheet = { onDateSelectorClick() },
             selectedValue = selectedDate,
             isSelectAll = isSelectAllDates,
-            isHideData = isHideData
+            isHideData = false
         )
     }
 }
@@ -440,11 +442,7 @@ private fun SelectorBar(
         Row(
             modifier = modifier
                 .weight(2f)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }) {
-                    openSheet()
-                },
+                .noRippleClickable { openSheet() },
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
@@ -466,11 +464,7 @@ private fun SelectorBar(
             modifier = modifier
                 .weight(3f)
                 .padding(top = 4.dp)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }) {
-                    openSheet()
-                },
+                .noRippleClickable { openSheet() },
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.End
         ) {
@@ -503,11 +497,7 @@ fun SelectValueBttn(
     val isEnable = !isEnable
     Box(
         modifier = modifier
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() }) {
-                if (isEnable) onClick()
-            }
+            .noRippleClickable(isEnable) { onClick() }
             .clip(CircleShape)
             .border(
                 color = if (isEnable) colorScheme.primary else colorScheme.outline,
@@ -536,6 +526,7 @@ private fun TransfersException(
         modifier = modifier
             .fillMaxWidth()
             .clip(MyRoundedCornerShape.medium)
+            .noRippleClickable { onExceptClick() }
             .border(
                 shape = MyRoundedCornerShape.medium,
                 width = 1.dp,
@@ -646,11 +637,7 @@ private fun ReportTab(
             .fillMaxHeight()
             .clip(MyRoundedCornerShape.medium)
             .background(tabColor)
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() }) {
-                onClick()
-            },
+            .noRippleClickable { onClick() },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -664,7 +651,7 @@ private fun ReportTab(
         Row(verticalAlignment = Alignment.CenterVertically) {
             HideTextData(
                 isHideData = isHideData,
-                text = doubleFormat(value),
+                text = value.formatAmount(),
                 color = textColor,
                 style = MyFontStyle.large()
             )
@@ -832,11 +819,7 @@ private fun ReportCards(
             .fillMaxWidth()
             .clip(MyRoundedCornerShape.medium)
             .heightIn(min = 50.dp)
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() }) {
-                onHeaderClick()
-            }
+            .noRippleClickable { onHeaderClick() }
             .border(
                 color = colorScheme.primary.copy(alpha = 0.7f),
                 shape = MyRoundedCornerShape.medium,
@@ -991,11 +974,7 @@ private fun TransactionItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() }) {
-                onTransactionClick()
-            }
+            .noRippleClickable { onTransactionClick() }
             .padding(10.dp)
             .padding(vertical = 15.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -1026,7 +1005,7 @@ private fun TransactionItem(
         HideTextData(
             modifier = Modifier.weight(1f),
             isHideData = isHideData,
-            text = doubleFormat(transaction.transaction.amount),
+            text = transaction.transaction.amount.formatAmount(),
             color = colorScheme.onBackground,
             style = MyFontStyle.xLarge(),
             align = Alignment.CenterEnd
@@ -1046,15 +1025,13 @@ fun formatDate(timestamp: Long?): String {
     }
 }
 
-fun Long.toDayHeader(): String {
-    val cal = Calendar.getInstance().apply { timeInMillis = this@toDayHeader }
-    val day = cal.get(Calendar.DAY_OF_MONTH)
-    val month = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.forLanguageTag("ar"))
-    val year = cal.get(Calendar.YEAR)
-    val weekday =
-        cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.forLanguageTag("ar"))
-    return "$weekday $day $month $year"
-}
+private val ARABIC_FORMATTER =
+    DateTimeFormatter.ofPattern("EEEE d MMMM yyyy", Locale.forLanguageTag("ar"))
+
+fun Long.toDayHeader(): String = Instant.ofEpochMilli(this)
+    .atZone(ZoneId.systemDefault())
+    .toLocalDate()
+    .format(ARABIC_FORMATTER)
 
 fun Long.startOfDay(): Long {
     val cal = Calendar.getInstance().apply { timeInMillis = this@startOfDay }

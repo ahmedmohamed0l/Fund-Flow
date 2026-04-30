@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addamount
+package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addAmount
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -17,11 +17,10 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.ui.components.DateSelection
-import com.axoncodelabs.cashbox.ui.components.LabelAmountSection
-import com.axoncodelabs.cashbox.ui.components.LabelDescriptionSection
 import com.axoncodelabs.cashbox.ui.components.MainBttn
-import com.axoncodelabs.cashbox.ui.components.SheetFieldLabel
-import com.axoncodelabs.cashbox.ui.components.SheetRoundedLabel
+import com.axoncodelabs.cashbox.ui.components.sheets.FundNameSection
+import com.axoncodelabs.cashbox.ui.components.sheets.LabelAmountSection
+import com.axoncodelabs.cashbox.ui.components.sheets.LabelDescriptionSection
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -49,7 +48,7 @@ fun AddAmountSheet(
     AddAmountSheetRoot(
         isHideData = isHideData,
 
-        name = viewModel.name,
+        fundName = viewModel.fund?.name.orEmpty(),
 
         amount = viewModel.amount,
         onAmountChange = { viewModel.onEvent(AddAmountEvent.OnAmountChange(it)) },
@@ -70,7 +69,7 @@ fun AddAmountSheet(
 private fun AddAmountSheetRoot(
     isHideData: Boolean,
 
-    name: String,
+    fundName: String,
 
     amount: String,
     onAmountChange: (String) -> Unit,
@@ -93,7 +92,8 @@ private fun AddAmountSheetRoot(
         FundNameSection(
             modifier = Modifier.fillMaxWidth(),
             isHideData = isHideData,
-            name = name
+            label = stringResource(R.string.Sheet_FundName),
+            fundName = fundName
         )
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -130,28 +130,6 @@ private fun AddAmountSheetRoot(
         MainBttn(
             text = stringResource(R.string.Sheet_AddTransaction_Bttn),
             onClick = onSaveClick
-        )
-    }
-}
-
-// ────────────────{ Components }────────────────
-@Composable
-private fun FundNameSection(
-    modifier: Modifier = Modifier,
-    isHideData: Boolean,
-    name: String,
-) {
-    Column(
-        modifier = modifier
-    ) {
-        SheetFieldLabel(stringResource(R.string.Sheet_FundName))
-        Spacer(modifier = Modifier.height(10.dp))
-
-        SheetRoundedLabel(
-            modifier = Modifier.fillMaxWidth(),
-            isHideData = isHideData,
-            lapel = (name),
-            textAlign = Alignment.CenterStart,
         )
     }
 }

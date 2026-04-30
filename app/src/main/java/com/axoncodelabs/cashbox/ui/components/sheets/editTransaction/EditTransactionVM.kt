@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.components.editTransaction
+package com.axoncodelabs.cashbox.ui.components.sheets.editTransaction
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -19,12 +19,12 @@ import javax.inject.Inject
 class EditTransactionVM @Inject constructor(
     private val repository: CashBoxRepository,
 ) : ViewModel() {
+
+    //──── UI State ────
     var transaction by mutableStateOf<TransactionWithFund?>(null)
         private set
 
     var fund by mutableStateOf<FundEntity?>(null)
-        private set
-    var fundName by mutableStateOf("")
         private set
 
     var amount by mutableStateOf("")
@@ -41,6 +41,7 @@ class EditTransactionVM @Inject constructor(
     var isSaveBttnEnabled by mutableStateOf(false)
         private set
 
+    //──── Internal Models ────
     private data class EditableTransaction(
         val fund: FundEntity?,
         val amount: String,
@@ -49,6 +50,8 @@ class EditTransactionVM @Inject constructor(
     )
 
     private var originalEditableTransaction: EditableTransaction? = null
+
+    //──── Data Flows ────
     private fun currentEditableTransaction(): EditableTransaction {
         return EditableTransaction(
             fund = fund,
@@ -58,22 +61,30 @@ class EditTransactionVM @Inject constructor(
         )
     }
 
+    //──── Helpers ────
+    fun clearSheetErrsStates() {
+        isAmountEmpty = false
+        isDescriptionEmpty = false
+    }
+
     fun updateSaveBttnState() {
         isSaveBttnEnabled = originalEditableTransaction != currentEditableTransaction()
     }
 
+    //──── Init ────
     fun initTransaction(transaction: TransactionWithFund) {
         this.transaction = transaction
         fund = transaction.fund
-        fundName = transaction.fund.name
         amount = transaction.transaction.amount.toString()
         description = transaction.transaction.description
         selectedDate = transaction.transaction.date
 
+        clearSheetErrsStates()
         originalEditableTransaction = currentEditableTransaction()
         updateSaveBttnState()
     }
 
+    //──── Events ────
     private val _closeEvent = Channel<Unit>(Channel.CONFLATED)
     val closeEvent = _closeEvent.receiveAsFlow()
 
@@ -81,7 +92,6 @@ class EditTransactionVM @Inject constructor(
         when (event) {
             is EditTransactionEvent.OnFundChanged -> {
                 fund = event.fund
-                fundName = event.fund.name
                 updateSaveBttnState()
             }
 

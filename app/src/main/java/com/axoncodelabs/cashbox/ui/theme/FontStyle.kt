@@ -28,6 +28,7 @@ val Typography = Typography(
 // ────────────────{ Font Styles }────────────────
 object MyFontStyle {
 
+    //──── Small ────
     fun xSmall() = TextStyle(
         fontFamily = mainFont,
         fontWeight = FontWeight.Normal,
@@ -46,6 +47,7 @@ object MyFontStyle {
         fontSize = 14.sp
     )
 
+    //──── Medium ────
     fun medium() = TextStyle(
         fontFamily = mainFont,
         fontWeight = FontWeight.Normal,
@@ -58,6 +60,7 @@ object MyFontStyle {
         fontSize = 16.sp
     )
 
+    //──── Large ────
     fun large() = TextStyle(
         fontFamily = mainFont,
         fontWeight = FontWeight.Normal,

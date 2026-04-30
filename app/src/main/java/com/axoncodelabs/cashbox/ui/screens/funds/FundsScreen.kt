@@ -3,8 +3,6 @@ package com.axoncodelabs.cashbox.ui.screens.funds
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,7 +28,6 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -51,17 +48,18 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.ui.components.AppCurrency
+import com.axoncodelabs.cashbox.ui.components.DeletePopup
 import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.components.appTopBar.AppTopBarState
-import com.axoncodelabs.cashbox.ui.screens.funds.components.deletepopup.DeleteFundConfirm
-import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addamount.AddAmountSheet
-import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addfund.AddFundSheet
-import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.fundoptions.FundOptionsSheet
+import com.axoncodelabs.cashbox.ui.components.noRippleClickable
+import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addAmount.AddAmountSheet
+import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addFund.AddFundSheet
+import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.fundOptions.FundOptionsSheet
 import com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.transfer.TransferSheet
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
-import com.axoncodelabs.cashbox.ui.util.doubleFormat
+import com.axoncodelabs.cashbox.ui.util.formatAmount
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -168,9 +166,10 @@ fun FundsScreen(
                 Dialog(
                     onDismissRequest = { viewModel.onEvent(FundsEvent.ClosePopup) }
                 ) {
-                    DeleteFundConfirm(
-                        fund = popup.fund,
-                        onCancel = { viewModel.onEvent(FundsEvent.ClosePopup) },
+                    DeletePopup(
+                        title = stringResource(id = R.string.Popups_DeleteFundConfirm_Message),
+                        onDelete = { viewModel.onEvent(FundsEvent.DeleteFund(popup.fund)) },
+                        onCancel = { viewModel.onEvent(FundsEvent.ClosePopup) }
                     )
                 }
             }
@@ -257,7 +256,7 @@ private fun TotalFundsValue(
         )
         HideTextData(
             isHideData = isHideData,
-            text = (doubleFormat(fundsTotalBalance)),
+            text = fundsTotalBalance.formatAmount(),
             color = MaterialTheme.colorScheme.primary,
             style = MyFontStyle.large(),
             align = Alignment.CenterEnd
@@ -416,11 +415,14 @@ fun FundItem(
                         MyIcons.Settings(
                             modifier = modifier
                                 .offset(y = (-2.5).dp)
-                                .clickable(
-                                    indication = null,
-                                    interactionSource = remember { MutableInteractionSource() }
-                                ) {
-                                    onEvent(FundsEvent.SheetDisplayed(FundsSheets.FundOptions(fund)))
+                                .noRippleClickable {
+                                    onEvent(
+                                        FundsEvent.SheetDisplayed(
+                                            FundsSheets.FundOptions(
+                                                fund
+                                            )
+                                        )
+                                    )
                                 },
                             filledState = false,
                             size = 25.dp,
@@ -439,7 +441,7 @@ fun FundItem(
                     HideTextData(
                         modifier = Modifier.weight(10f),
                         isHideData = isHideData,
-                        text = (doubleFormat(fund.balance)),
+                        text = fund.balance.formatAmount(),
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MyFontStyle.large(),
                         align = Alignment.CenterEnd
@@ -457,38 +459,26 @@ fun FundItem(
                         text = stringResource(R.string.FundsScreen_AddBalance_Bttn),
                         color = MaterialTheme.colorScheme.inversePrimary,
                         style = MyFontStyle.small(),
-                        modifier = modifier.clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() }
-                        ) {
-                            onEvent(
-                                FundsEvent.SheetDisplayed(FundsSheets.AddAmount(fund))
-                            )
-                        })
+                        modifier = modifier.noRippleClickable {
+                            onEvent(FundsEvent.SheetDisplayed(FundsSheets.AddAmount(fund)))
+                        }
+                    )
                     Text(
                         text = stringResource(R.string.FundsScreen_FundsTransfer_Bttn),
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MyFontStyle.small(),
-                        modifier = modifier.clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() }
-                        ) {
-                            onEvent(
-                                FundsEvent.SheetDisplayed(FundsSheets.Transfer(fund))
-                            )
-                        })
+                        modifier = modifier.noRippleClickable {
+                            onEvent(FundsEvent.SheetDisplayed(FundsSheets.Transfer(fund)))
+                        }
+                    )
                     Text(
                         text = stringResource(R.string.Delete_Bttn),
                         color = MaterialTheme.colorScheme.error,
                         style = MyFontStyle.small(),
-                        modifier = modifier.clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() }
-                        ) {
-                            onEvent(
-                                FundsEvent.PopupDisplay(FundsPopup.DeleteFund(fund))
-                            )
-                        })
+                        modifier = modifier.noRippleClickable {
+                            onEvent(FundsEvent.PopupDisplay(FundsPopup.DeleteFund(fund)))
+                        }
+                    )
                 }
             }
         }

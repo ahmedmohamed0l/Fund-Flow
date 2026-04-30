@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.fundoptions
+package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.fundOptions
 
 sealed class FundOptionsEvent {
     object OnEditFundClick : FundOptionsEvent()
@@ -7,7 +7,6 @@ sealed class FundOptionsEvent {
     object OnExceptFundToggle : FundOptionsEvent()
 
 
-    //  data class OnExceptBalance(val fund: FundEntity) : FundOptionsEvent()
     //Delete Fund Transactions Popup events
     object OnDeleteClick : FundOptionsEvent()
     object OnCancelClick : FundOptionsEvent()

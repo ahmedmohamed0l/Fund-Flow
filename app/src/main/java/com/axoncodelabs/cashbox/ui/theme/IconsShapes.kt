@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.axoncodelabs.cashbox.R
 
-// Usage of this file: Ic_Name( size = 30.dp, color = MyColors.LightRed, modifier = Modifier.clickable { })
+// Usage of this file: Ic_Name( size = 30.dp, color = MyColors.LightRed, modifier = Modifier.noRippleClickable { })
 object MyIcons {
 
     @Composable

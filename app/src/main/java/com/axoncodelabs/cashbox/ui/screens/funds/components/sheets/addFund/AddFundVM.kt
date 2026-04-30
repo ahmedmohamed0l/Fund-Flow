@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addfund
+package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addFund
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +20,7 @@ class AddFundVM @Inject constructor(
     private val repository: CashBoxRepository,
 ) : ViewModel() {
 
+    //──── UI State ────
     var name by mutableStateOf("")
         private set
     var amount by mutableStateOf("")
@@ -29,6 +30,7 @@ class AddFundVM @Inject constructor(
     var isNameEmpty by mutableStateOf(false)
         private set
 
+    //──── Helpers ────
     fun clearSheetData() {
         name = ""
         amount = ""
@@ -36,11 +38,13 @@ class AddFundVM @Inject constructor(
         isNameEmpty = false
     }
 
+    //──── Init ────
     fun initData() {
         //Clear old
         clearSheetData()
     }
 
+    //──── Events ────
     private val _closeEvent = Channel<Unit>(Channel.CONFLATED)
     val closeEvent = _closeEvent.receiveAsFlow()
 

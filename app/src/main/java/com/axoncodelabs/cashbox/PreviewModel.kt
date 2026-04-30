@@ -16,11 +16,10 @@ import com.axoncodelabs.cashbox.data.local.entity.TransactionType
 import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
 import com.axoncodelabs.cashbox.ui.theme.CashBoxTheme
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, widthDp = 360, heightDp = 780)
 @Composable
 private fun Preview() {
-    /* Mock Data Count
-    val mockExpenseList = mockExpenseList(1)*/
+    mockExpenseList(5)
 
     CompositionLocalProvider(
         LocalLayoutDirection provides LayoutDirection.Rtl
@@ -31,11 +30,12 @@ private fun Preview() {
         ) {
             //──── Content ────
             Column(Modifier.fillMaxWidth(), Arrangement.Center, Alignment.CenterHorizontally) {
-
             }
         }
     }
 }
+
+val mockDate = System.currentTimeMillis()
 
 object Mock {
     var isFull = false

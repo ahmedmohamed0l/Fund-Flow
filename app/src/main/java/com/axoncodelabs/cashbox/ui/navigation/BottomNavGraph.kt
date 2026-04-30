@@ -25,7 +25,7 @@ fun BottomNavGraph(
         modifier = modifier.fillMaxSize(),
         navController = navController,
         startDestination = BottomBarScreen.Expenses.route,
-        // To disable it, use = { EnterTransition.None }
+        /** To disable it, use = { EnterTransition.None } **/
         enterTransition = { fadeIn(animationSpec = tween(300)) },
         exitTransition = { fadeOut(animationSpec = tween(300)) },
     ) {

@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addamount
+package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addAmount
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -23,9 +23,9 @@ class AddAmountVM @Inject constructor(
     private val repository: CashBoxRepository,
     private val stringProvider: StringProvider,
 ) : ViewModel() {
+
+    //──── UI State ────
     var fund by mutableStateOf<FundEntity?>(null)
-        private set
-    var name by mutableStateOf("")
         private set
 
     var amount by mutableStateOf("")
@@ -37,6 +37,7 @@ class AddAmountVM @Inject constructor(
     var selectedDate by mutableLongStateOf(System.currentTimeMillis())
         private set
 
+    //──── Helpers ────
     fun clearSheetData() {
         amount = ""
         description = ""
@@ -44,15 +45,16 @@ class AddAmountVM @Inject constructor(
         selectedDate = System.currentTimeMillis()
     }
 
+    //──── Init ────
     fun initData(fund: FundEntity) {
-        //Set new
+        // Set new
         this.fund = fund
-        name = fund.name
 
-        //Clear old
+        // Clear old
         clearSheetData()
     }
 
+    //──── Events ────
     private val _closeEvent = Channel<Unit>(Channel.CONFLATED)
     val closeEvent = _closeEvent.receiveAsFlow()
 
@@ -74,14 +76,14 @@ class AddAmountVM @Inject constructor(
             AddAmountEvent.OnSaveClick -> {
                 viewModelScope.launch {
                     val amountDouble = amount.toDoubleOrNull()
-                    if (amount.isBlank() || amountDouble == null || amountDouble < 0) {
+                    if (amount.isBlank() || amountDouble == null || amountDouble == 0.0) {
                         isAmountEmpty = true
                         return@launch
                     }
 
                     if (description.isBlank()) {
                         description =
-                            (stringProvider.getString(R.string.Sheet_AddFundDescription) + "" + name)
+                            (stringProvider.getString(R.string.Sheet_AddFundDescription) + "" + fund?.name.orEmpty())
                     }
 
                     fund?.let {

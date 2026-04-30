@@ -21,11 +21,9 @@ import javax.inject.Inject
 class AddExpenseVM @Inject constructor(
     private val repository: CashBoxRepository,
 ) : ViewModel() {
+
+    //──── UI State ────
     var fund by mutableStateOf<FundEntity?>(null)
-        private set
-    var fundName by mutableStateOf("")
-        private set
-    var fundBalance by mutableDoubleStateOf(0.0)
         private set
 
     var isNoFundSelected by mutableStateOf(false)
@@ -47,10 +45,9 @@ class AddExpenseVM @Inject constructor(
     var selectedDate by mutableLongStateOf(System.currentTimeMillis())
         private set
 
+    //──── Helpers ────
     fun clearSheetData() {
         fund = null
-        fundName = ""
-        fundBalance = 0.0
         isNoFundSelected = false
         amount = ""
         description = ""
@@ -61,16 +58,18 @@ class AddExpenseVM @Inject constructor(
 
     private fun updateAvailableBalance() {
         val amount = amount.toDoubleOrNull() ?: 0.0
-        val delta = fundBalance - amount
+        val delta = (fund?.balance ?: 0.0) - amount
         availableBalance = delta
         isAvailableNegative = delta < 0
     }
 
+    //──── Init ────
     fun initTransaction(selectedDate: Long) {
         this.selectedDate = selectedDate
         clearSheetData()
     }
 
+    //──── Events ────
     private val _closeEvent = Channel<Unit>(Channel.CONFLATED)
     val closeEvent = _closeEvent.receiveAsFlow()
 
@@ -78,8 +77,6 @@ class AddExpenseVM @Inject constructor(
         when (event) {
             is AddExpenseEvent.OnFundSelected -> {
                 fund = event.fund
-                fundName = event.fund.name
-                fundBalance = event.fund.balance
                 isNoFundSelected = false
                 updateAvailableBalance()
             }
@@ -103,7 +100,7 @@ class AddExpenseVM @Inject constructor(
                     }
 
                     val amountDouble = amount.toDoubleOrNull()
-                    if (amount.isBlank() || amountDouble == null) {
+                    if (amount.isBlank() || amountDouble == null || amountDouble == 0.0) {
                         isAmountEmpty = true
                         return@launch
                     }

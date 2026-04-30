@@ -1,7 +1,5 @@
-package com.axoncodelabs.cashbox.ui.components.fundselection
+package com.axoncodelabs.cashbox.ui.components.sheets.fundSelection
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,7 +16,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,10 +26,11 @@ import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.ui.components.AppCurrency
 import com.axoncodelabs.cashbox.ui.components.HideTextData
+import com.axoncodelabs.cashbox.ui.components.noRippleClickable
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
-import com.axoncodelabs.cashbox.ui.util.doubleFormat
+import com.axoncodelabs.cashbox.ui.util.formatAmount
 
 @Composable
 fun FundSelectionSheet(
@@ -102,10 +100,7 @@ private fun FundItem(
             .fillMaxWidth()
             .height(50.dp)
             .padding(10.dp)
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() }
-            ) { onSelect() },
+            .noRippleClickable { onSelect() },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(
@@ -129,7 +124,7 @@ private fun FundItem(
         HideTextData(
             modifier = Modifier.weight(1f),
             isHideData = isHideData,
-            text = (doubleFormat(fund.balance)),
+            text = fund.balance.formatAmount(),
             color = MaterialTheme.colorScheme.onBackground,
             style = MyFontStyle.large(),
             align = Alignment.CenterEnd

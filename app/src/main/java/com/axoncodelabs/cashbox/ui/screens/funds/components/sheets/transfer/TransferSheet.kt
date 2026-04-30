@@ -1,35 +1,30 @@
 package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.transfer
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.ui.components.DateSelection
-import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.components.MainBttn
-import com.axoncodelabs.cashbox.ui.components.SheetFieldLabel
-import com.axoncodelabs.cashbox.ui.components.SheetNumField
-import com.axoncodelabs.cashbox.ui.components.SheetRoundedLabel
-import com.axoncodelabs.cashbox.ui.components.SheetTextField
-import com.axoncodelabs.cashbox.ui.components.fundselection.FundSelectionBttn
-import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
-import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
-import com.axoncodelabs.cashbox.ui.util.doubleFormat
+import com.axoncodelabs.cashbox.ui.components.sheets.AvailableBalanceSection
+import com.axoncodelabs.cashbox.ui.components.sheets.FundNameSection
+import com.axoncodelabs.cashbox.ui.components.sheets.LabelAmountSection
+import com.axoncodelabs.cashbox.ui.components.sheets.LabelDescriptionSection
+import com.axoncodelabs.cashbox.ui.components.sheets.SheetFieldLabel
+import com.axoncodelabs.cashbox.ui.components.sheets.fundSelection.FundSelectionBttn
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -42,59 +37,68 @@ fun TransferSheet(
     viewModel: TransferVM = hiltViewModel(),
     onClose: () -> Unit,
 ) {
-    LaunchedEffect(key1 = true) {
-        viewModel.fundsEvent.collect { event ->
-            when (event) {
-                FundsEvent.CloseSheet -> {
-                    onClose()
-                }
-
-                else -> Unit
-            }
-        }
-    }
     LaunchedEffect(key1 = fromFund.id) {
         viewModel.initTransaction(fromFund)
     }
 
+    // Send Close Event
+    LaunchedEffect(Unit) {
+        viewModel.closeEvent.collect {
+            onClose()
+        }
+    }
+
     TransferSheetRoot(
         isHideData = isHideData,
+
         fromFund = fromFund,
-        fromName = viewModel.fromName,
-        availableBalance = viewModel.availableBalance,
-        isAvailableNegative = viewModel.isAvailableNegative,
-        amount = viewModel.amount,
-        description = viewModel.description,
-        onAmountChange = { viewModel.onEvent(TransferEvent.OnAmountChange(it)) },
-        onDescriptionChange = { viewModel.onEvent(TransferEvent.OnDescriptionChange(it)) },
-        selectedDate = viewModel.selectedDate,
-        onDateChange = { viewModel.onEvent(TransferEvent.OnDateChange(it)) },
-        onSaveClick = { viewModel.onEvent(TransferEvent.OnSaveClick) },
-        isAmountEmpty = viewModel.isAmountEmpty,
+
         toFund = viewModel.toFund,
         onToFundSelected = { viewModel.onEvent(TransferEvent.OnToFundSelected(it)) },
-        isNoFundSelected = viewModel.isNoFundSelected
+        isNoFundSelected = viewModel.isNoFundSelected,
+
+        availableBalance = viewModel.availableBalance,
+        isAvailableNegative = viewModel.isAvailableNegative,
+
+        amount = viewModel.amount,
+        onAmountChange = { viewModel.onEvent(TransferEvent.OnAmountChange(it)) },
+        isAmountEmpty = viewModel.isAmountEmpty,
+
+        description = viewModel.description,
+        onDescriptionChange = { viewModel.onEvent(TransferEvent.OnDescriptionChange(it)) },
+
+        selectedDate = viewModel.selectedDate,
+        onDateChange = { viewModel.onEvent(TransferEvent.OnDateChange(it)) },
+
+        onSaveClick = { viewModel.onEvent(TransferEvent.OnSaveClick) }
     )
 }
 
+// ────────────────{ Sheet Layout }────────────────
 @Composable
 private fun TransferSheetRoot(
     isHideData: Boolean,
+
     fromFund: FundEntity,
-    fromName: String,
-    availableBalance: Double,
-    isAvailableNegative: Boolean,
-    amount: String,
-    description: String,
-    onAmountChange: (String) -> Unit,
-    onDescriptionChange: (String) -> Unit,
-    selectedDate: Long,
-    onDateChange: (Long) -> Unit,
-    onSaveClick: () -> Unit,
-    isAmountEmpty: Boolean,
+
     toFund: FundEntity?,
     onToFundSelected: (FundEntity) -> Unit,
     isNoFundSelected: Boolean,
+
+    availableBalance: Double,
+    isAvailableNegative: Boolean,
+
+    amount: String,
+    onAmountChange: (String) -> Unit,
+    isAmountEmpty: Boolean,
+
+    description: String,
+    onDescriptionChange: (String) -> Unit,
+
+    selectedDate: Long,
+    onDateChange: (Long) -> Unit,
+
+    onSaveClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -102,77 +106,46 @@ private fun TransferSheetRoot(
             .background(MaterialTheme.colorScheme.background)
             .padding(25.dp), horizontalAlignment = Alignment.Start
     ) {
-        SheetFieldLabel(stringResource(R.string.Sheet_Fund_From_Name))
-        Spacer(modifier = Modifier.height(10.dp))
-        SheetRoundedLabel(
+        FundNameSection(
             modifier = Modifier.fillMaxWidth(),
             isHideData = isHideData,
-            lapel = fromName,
-            textColor = MaterialTheme.colorScheme.onBackground,
-            textAlign = Alignment.CenterStart
+            label = stringResource(R.string.Sheet_Fund_From_Name),
+            fundName = fromFund.name,
+            fundNameColor = MaterialTheme.colorScheme.onBackground
         )
-
-
         Spacer(modifier = Modifier.height(20.dp))
 
-        SheetFieldLabel(stringResource(R.string.Sheet_Fund_To_Name))
-        Spacer(modifier = Modifier.height(10.dp))
-        FundSelectionBttn(
+        SelectFundSection(
+            modifier = Modifier.fillMaxWidth(),
             isHideData = isHideData,
-            fund = toFund,
-            fromFundId = fromFund.id,
-            onFundSelected = onToFundSelected,
-            isUnSelected = isNoFundSelected,
-            unSelectedErrorMsg = stringResource(R.string.Sheet_NoFundSelected)
+            fromFund = fromFund,
+            toFund = toFund,
+            onToFundSelected = onToFundSelected,
+            isNoFundSelected = isNoFundSelected
         )
-
         Spacer(modifier = Modifier.height(20.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            SheetFieldLabel(stringResource(R.string.Sheet_Amount_Lapel))
-            HideTextData(
-                isHideData = isHideData,
-                text = (stringResource(R.string.Sheet_FundFromBalance) + " (${
-                    doubleFormat(
-                        availableBalance
-                    )
-                })"),
-                color = if (isAvailableNegative) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.inversePrimary,
-                style = MyFontStyle.medium(),
-                align = Alignment.CenterEnd
-            )
-        }
-        Spacer(modifier = Modifier.height(10.dp))
-        SheetNumField(
+        LabelAmountSection(
             modifier = Modifier.fillMaxWidth(),
-            value = amount,
-            onValueChange = onAmountChange,
-            hintText = stringResource(R.string.Sheet_Amount_Hint),
-            singleLine = true,
-            isEmptyValue = isAmountEmpty,
-            emptyValueMsg = stringResource(R.string.Sheet_AddFundAmountError),
-            wrongValueMsg = stringResource(R.string.Sheet_FundAmountError),
+            amount = amount,
+            onAmountChange = onAmountChange,
+            isAmountEmpty = isAmountEmpty,
+            labelEndContent = {
+                Spacer(modifier = Modifier.width(5.dp))
+                AvailableBalanceSection(
+                    isHideData = isHideData,
+                    availableBalance = availableBalance,
+                    isAvailableNegative = isAvailableNegative
+                )
+            }
         )
-
         Spacer(modifier = Modifier.height(20.dp))
 
-        SheetFieldLabel(stringResource(R.string.Sheet_DescriptionLapel))
-        Spacer(modifier = Modifier.height(10.dp))
-        SheetTextField(
+        LabelDescriptionSection(
             modifier = Modifier.fillMaxWidth(),
-            value = description,
-            onValueChange = onDescriptionChange,
-            hintText = stringResource(R.string.Sheet_Description_Hint),
-            keyboardType = KeyboardType.Text,
-            singleLine = false,
-            maxLines = 3
+            description = description,
+            onDescriptionChange = onDescriptionChange
         )
-
         Spacer(modifier = Modifier.height(15.dp))
 
         DateSelection(
@@ -194,6 +167,30 @@ private fun TransferSheetRoot(
         MainBttn(
             text = stringResource(R.string.Sheet_AddTransaction_Bttn),
             onClick = onSaveClick
+        )
+    }
+}
+
+// ────────────────{ Components }────────────────
+@Composable
+private fun SelectFundSection(
+    modifier: Modifier = Modifier,
+    isHideData: Boolean,
+    fromFund: FundEntity,
+    toFund: FundEntity?,
+    onToFundSelected: (FundEntity) -> Unit,
+    isNoFundSelected: Boolean,
+) {
+    Column(modifier = modifier) {
+        SheetFieldLabel(stringResource(R.string.Sheet_Fund_To_Name))
+        Spacer(modifier = Modifier.height(10.dp))
+        FundSelectionBttn(
+            isHideData = isHideData,
+            fund = toFund,
+            fromFundId = fromFund.id,
+            onFundSelected = onToFundSelected,
+            isUnSelected = isNoFundSelected,
+            unSelectedErrorMsg = stringResource(R.string.Sheet_NoFundSelected)
         )
     }
 }

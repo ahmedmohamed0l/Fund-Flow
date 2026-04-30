@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addfund
+package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addFund
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -17,15 +17,19 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.ui.components.MainBttn
-import com.axoncodelabs.cashbox.ui.components.SheetFieldLabel
-import com.axoncodelabs.cashbox.ui.components.SheetNumField
-import com.axoncodelabs.cashbox.ui.components.SheetTextField
+import com.axoncodelabs.cashbox.ui.components.sheets.SheetFieldLabel
+import com.axoncodelabs.cashbox.ui.components.sheets.SheetNumField
+import com.axoncodelabs.cashbox.ui.components.sheets.SheetTextField
 
 @Composable
 fun AddFundSheet(
     viewModel: AddFundVM = hiltViewModel(),
     onClose: () -> Unit,
 ) {
+    LaunchedEffect(key1 = true) {
+        viewModel.initData()
+    }
+
     // Send Close Event
     LaunchedEffect(Unit) {
         viewModel.closeEvent.collect {

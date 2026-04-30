@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.components.editTransaction
+package com.axoncodelabs.cashbox.ui.components.sheets.editTransaction
 
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 

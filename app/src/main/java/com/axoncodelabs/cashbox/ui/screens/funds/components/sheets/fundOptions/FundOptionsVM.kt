@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.fundoptions
+package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.fundOptions
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
-import com.axoncodelabs.cashbox.ui.screens.funds.FundsEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -19,6 +18,7 @@ class FundOptionsVM @Inject constructor(
     private val repository: CashBoxRepository,
 ) : ViewModel() {
 
+    //──── UI State ────
     var fund by mutableStateOf<FundEntity?>(null)
         private set
     var name by mutableStateOf("")
@@ -32,8 +32,13 @@ class FundOptionsVM @Inject constructor(
     var isFundBalanceExcepted by mutableStateOf(false)
         private set
 
-    var showDeleteFundTransPopup by mutableStateOf(false)
+    //──── Helpers ────
+    fun clearSheetData() {
+        isNameEmpty = false
+        isEditMode = false
+    }
 
+    //──── Init ────
     fun initData(fund: FundEntity) {
         //Set new
         this.fund = fund
@@ -44,8 +49,9 @@ class FundOptionsVM @Inject constructor(
         clearSheetData()
     }
 
-    private val _fundsEvent = Channel<FundsEvent>()
-    val fundsEvent = _fundsEvent.receiveAsFlow()
+    //──── Events ────
+    private val _closeEvent = Channel<Unit>(Channel.CONFLATED)
+    val closeEvent = _closeEvent.receiveAsFlow()
 
     fun onEvent(event: FundOptionsEvent) {
         when (event) {
@@ -88,31 +94,21 @@ class FundOptionsVM @Inject constructor(
                 }
             }
 
-            //Delete Fund Transactions Popup events
+            // ────────( Delete Fund Transactions Popup events )────────
             FundOptionsEvent.OnDeleteClick -> {
                 viewModelScope.launch {
                     fund?.let {
                         repository.deleteAllFundTransactions(it.id)
                     }
-                    sendFundsEvent(FundsEvent.ClosePopup)
-                    sendFundsEvent(FundsEvent.CloseSheet)
+                    _closeEvent.send(Unit)
                 }
             }
 
             FundOptionsEvent.OnCancelClick -> {
-                sendFundsEvent(FundsEvent.ClosePopup)
+                viewModelScope.launch {
+                    _closeEvent.send(Unit)
+                }
             }
-        }
-    }
-
-    fun clearSheetData() {
-        isNameEmpty = false
-        isEditMode = false
-    }
-
-    private fun sendFundsEvent(event: FundsEvent) {
-        viewModelScope.launch {
-            _fundsEvent.send(event)
         }
     }
 }

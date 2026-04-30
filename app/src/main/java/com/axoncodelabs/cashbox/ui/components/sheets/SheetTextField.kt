@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.components
+package com.axoncodelabs.cashbox.ui.components.sheets
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 
 @Composable

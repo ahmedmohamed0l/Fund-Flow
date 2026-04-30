@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -66,6 +67,15 @@ class FundsViewModel @Inject constructor(
             }
 
             FundsEvent.ClosePopup -> {
+                _state.update {
+                    it.copy(popupState = FundsPopup.Close)
+                }
+            }
+
+            is FundsEvent.DeleteFund -> {
+                viewModelScope.launch {
+                    repository.deleteFund(event.fund)
+                }
                 _state.update {
                     it.copy(popupState = FundsPopup.Close)
                 }

@@ -1,17 +1,13 @@
-package com.axoncodelabs.cashbox.ui.components.editTransaction
+package com.axoncodelabs.cashbox.ui.components.sheets.editTransaction
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -30,11 +26,13 @@ import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
 import com.axoncodelabs.cashbox.ui.components.DateSelection
-import com.axoncodelabs.cashbox.ui.components.IconAmountSection
-import com.axoncodelabs.cashbox.ui.components.IconDescriptionSection
-import com.axoncodelabs.cashbox.ui.components.fundselection.FundSelectionBttn
+import com.axoncodelabs.cashbox.ui.components.DeletePopup
+import com.axoncodelabs.cashbox.ui.components.hideDataMask
+import com.axoncodelabs.cashbox.ui.components.noRippleClickable
+import com.axoncodelabs.cashbox.ui.components.sheets.IconAmountSection
+import com.axoncodelabs.cashbox.ui.components.sheets.IconDescriptionSection
+import com.axoncodelabs.cashbox.ui.components.sheets.IconFundSelectionSection
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
-import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -101,7 +99,8 @@ private fun DeleteConfirmationDialog(
 ) {
     if (show) {
         Dialog(onDismissRequest = onClosePop) {
-            DeleteTransactionPopup(
+            DeletePopup(
+                title = stringResource(id = R.string.Popups_DeleteTransactionConfirm_Message),
                 onDelete = onDelete,
                 onCancel = onClosePop
             )
@@ -140,17 +139,17 @@ private fun EditTransactionSheetRoot(
             .padding(25.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        FundSelectionSection(
+        IconFundSelectionSection(
             modifier = Modifier.fillMaxWidth(),
             isHideData = isHideData,
             fund = fund,
-            onFundChanged = onFundChanged
+            onFundSelected = onFundChanged
         )
         Spacer(modifier = Modifier.height(20.dp))
 
         IconAmountSection(
             modifier = Modifier.fillMaxWidth(),
-            amount = amount,
+            amount = hideDataMask(isHideData, text = (amount)),
             onAmountChange = onAmountChange,
             isAmountEmpty = isAmountEmpty
         )
@@ -158,7 +157,7 @@ private fun EditTransactionSheetRoot(
 
         IconDescriptionSection(
             modifier = Modifier.fillMaxWidth(),
-            description = description,
+            description = hideDataMask(isHideData, text = (description)),
             onDescriptionChange = onDescriptionChange,
             isDescriptionEmpty = isDescriptionEmpty
         )
@@ -199,32 +198,6 @@ private fun EditTransactionSheetRoot(
 
 // ────────────────{ Components }────────────────
 @Composable
-private fun FundSelectionSection(
-    modifier: Modifier = Modifier,
-    isHideData: Boolean,
-    fund: FundEntity?,
-    onFundChanged: (FundEntity) -> Unit,
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        MyIcons.TransactionWallet(
-            modifier = Modifier.offset(y = (-2.5).dp),
-            color = MaterialTheme.colorScheme.onBackground,
-            size = 30.dp
-        )
-        Spacer(modifier = Modifier.width(10.dp))
-        FundSelectionBttn(
-            isHideData = isHideData,
-            fund = fund,
-            onFundSelected = onFundChanged,
-        )
-    }
-}
-
-@Composable
 private fun ActionsBttns(
     modifier: Modifier = Modifier,
     isSaveEnabled: Boolean,
@@ -240,11 +213,7 @@ private fun ActionsBttns(
         Text(
             modifier = Modifier
                 .weight(3f)
-                .clickable(
-                    enabled = isSaveEnabled,
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) { onSaveClick() },
+                .noRippleClickable(isSaveEnabled) { onSaveClick() },
             text = stringResource(R.string.Sheet_EditTransaction_Bttn),
             textAlign = TextAlign.Start,
             color = if (isSaveEnabled)
@@ -256,10 +225,7 @@ private fun ActionsBttns(
         Text(
             modifier = Modifier
                 .weight(1f)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) { onDeleteClick() },
+                .noRippleClickable { onDeleteClick() },
             text = stringResource(R.string.Delete_Bttn),
             color = MaterialTheme.colorScheme.error,
             style = MyFontStyle.medium()
@@ -267,10 +233,7 @@ private fun ActionsBttns(
         Text(
             modifier = Modifier
                 .weight(1f)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) { onCancelClick() },
+                .noRippleClickable { onCancelClick() },
             text = stringResource(R.string.Cancel_Bttn),
             textAlign = TextAlign.End,
             color = MaterialTheme.colorScheme.onBackground,

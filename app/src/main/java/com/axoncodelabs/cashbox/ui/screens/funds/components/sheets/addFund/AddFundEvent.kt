@@ -1,4 +1,4 @@
-package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addfund
+package com.axoncodelabs.cashbox.ui.screens.funds.components.sheets.addFund
 
 sealed class AddFundEvent {
     data class OnNameChange(val name: String) : AddFundEvent()
