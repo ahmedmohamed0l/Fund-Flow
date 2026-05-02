@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name" translatable="false">Cash Box</string>
 
-    <string name="App_Currency">EGP</string>
+    <string name="App_Currency" translatable="false">EGP</string>
     <string name="Delete_Bttn">حذف</string>
     <string name="Cancel_Bttn">إلغاء</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.axoncodelabs.cashbox
 
+/*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,8 +20,6 @@ import com.axoncodelabs.cashbox.ui.theme.CashBoxTheme
 @Preview(showBackground = true, widthDp = 360, heightDp = 780)
 @Composable
 private fun Preview() {
-    mockExpenseList(5)
-
     CompositionLocalProvider(
         LocalLayoutDirection provides LayoutDirection.Rtl
     ) {
@@ -30,6 +29,7 @@ private fun Preview() {
         ) {
             //──── Content ────
             Column(Modifier.fillMaxWidth(), Arrangement.Center, Alignment.CenterHorizontally) {
+
             }
         }
     }
@@ -75,3 +75,15 @@ private fun mockExpenseList(count: Int): List<TransactionWithFund> {
         )
     }
 }
+
+private fun mockFundList(count: Int): List<FundEntity> {
+    return List(count) { index ->
+        FundEntity(
+            id = index + 1,
+            name = "صندوق رقم ${index + 1}",
+            balance = 100.0 + index * 10,
+            isExcepted = true
+        )
+    }
+}
+*/

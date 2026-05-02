@@ -78,7 +78,7 @@ fun FundSelectionBttn(
                 align = Alignment.CenterStart
             )
             MyIcons.Arrow(
-                autoMirroredState = false,
+                autoMirroredState = true,
                 size = 25.dp, color = finalBorderColor, angle = 180f
             )
         }

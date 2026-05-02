@@ -1,5 +1,7 @@
 package com.axoncodelabs.cashbox.ui.screens.funds
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
@@ -18,10 +20,12 @@ class FundsViewModel @Inject constructor(
     private val repository: CashBoxRepository,
 ) : ViewModel() {
 
+    //── State ──
     private val _state = MutableStateFlow(FundsState())
     val state = _state.asStateFlow()
 
-    private val fundsFlow = repository.getAllFunds()
+    //──── Data Flows ────
+    val fundsFlow by mutableStateOf(repository.getAllFunds())
 
     private val fundsSumFlow = fundsFlow
         .map { list ->
@@ -30,14 +34,15 @@ class FundsViewModel @Inject constructor(
                 .sumOf { it.balance }
         }
 
+    //──── Init ────
     init {
         combine(
             fundsFlow,
             fundsSumFlow,
             repository.hideDataFlow
         ) { funds, totalBalance, isHideData ->
-            _state.update {
-                it.copy(
+            _state.update { currentState ->
+                currentState.copy(
                     funds = funds,
                     fundsTotalBalance = totalBalance,
                     isHideData = isHideData
@@ -46,8 +51,10 @@ class FundsViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    //──── Events ────
     fun onEvent(event: FundsEvent) {
         when (event) {
+            //── Sheets ──
             is FundsEvent.SheetDisplayed -> {
                 _state.update {
                     it.copy(currentSheet = event.sheet)
@@ -60,6 +67,7 @@ class FundsViewModel @Inject constructor(
                 }
             }
 
+            //── Popups ──
             is FundsEvent.PopupDisplay -> {
                 _state.update {
                     it.copy(popupState = event.popup)
@@ -68,16 +76,17 @@ class FundsViewModel @Inject constructor(
 
             FundsEvent.ClosePopup -> {
                 _state.update {
-                    it.copy(popupState = FundsPopup.Close)
+                    it.copy(popupState = FundsPopup.None)
                 }
             }
 
+            //── UI ──
             is FundsEvent.DeleteFund -> {
                 viewModelScope.launch {
                     repository.deleteFund(event.fund)
                 }
                 _state.update {
-                    it.copy(popupState = FundsPopup.Close)
+                    it.copy(popupState = FundsPopup.None)
                 }
             }
         }

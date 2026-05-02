@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -207,7 +208,11 @@ private fun EditFundName(
     }
     Spacer(modifier = Modifier.width(10.dp))
 
-    EditFundNameIcon(icon = Icons.Rounded.Check, onSaveClick = onSaveClick)
+    EditFundNameIcon(
+        icon = Icons.Rounded.Check,
+        onSaveClick = onSaveClick,
+        iconColor = MaterialTheme.colorScheme.inversePrimary
+    )
 }
 
 @Composable
@@ -228,7 +233,11 @@ private fun ProvideFundName(
 
     Spacer(modifier = Modifier.width(10.dp))
 
-    EditFundNameIcon(icon = Icons.Rounded.Edit, onSaveClick = onEditFundClick)
+    EditFundNameIcon(
+        icon = Icons.Rounded.Edit,
+        onSaveClick = onEditFundClick,
+        iconColor = MaterialTheme.colorScheme.onTertiary
+    )
 }
 
 //──── Other ────
@@ -267,6 +276,7 @@ private fun ExceptFundSection(
 private fun EditFundNameIcon(
     modifier: Modifier = Modifier,
     icon: ImageVector,
+    iconColor: Color,
     onSaveClick: () -> Unit,
 ) {
     Box(
@@ -280,7 +290,7 @@ private fun EditFundNameIcon(
         Icon(
             imageVector = icon,
             contentDescription = "",
-            tint = MaterialTheme.colorScheme.inversePrimary,
+            tint = iconColor,
             modifier = Modifier.size(20.dp)
         )
     }

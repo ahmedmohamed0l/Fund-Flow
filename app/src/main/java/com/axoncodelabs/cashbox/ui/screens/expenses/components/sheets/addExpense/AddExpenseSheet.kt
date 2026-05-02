@@ -127,6 +127,7 @@ private fun AddExpenseSheetRoot(
         Spacer(modifier = Modifier.height(20.dp))
 
         MainBttn(
+            modifier = Modifier.fillMaxWidth(),
             text = stringResource(R.string.Sheet_AddTransaction_Bttn),
             onClick = onSaveClick
         )

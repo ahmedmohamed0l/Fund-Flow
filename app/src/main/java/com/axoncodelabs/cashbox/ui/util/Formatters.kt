@@ -13,18 +13,26 @@ fun Double.formatAmount(): String {
     return formatter.format(this)
 }
 
-//──── Double Formatters ────
+//──── Date Formatters ────
+object DateFormates {
+    val FullDateArabic: DateTimeFormatter =
+        DateTimeFormatter.ofPattern("EEEE d MMMM yyyy", Locale.forLanguageTag("ar"))
 
-private val ARABIC_FORMATTER =
-    DateTimeFormatter.ofPattern("EEEE d MMMM yyyy", Locale.forLanguageTag("ar"))
+    val MonthYearArabic: DateTimeFormatter =
+        DateTimeFormatter.ofPattern("MMMM، yyyy", Locale.forLanguageTag("ar"))
+}
 
-fun Long.dateFormatter(): String = Instant.ofEpochMilli(this)
+/** > **To formate date for providing in UI**
+ * @param formatType [DateFormates]**/
+fun Long.dateFormatter(formatType: DateTimeFormatter): String = Instant.ofEpochMilli(this)
     .atZone(ZoneId.systemDefault())
     .toLocalDate()
-    .format(ARABIC_FORMATTER)
+    .format(formatType)
 
-// ────────────────{ For (Expenses) }────────────────
 
+// ────────────────{ Date Value Formatter for get data }────────────────
+// ────────( Day Formatter )────────
+/** > **Formate date for get data** **/
 fun Long.startOfDay(): Long {
     val cal = Calendar.getInstance().apply { timeInMillis = this@startOfDay }
     cal.set(Calendar.HOUR_OF_DAY, 0)
@@ -34,8 +42,32 @@ fun Long.startOfDay(): Long {
     return cal.timeInMillis
 }
 
+/** > **Formate date for get data** **/
 fun Long.endOfDay(): Long {
     val cal = Calendar.getInstance().apply { timeInMillis = this@endOfDay }
+    cal.set(Calendar.HOUR_OF_DAY, 23)
+    cal.set(Calendar.MINUTE, 59)
+    cal.set(Calendar.SECOND, 59)
+    cal.set(Calendar.MILLISECOND, 999)
+    return cal.timeInMillis
+}
+
+// ────────( Month Formatter )────────
+
+/** > **Formate date for get data** **/
+fun Long.startOfMonth(): Long {
+    val cal = Calendar.getInstance().apply { timeInMillis = this@startOfMonth }
+    cal.set(Calendar.DAY_OF_MONTH, 1)
+    cal.set(Calendar.HOUR_OF_DAY, 0)
+    cal.set(Calendar.MINUTE, 0)
+    cal.set(Calendar.SECOND, 0)
+    return cal.timeInMillis
+}
+
+/** > **Formate date for get data** **/
+fun Long.endOfMonth(): Long {
+    val cal = Calendar.getInstance().apply { timeInMillis = this@endOfMonth }
+    cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH))
     cal.set(Calendar.HOUR_OF_DAY, 23)
     cal.set(Calendar.MINUTE, 59)
     cal.set(Calendar.SECOND, 59)

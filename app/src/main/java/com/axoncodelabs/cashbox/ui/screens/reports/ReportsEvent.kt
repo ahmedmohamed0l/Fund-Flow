@@ -7,10 +7,6 @@ sealed class ReportsEvent {
     data class SheetDisplayed(val sheet: ReportsSheets) : ReportsEvent()
     object CloseSheet : ReportsEvent()
 
-    // Popup
-    data class PopupDisplayed(val popup: ReportsPopups) : ReportsEvent()
-    object ClosePopup : ReportsEvent()
-
     data class OnFundChanged(val fund: FundEntity) : ReportsEvent()
     object OnSelectAllFunds : ReportsEvent()
 

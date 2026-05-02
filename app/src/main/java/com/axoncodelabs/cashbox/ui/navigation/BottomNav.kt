@@ -77,7 +77,7 @@ private fun RowScope.AddItem(
 ) {
     val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
 
-    val background = if (selected) MaterialTheme.colorScheme.primary else Color.Transparent
+    val background = if (selected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent
 
     val contentColor =
         if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
@@ -88,13 +88,13 @@ private fun RowScope.AddItem(
             .clip(CircleShape)
             .background(background)
             .noRippleClickable {
-                    navController.navigate(screen.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
+                navController.navigate(screen.route) {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
                     }
+                    launchSingleTop = true
+                    restoreState = true
+                }
             }
     ) {
         Row(

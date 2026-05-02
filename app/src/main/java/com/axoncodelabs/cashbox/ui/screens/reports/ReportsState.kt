@@ -10,33 +10,19 @@ sealed class ReportsSheets {
     data class EditTransaction(val transaction: TransactionWithFund) : ReportsSheets()
 }
 
-sealed class ReportsPopups {
-    object None : ReportsPopups()
-//    object DateSelection : ReportsPopups()
-}
+data class QueryFilter(
+    val fund: FundEntity?,
+    val startDate: Long?,
+    val endDate: Long?
+)
 
 enum class ReportType {
     Expenses,
     Income
 }
 
-data class QueryFilter(
-    val fund: FundEntity?,
-    val startDate: Long?,
-    val endDate: Long?
-)
-/*data class DayTransactions(
-    val date: Long,
-    val dayName: String,
-    val formattedDate: String,
-    val totalAmount: Double,
-    val transactions: List<TransactionWithFund>,
-    var isExpanded: Boolean = false
-)*/
-
 data class ReportsState(
     val currentSheet: ReportsSheets = ReportsSheets.None,
-    val popupState: ReportsPopups = ReportsPopups.None,
 
     val selectedFund: FundEntity? = null,
     val isSelectAllFunds: Boolean = true,

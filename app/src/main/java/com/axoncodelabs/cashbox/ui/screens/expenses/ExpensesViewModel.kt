@@ -77,6 +77,7 @@ class ExpensesViewModel @Inject constructor(
     //──── Events ────
     fun onEvent(event: ExpensesEvent) {
         when (event) {
+            //── Sheets ──
             is ExpensesEvent.SheetDisplayed -> {
                 _state.update {
                     it.copy(currentSheet = event.sheet)
@@ -89,6 +90,7 @@ class ExpensesViewModel @Inject constructor(
                 }
             }
 
+            //── Popups ──
             is ExpensesEvent.PopupDisplayed -> {
                 _state.update {
                     it.copy(currentPopup = event.popup)
@@ -101,6 +103,7 @@ class ExpensesViewModel @Inject constructor(
                 }
             }
 
+            //── DatePickerEvents ──
             ExpensesEvent.OnPreviousDayClick -> changeDay(-1)
             ExpensesEvent.OnNextDayClick -> changeDay(1)
 

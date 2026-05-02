@@ -29,7 +29,7 @@ import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 @Composable
 fun AppTopBar(
     state: AppTopBarState,
-    barColor: Color = MaterialTheme.colorScheme.primary,
+    barColor: Color = MaterialTheme.colorScheme.primaryContainer,
     onBarColor: Color = MaterialTheme.colorScheme.onPrimary,
 ) {
     Card(

@@ -109,6 +109,7 @@ private fun AddFundSheetRoot(
         Spacer(modifier = Modifier.height(20.dp))
 
         MainBttn(
+            modifier = Modifier.fillMaxWidth(),
             text = stringResource(R.string.Sheet_Save_Bttn),
             onClick = onSaveClick
         )

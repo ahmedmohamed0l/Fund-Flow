@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -26,29 +26,27 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.datastore.preferences.protobuf.LazyStringArrayList.emptyList
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.ui.components.AppCurrency
 import com.axoncodelabs.cashbox.ui.components.DeletePopup
+import com.axoncodelabs.cashbox.ui.components.EmptyPage
 import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.components.appTopBar.AppTopBarState
 import com.axoncodelabs.cashbox.ui.components.noRippleClickable
@@ -61,27 +59,23 @@ import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
 import com.axoncodelabs.cashbox.ui.util.formatAmount
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FundsScreen(
     viewModel: FundsViewModel = hiltViewModel(),
     onTopBarChange: (AppTopBarState) -> Unit,
 ) {
-    //.....( State & ViewModel Setup ).....
-    val state = viewModel.state.collectAsState()
+    //──── State & ViewModel Setup ────
+    val state by viewModel.state.collectAsState()
 
-    val funds = state.value.funds
-    val fundsTotalBalance = state.value.fundsTotalBalance
+    val sheet = state.currentSheet
+    val popup = state.popupState
+    val isHideData = state.isHideData
 
-    val sheet = state.value.currentSheet
-    val popup = state.value.popupState
+    val funds = state.funds
+    val fundsTotalBalance = state.fundsTotalBalance
 
-    val isHideData = state.value.isHideData
-
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
-    //.....( TopAppBar Data ).....
-    LaunchedEffect(Unit) {
+    //──── AppTopBar Data ────
+    SideEffect {
         onTopBarChange(
             AppTopBarState(
                 titleRes = R.string.FundsScreen_Identifier,
@@ -94,136 +88,154 @@ fun FundsScreen(
         )
     }
 
-    //.....( Sheets & Popups Handling ).....
-    @Composable
-    fun sheetsHandle() {
-        when (sheet) {
-            FundsSheets.AddFund -> {
-                ModalBottomSheet(
-                    onDismissRequest = { viewModel.onEvent(FundsEvent.CloseSheet) },
-                    containerColor = MaterialTheme.colorScheme.background,
-                    sheetState = sheetState
-                ) {
-                    AddFundSheet(
-                        /*Disable ShowSnackbar
-                        snackbarHostState = snackbarHostState,*/
-                        onClose = { viewModel.onEvent(FundsEvent.CloseSheet) }
-                    )
-                }
-            }
-
-            is FundsSheets.AddAmount -> {
-                ModalBottomSheet(
-                    onDismissRequest = { viewModel.onEvent(FundsEvent.CloseSheet) },
-                    containerColor = MaterialTheme.colorScheme.background,
-                    sheetState = sheetState
-                ) {
-                    AddAmountSheet(
-                        isHideData = isHideData,
-                        fund = sheet.fund,
-                        onClose = { viewModel.onEvent(FundsEvent.CloseSheet) }
-                    )
-                }
-            }
-
-            is FundsSheets.Transfer -> {
-                ModalBottomSheet(
-                    onDismissRequest = { viewModel.onEvent(FundsEvent.CloseSheet) },
-                    containerColor = MaterialTheme.colorScheme.background,
-                    sheetState = sheetState
-                ) {
-                    TransferSheet(
-                        isHideData = isHideData,
-                        fromFund = sheet.fund,
-                        onClose = { viewModel.onEvent(FundsEvent.CloseSheet) }
-                    )
-                }
-            }
-
-            is FundsSheets.FundOptions -> {
-                ModalBottomSheet(
-                    onDismissRequest = { viewModel.onEvent(FundsEvent.CloseSheet) },
-                    containerColor = MaterialTheme.colorScheme.background,
-                    sheetState = sheetState
-                ) {
-                    FundOptionsSheet(
-                        isHideData = isHideData,
-                        fund = sheet.fund,
-                        onClose = { viewModel.onEvent(FundsEvent.CloseSheet) }
-                    )
-                }
-            }
-
-            FundsSheets.None -> Unit
-        }
-    }
-    sheetsHandle()
-
-    @Composable
-    fun popupsHandle() {
-        when (popup) {
-            is FundsPopup.DeleteFund -> {
-                Dialog(
-                    onDismissRequest = { viewModel.onEvent(FundsEvent.ClosePopup) }
-                ) {
-                    DeletePopup(
-                        title = stringResource(id = R.string.Popups_DeleteFundConfirm_Message),
-                        onDelete = { viewModel.onEvent(FundsEvent.DeleteFund(popup.fund)) },
-                        onCancel = { viewModel.onEvent(FundsEvent.ClosePopup) }
-                    )
-                }
-            }
-
-            FundsPopup.Close -> Unit
-        }
-    }
-    popupsHandle()
-
-    //.....( Screen Layout ).....
-    FundsScreenRoot(
-        funds = funds,
+    //──── Sheets & Popups Handling ────
+    SheetsHandler(
+        sheet = sheet,
         isHideData = isHideData,
-        onEvent = viewModel::onEvent,
-        fundsTotalBalance = fundsTotalBalance
+        onClose = { viewModel.onEvent(FundsEvent.CloseSheet) }
+    )
+
+    PopupsHandler(
+        popup = popup,
+        onClose = { viewModel.onEvent(FundsEvent.ClosePopup) },
+        onDeleteFund = { fund ->
+            viewModel.onEvent(FundsEvent.DeleteFund(fund))
+        }
+    )
+
+    //──── Screen Layout ────
+    FundsScreenRoot(
+        isHideData = isHideData,
+
+        fundsTotalBalance = fundsTotalBalance,
+        funds = funds,
+
+        onFundOptionsClick = {
+            viewModel.onEvent(FundsEvent.SheetDisplayed(FundsSheets.FundOptions(it)))
+        },
+        onAddAmountClick = {
+            viewModel.onEvent(FundsEvent.SheetDisplayed(FundsSheets.AddAmount(it)))
+        },
+        onTransferClick = {
+            viewModel.onEvent(FundsEvent.SheetDisplayed(FundsSheets.Transfer(it)))
+        },
+        onDeleteFundClick = {
+            viewModel.onEvent(FundsEvent.PopupDisplay(FundsPopup.DeleteFund(it)))
+        }
     )
 }
 
-/**.....( Screen Layout ).....**/
+// ────────────────{ Handlers }────────────────
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SheetsHandler(
+    sheet: FundsSheets,
+    isHideData: Boolean,
+    onClose: () -> Unit,
+) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    if (sheet != FundsSheets.None) {
+        ModalBottomSheet(
+            onDismissRequest = onClose,
+            containerColor = MaterialTheme.colorScheme.background,
+            sheetState = sheetState
+        ) {
+            when (sheet) {
+                FundsSheets.AddFund -> {
+                    AddFundSheet(onClose = onClose)
+                }
+
+                is FundsSheets.FundOptions -> {
+                    FundOptionsSheet(
+                        isHideData = isHideData,
+                        fund = sheet.fund,
+                        onClose = onClose
+                    )
+                }
+
+                is FundsSheets.AddAmount -> {
+                    AddAmountSheet(
+                        isHideData = isHideData,
+                        fund = sheet.fund,
+                        onClose = onClose
+                    )
+                }
+
+                is FundsSheets.Transfer -> {
+                    TransferSheet(
+                        isHideData = isHideData,
+                        fromFund = sheet.fund,
+                        onClose = onClose
+                    )
+                }
+
+                FundsSheets.None -> Unit
+            }
+        }
+    }
+}
+
+@Composable
+private fun PopupsHandler(
+    popup: FundsPopup,
+    onClose: () -> Unit,
+    onDeleteFund: (FundEntity) -> Unit
+) {
+    when (popup) {
+        is FundsPopup.DeleteFund -> {
+            Dialog(
+                onDismissRequest = onClose
+            ) {
+                DeletePopup(
+                    title = stringResource(id = R.string.Popups_DeleteFundConfirm_Message),
+                    onDelete = { onDeleteFund(popup.fund) },
+                    onCancel = onClose
+                )
+            }
+        }
+
+        FundsPopup.None -> Unit
+    }
+}
+
+// ────────────────{ Screen Layout }────────────────
 @Composable
 private fun FundsScreenRoot(
-    funds: List<FundEntity>,
     isHideData: Boolean,
-    onEvent: (FundsEvent) -> Unit,
-    fundsTotalBalance: Double
+    fundsTotalBalance: Double,
+    funds: List<FundEntity>,
+    onFundOptionsClick: (FundEntity) -> Unit,
+    onAddAmountClick: (FundEntity) -> Unit,
+    onTransferClick: (FundEntity) -> Unit,
+    onDeleteFundClick: (FundEntity) -> Unit,
 ) {
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .background(MaterialTheme.colorScheme.background)
+            .padding(horizontal = 20.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 20.dp)
-        ) {
-            FundsPageState(
-                funds = funds,
-                isHideData = isHideData,
-                onEvent = onEvent
-            )
+        FundsPageState(
+            funds = funds,
+            isHideData = isHideData,
+            onFundOptionsClick = onFundOptionsClick,
+            onAddAmountClick = onAddAmountClick,
+            onTransferClick = onTransferClick,
+            onDeleteFundClick = onDeleteFundClick
+        )
 
+        if (funds.isNotEmpty())
             TotalFundsValue(
                 modifier = Modifier.align(Alignment.TopCenter),
                 isHideData = isHideData,
                 fundsTotalBalance = fundsTotalBalance
             )
-        }
     }
 }
 
-/** --------------------[ Components ]-------------------- **/
-
+// ────────────────{ Components }────────────────
+// ────────( Total Value )────────
 @Composable
 private fun TotalFundsValue(
     modifier: Modifier = Modifier,
@@ -235,155 +247,143 @@ private fun TotalFundsValue(
             .fillMaxWidth()
             .padding(horizontal = 10.dp)
             .padding(top = 10.dp)
-            .height(50.dp)
+            .height(45.dp)
             .clip(CircleShape)
             .background(MaterialTheme.colorScheme.secondary)
             .border(
-                1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f), CircleShape
+                1.dp, MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f), CircleShape
             ),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            stringResource(R.string.FundsScreen_FundsTotal),
+            modifier = Modifier.padding(start = 20.dp),
+            text = stringResource(R.string.FundsScreen_FundsTotal),
             style = MyFontStyle.medium(),
             color = MaterialTheme.colorScheme.onBackground,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier
-                .padding(start = 30.dp)
-                .weight(5f)
+            overflow = TextOverflow.Ellipsis
         )
-        HideTextData(
-            isHideData = isHideData,
-            text = fundsTotalBalance.formatAmount(),
-            color = MaterialTheme.colorScheme.primary,
-            style = MyFontStyle.large(),
-            align = Alignment.CenterEnd
-        )
-        AppCurrency(textColor = MaterialTheme.colorScheme.primary)
-        Spacer(modifier = Modifier.width(30.dp))
+        Row(
+            modifier = Modifier.padding(end = 20.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            HideTextData(
+                modifier = Modifier.weight(1f, fill = false),
+                isHideData = isHideData,
+                text = fundsTotalBalance.formatAmount(),
+                color = MaterialTheme.colorScheme.primary,
+                style = MyFontStyle.large(),
+                align = Alignment.CenterEnd
+            )
+            AppCurrency(textColor = MaterialTheme.colorScheme.primary)
+        }
     }
 }
 
+// ────────( Funds List )────────
 @Composable
 private fun FundsPageState(
-    funds: List<FundEntity>,
     isHideData: Boolean,
-    onEvent: (FundsEvent) -> Unit
+    funds: List<FundEntity>,
+    onFundOptionsClick: (FundEntity) -> Unit,
+    onAddAmountClick: (FundEntity) -> Unit,
+    onTransferClick: (FundEntity) -> Unit,
+    onDeleteFundClick: (FundEntity) -> Unit,
 ) {
-    if (funds == emptyList()) {
-        EmptyFundsPage()
+    if (funds.isEmpty()) {
+        EmptyPage(
+            modifier = Modifier
+                .fillMaxSize(),
+            topText = stringResource(id = R.string.FundsScreen_EmptyFundsPage_Title),
+            image = painterResource(id = R.drawable.img_empty_box),
+            imageScale = 1f,
+            imageSize = 300.dp,
+            bottomText = stringResource(id = R.string.FundsScreen_EmptyFundsPage_Description),
+            bottomSpace = 75.dp
+        )
     } else {
         FundsList(
-            funds = funds,
             isHideData = isHideData,
-            onEvent = onEvent,
+            funds = funds,
+            onFundOptionsClick = onFundOptionsClick,
+            onAddAmountClick = onAddAmountClick,
+            onTransferClick = onTransferClick,
+            onDeleteFundClick = onDeleteFundClick
         )
-    }
-}
-
-@Composable
-private fun EmptyFundsPage() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 15.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Spacer(modifier = Modifier.height(70.dp))
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = stringResource(id = R.string.FundsScreen_EmptyFundsPage_Title),
-            style = MyFontStyle.largeBold(),
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onBackground,
-            lineHeight = 28.sp
-        )
-
-        Image(
-            modifier = Modifier
-                .fillMaxWidth()
-                .scale(1f)
-                .size(300.dp),
-            painter = painterResource(id = R.drawable.img_empty_box),
-            contentDescription = "comfort"
-        )
-
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp),
-            text = stringResource(id = R.string.FundsScreen_EmptyFundsPage_Description),
-            style = MyFontStyle.medium(),
-            textAlign = TextAlign.Center,
-            lineHeight = 20.sp,
-            color = MaterialTheme.colorScheme.onSecondary
-        )
-
-        Spacer(modifier = Modifier.height(75.dp))
     }
 }
 
 @Composable
 private fun FundsList(
-    funds: List<FundEntity>,
     isHideData: Boolean,
-    onEvent: (FundsEvent) -> Unit,
+    funds: List<FundEntity>,
+
+    onFundOptionsClick: (FundEntity) -> Unit,
+    onAddAmountClick: (FundEntity) -> Unit,
+    onTransferClick: (FundEntity) -> Unit,
+    onDeleteFundClick: (FundEntity) -> Unit,
 ) {
-    Column(
+    LazyColumn(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .clip(MyRoundedCornerShape.medium),
         horizontalAlignment = Alignment.CenterHorizontally,
+        contentPadding = PaddingValues(top = 70.dp, bottom = 75.dp),
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .clip(MyRoundedCornerShape.medium)
-        ) {
-            item { Spacer(modifier = Modifier.height(70.dp)) }
-            itemsIndexed(
-                items = funds,
-                key = { _, fund -> fund.id },
-                contentType = { _, _ -> "FundItem" }) { index, fund ->
-                FundItem(
-                    isHideData = isHideData, fund = fund, onEvent = onEvent
-                )
-                if (index != funds.lastIndex) {
-                    Spacer(modifier = Modifier.height(15.dp))
-                }
+        itemsIndexed(
+            items = funds,
+            key = { _, fund -> fund.id },
+            contentType = { _, _ -> "FundItem" }) { index, fund ->
+
+            FundItem(
+                isHideData = isHideData,
+                fund = fund,
+                onFundOptionsClick = onFundOptionsClick,
+                onAddAmountClick = onAddAmountClick,
+                onTransferClick = onTransferClick,
+                onDeleteFundClick = onDeleteFundClick
+            )
+
+            if (index != funds.lastIndex) {
+                Spacer(modifier = Modifier.height(15.dp))
             }
-            item { Spacer(modifier = Modifier.height(75.dp)) }
         }
     }
 }
 
 @Composable
-fun FundItem(
+private fun FundItem(
+    modifier: Modifier = Modifier,
     isHideData: Boolean,
     fund: FundEntity,
-    onEvent: (FundsEvent) -> Unit,
-    modifier: Modifier = Modifier,
+    onFundOptionsClick: (FundEntity) -> Unit,
+    onAddAmountClick: (FundEntity) -> Unit,
+    onTransferClick: (FundEntity) -> Unit,
+    onDeleteFundClick: (FundEntity) -> Unit,
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
             .height(160.dp),
         shape = MyRoundedCornerShape.medium,
-//        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
+
+            // Fund Background
             Image(
+                modifier = Modifier
+                    .matchParentSize()
+                    .alpha(0.6f),
                 painter = painterResource(id = R.drawable.ic_launcher_foreground),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.background),
-                modifier = modifier
-                    .matchParentSize()
-                    .alpha(0.6f),
             )
+
+            // Excepted Line
             if (fund.isExcepted) {
                 Box(
                     modifier = Modifier
@@ -395,92 +395,114 @@ fun FundItem(
                         .background(MaterialTheme.colorScheme.error)
                 )
             }
-            Box(
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(20.dp)
-                    .padding(vertical = 10.dp)
-            ) {
-                Row(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .align(Alignment.TopCenter),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(
-                        modifier = modifier.weight(20f),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        MyIcons.Settings(
-                            modifier = modifier
-                                .offset(y = (-2.5).dp)
-                                .noRippleClickable {
-                                    onEvent(
-                                        FundsEvent.SheetDisplayed(
-                                            FundsSheets.FundOptions(
-                                                fund
-                                            )
-                                        )
-                                    )
-                                },
-                            filledState = false,
-                            size = 25.dp,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Spacer(modifier = modifier.width(15.dp))
 
-                        HideTextData(
-                            isHideData = isHideData,
-                            text = (fund.name),
-                            color = MaterialTheme.colorScheme.onBackground,
-                            style = MyFontStyle.medium(),
-                            align = Alignment.CenterStart
-                        )
-                    }
-                    HideTextData(
-                        modifier = Modifier.weight(10f),
-                        isHideData = isHideData,
-                        text = fund.balance.formatAmount(),
-                        color = MaterialTheme.colorScheme.onBackground,
-                        style = MyFontStyle.large(),
-                        align = Alignment.CenterEnd
-                    )
-                    AppCurrency(textColor = MaterialTheme.colorScheme.onBackground)
-                }
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = modifier
-                        .align(Alignment.BottomCenter)
-                        .fillMaxWidth()
-                ) {
-                    Text(
-                        text = stringResource(R.string.FundsScreen_AddBalance_Bttn),
-                        color = MaterialTheme.colorScheme.inversePrimary,
-                        style = MyFontStyle.small(),
-                        modifier = modifier.noRippleClickable {
-                            onEvent(FundsEvent.SheetDisplayed(FundsSheets.AddAmount(fund)))
-                        }
-                    )
-                    Text(
-                        text = stringResource(R.string.FundsScreen_FundsTransfer_Bttn),
-                        color = MaterialTheme.colorScheme.onBackground,
-                        style = MyFontStyle.small(),
-                        modifier = modifier.noRippleClickable {
-                            onEvent(FundsEvent.SheetDisplayed(FundsSheets.Transfer(fund)))
-                        }
-                    )
-                    Text(
-                        text = stringResource(R.string.Delete_Bttn),
-                        color = MaterialTheme.colorScheme.error,
-                        style = MyFontStyle.small(),
-                        modifier = modifier.noRippleClickable {
-                            onEvent(FundsEvent.PopupDisplay(FundsPopup.DeleteFund(fund)))
-                        }
-                    )
-                }
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 20.dp, vertical = 30.dp),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                FundHeader(
+                    modifier = Modifier.fillMaxWidth(),
+                    isHideData = isHideData,
+                    fund = fund,
+                    onFundOptionsClick = onFundOptionsClick
+                )
+
+                FundActions(
+                    modifier = Modifier.fillMaxWidth(),
+                    fund = fund,
+                    onAddAmountClick = onAddAmountClick,
+                    onTransferClick = onTransferClick,
+                    onDeleteFundClick = onDeleteFundClick
+                )
             }
         }
+    }
+}
+
+//── Tini Fund Item Components ──
+@Composable
+private fun FundHeader(
+    modifier: Modifier = Modifier,
+    isHideData: Boolean,
+    fund: FundEntity,
+    onFundOptionsClick: (FundEntity) -> Unit
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Row(
+            modifier = Modifier.weight(3f),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            MyIcons.Settings(
+                modifier = Modifier
+                    .offset(y = (-2.5).dp)
+                    .noRippleClickable { onFundOptionsClick(fund) },
+                filledState = false,
+                size = 25.dp,
+                color = MaterialTheme.colorScheme.primaryContainer
+            )
+            Spacer(modifier = Modifier.width(15.dp))
+
+            HideTextData(
+                isHideData = isHideData,
+                text = (fund.name),
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MyFontStyle.medium(),
+                align = Alignment.CenterStart
+            )
+        }
+        Row(
+            modifier = Modifier.weight(2f),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.End
+        ) {
+            HideTextData(
+                modifier = Modifier.weight(1f, fill = false),
+                isHideData = isHideData,
+                text = fund.balance.formatAmount(),
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MyFontStyle.large(),
+                align = Alignment.CenterEnd
+            )
+            AppCurrency(textColor = MaterialTheme.colorScheme.onBackground)
+        }
+    }
+}
+
+@Composable
+private fun FundActions(
+    modifier: Modifier = Modifier,
+    fund: FundEntity,
+    onAddAmountClick: (FundEntity) -> Unit,
+    onTransferClick: (FundEntity) -> Unit,
+    onDeleteFundClick: (FundEntity) -> Unit,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            modifier = Modifier.noRippleClickable { onAddAmountClick(fund) },
+            text = stringResource(R.string.FundsScreen_AddBalance_Bttn),
+            color = MaterialTheme.colorScheme.inversePrimary,
+            style = MyFontStyle.small()
+        )
+        Text(
+            modifier = Modifier.noRippleClickable { onTransferClick(fund) },
+            text = stringResource(R.string.FundsScreen_FundsTransfer_Bttn),
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MyFontStyle.small()
+        )
+        Text(
+            modifier = Modifier.noRippleClickable { onDeleteFundClick(fund) },
+            text = stringResource(R.string.Delete_Bttn),
+            color = MaterialTheme.colorScheme.error,
+            style = MyFontStyle.small()
+        )
     }
 }

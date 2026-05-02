@@ -8,6 +8,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,24 +19,26 @@ class SettingsViewModel @Inject constructor(
     private val repository: CashBoxRepository,
 ) : ViewModel() {
 
+    //── State ──
     private val _state = MutableStateFlow(SettingsState())
     val state: StateFlow<SettingsState> = _state.asStateFlow()
 
+    //──── Init ────
     init {
-        viewModelScope.launch {
-            repository.themeFlow.collect { theme ->
-                _state.value = _state.value.copy(darkMode = theme is Theme.Dark)
+        combine(
+            repository.themeFlow,
+            repository.hideDataFlow
+        ) { theme, isHideData ->
+            _state.update { currentState ->
+                currentState.copy(
+                    darkMode = theme is Theme.Dark,
+                    isHideData = isHideData
+                )
             }
-
-        }
-
-        viewModelScope.launch {
-            repository.hideDataFlow.collect { isHideData ->
-                _state.value = _state.value.copy(isHideData = isHideData)
-            }
-        }
+        }.launchIn(viewModelScope)
     }
 
+    //──── Events ────
     fun onEvent(event: SettingsEvent) {
         when (event) {
             is SettingsEvent.ToggleTheme -> {

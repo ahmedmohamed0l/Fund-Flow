@@ -12,13 +12,15 @@ sealed class FundsSheets {
 
 sealed class FundsPopup {
     data class DeleteFund(val fund: FundEntity) : FundsPopup()
-    object Close : FundsPopup()
+    object None : FundsPopup()
 }
 
 data class FundsState(
     val currentSheet: FundsSheets = FundsSheets.None,
-    val popupState: FundsPopup = FundsPopup.Close,
+    val popupState: FundsPopup = FundsPopup.None,
+
+    val isHideData: Boolean = false,
+
     val funds: List<FundEntity> = emptyList(),
     val fundsTotalBalance: Double = 0.0,
-    val isHideData: Boolean = false,
 )

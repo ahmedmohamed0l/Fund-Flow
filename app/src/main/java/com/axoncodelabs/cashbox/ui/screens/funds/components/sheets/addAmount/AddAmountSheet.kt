@@ -128,6 +128,7 @@ private fun AddAmountSheetRoot(
         Spacer(modifier = Modifier.height(15.dp))
 
         MainBttn(
+            modifier = Modifier.fillMaxWidth(),
             text = stringResource(R.string.Sheet_AddTransaction_Bttn),
             onClick = onSaveClick
         )

@@ -31,6 +31,7 @@ private val LightColorScheme = lightColorScheme(
 
 
     primary = MyColors.DarkSkyBlue,
+    primaryContainer = MyColors.DarkSkyBlue,
     onPrimary = MyColors.White,
 
     secondary = MyColors.LightGray,
@@ -39,9 +40,8 @@ private val LightColorScheme = lightColorScheme(
     surface = MyColors.White,
     onSurface = MyColors.Gray,
 
-//    tertiary = MyColors.LightGray,
-
-//    onTertiary = MyColors.SoftBlack,
+    tertiary = MyColors.Black,
+    onTertiary = MyColors.White,
 
     error = MyColors.LightRed,
     inversePrimary = MyColors.DarkGreen,
@@ -62,7 +62,8 @@ private val DarkColorScheme = darkColorScheme(
 //    onPrimaryFixed = MyColors.Black,
 
 
-    primary = MyColors.DeepBlue,
+    primary = MyColors.DarkSkyBlue,
+    primaryContainer = MyColors.DeepBlue,
     onPrimary = MyColors.White,
 
     secondary = MyColors.LightBlack,
@@ -71,9 +72,8 @@ private val DarkColorScheme = darkColorScheme(
     surface = MyColors.LightBlack,
     onSurface = MyColors.SoftBlack,
 
-//    tertiary = MyColors.LightBlack,
-
-//    onTertiary = MyColors.WhiteSmoke,
+    tertiary = MyColors.Gray,
+    onTertiary = MyColors.White,
 
     error = MyColors.MidRed,
     inversePrimary = MyColors.MidGreen,

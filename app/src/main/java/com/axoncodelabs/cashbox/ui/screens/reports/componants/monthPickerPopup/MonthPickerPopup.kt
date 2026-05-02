@@ -196,6 +196,7 @@ fun ScrollableMonthPickerRoot(
         //── Confirm button ────
         Spacer(Modifier.height(15.dp))
         MainBttn(
+            modifier = Modifier.fillMaxWidth(),
             text = stringResource(R.string.Popups_DatePickerConfirm_Bttn),
             onClick = onConfirmBttnClicked
         )

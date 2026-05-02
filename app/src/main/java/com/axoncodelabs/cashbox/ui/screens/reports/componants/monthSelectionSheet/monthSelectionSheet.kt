@@ -25,10 +25,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.ui.components.noRippleClickable
-import com.axoncodelabs.cashbox.ui.screens.reports.formatDate
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
+import com.axoncodelabs.cashbox.ui.util.DateFormates
+import com.axoncodelabs.cashbox.ui.util.dateFormatter
 
 @Composable
 fun MonthSelectionSheet(
@@ -109,7 +110,7 @@ private fun DateItem(
             )
             Spacer(modifier = Modifier.width(15.dp))
             Text(
-                text = formatDate(date),
+                text = date.dateFormatter(DateFormates.MonthYearArabic),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MyFontStyle.medium()
             )

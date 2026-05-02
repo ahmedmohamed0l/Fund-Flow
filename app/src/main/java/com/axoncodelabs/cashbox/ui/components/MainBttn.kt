@@ -2,7 +2,6 @@ package com.axoncodelabs.cashbox.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -13,6 +12,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
@@ -20,7 +20,8 @@ import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
 @Composable
 fun MainBttn(
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colorScheme.primary,
+    backgroundColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    height: Dp = 50.dp,
     clipShape: Shape = MyRoundedCornerShape.medium,
     text: String,
     textStyle: TextStyle = MyFontStyle.medium(),
@@ -29,14 +30,12 @@ fun MainBttn(
 ) {
     Box(
         modifier = modifier
-            .fillMaxWidth()
-            .height(50.dp)
+            .height(height)
             .clip(clipShape)
             .background(backgroundColor)
             .noRippleClickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
-
         Text(
             text = text,
             style = textStyle,

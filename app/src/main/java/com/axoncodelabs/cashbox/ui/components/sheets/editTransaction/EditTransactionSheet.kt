@@ -216,10 +216,9 @@ private fun ActionsBttns(
                 .noRippleClickable(isSaveEnabled) { onSaveClick() },
             text = stringResource(R.string.Sheet_EditTransaction_Bttn),
             textAlign = TextAlign.Start,
-            color = if (isSaveEnabled)
-                MaterialTheme.colorScheme.primary
-            else
-                MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+            color = if (isSaveEnabled) MaterialTheme.colorScheme.inversePrimary else MaterialTheme.colorScheme.onBackground.copy(
+                alpha = 0.5f
+            ),
             style = MyFontStyle.medium()
         )
         Text(

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="DatePickerTodaySelect">إختيار تاريخ انهارده</string>
+    <string name="DatePickerTodaySelect">اختيار تاريخ النهارده</string>
 
     <string name="Popups_DeleteFundConfirm_Message">هل أنت متأكد من حذف الصندوق</string>
     <string name="Popups_DeleteFundTransactionsConfirm_Message">هل أنت متأكد من حذف كل معاملات الصندوق</string>
@@ -8,7 +8,7 @@
 
     <string name="Popups_DatePickerConfirm_Bttn">إختيار</string>
 
-    <string name="Popups_MonthPickerTitle">إختر فترة التقارير</string>
+    <string name="Popups_MonthPickerTitle">اختر فترة التقارير</string>
     <string name="Popups_MonthPicker_Year">السنة</string>
     <string name="Popups_MonthPicker_Month">الشهر</string>
 

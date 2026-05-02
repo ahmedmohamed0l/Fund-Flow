@@ -1,6 +1,11 @@
 package com.axoncodelabs.cashbox.ui.screens.expenses
 
-import androidx.compose.foundation.Image
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -14,7 +19,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -32,20 +36,20 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.cashbox.R
 import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
 import com.axoncodelabs.cashbox.ui.components.AppCurrency
+import com.axoncodelabs.cashbox.ui.components.EmptyPage
 import com.axoncodelabs.cashbox.ui.components.HideTextData
 import com.axoncodelabs.cashbox.ui.components.MainBttn
 import com.axoncodelabs.cashbox.ui.components.appTopBar.AppTopBarState
@@ -56,18 +60,17 @@ import com.axoncodelabs.cashbox.ui.screens.expenses.components.sheets.addExpense
 import com.axoncodelabs.cashbox.ui.theme.MyFontStyle
 import com.axoncodelabs.cashbox.ui.theme.MyIcons
 import com.axoncodelabs.cashbox.ui.theme.MyRoundedCornerShape
+import com.axoncodelabs.cashbox.ui.util.DateFormates
 import com.axoncodelabs.cashbox.ui.util.dateFormatter
 import com.axoncodelabs.cashbox.ui.util.formatAmount
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpensesScreen(
     viewModel: ExpensesViewModel = hiltViewModel(),
     onTopBarChange: (AppTopBarState) -> Unit
 ) {
     //──── State & ViewModel Setup ────
-    val state = viewModel.state.collectAsState().value
+    val state by viewModel.state.collectAsState()
 
     val sheet = state.currentSheet
     val popup = state.currentPopup
@@ -84,19 +87,17 @@ fun ExpensesScreen(
     }
 
     //──── Sheets & Popups Handling ────
-    val closeSheet = { viewModel.onEvent(ExpensesEvent.CloseSheet) }
     SheetsHandler(
         sheet = sheet,
         isHideData = isHideData,
         selectedDate = selectedDate,
-        onClose = closeSheet
+        onClose = { viewModel.onEvent(ExpensesEvent.CloseSheet) }
     )
 
-    val closePopup = { viewModel.onEvent(ExpensesEvent.ClosePopup) }
     PopupsHandler(
         popup = popup,
         selectedDate = selectedDate,
-        onClose = closePopup,
+        onClose = { viewModel.onEvent(ExpensesEvent.ClosePopup) },
         onDateSelected = { date ->
             viewModel.onEvent(ExpensesEvent.OnDateSelected(date))
         }
@@ -118,9 +119,6 @@ fun ExpensesScreen(
         expensesTotalValue = expensesTotalValue,
 
         expenses = expenses,
-
-        onAddExpenseClick = { viewModel.onEvent(ExpensesEvent.SheetDisplayed(ExpensesSheets.AddExpense)) },
-
         onExpenseClick = {
             viewModel.onEvent(
                 ExpensesEvent.SheetDisplayed(
@@ -129,7 +127,9 @@ fun ExpensesScreen(
                     )
                 )
             )
-        }
+        },
+
+        onAddExpenseClick = { viewModel.onEvent(ExpensesEvent.SheetDisplayed(ExpensesSheets.AddExpense)) }
     )
 }
 
@@ -212,9 +212,9 @@ private fun ExpensesScreenRoot(
     expensesTotalValue: Double,
 
     expenses: List<TransactionWithFund>,
+    onExpenseClick: (TransactionWithFund) -> Unit,
 
     onAddExpenseClick: () -> Unit,
-    onExpenseClick: (TransactionWithFund) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -234,6 +234,7 @@ private fun ExpensesScreenRoot(
                 onShowDatePicker = onShowDatePicker,
                 selectedDate = selectedDate,
 
+                emptyExpensesList = expenses.isEmpty(),
                 isHideData = isHideData,
                 expensesTotalValue = expensesTotalValue
             )
@@ -248,6 +249,7 @@ private fun ExpensesScreenRoot(
         MainBttn(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
+                .fillMaxWidth()
                 .padding(bottom = 70.dp)
                 .padding(horizontal = 40.dp),
             clipShape = MyRoundedCornerShape.large,
@@ -267,6 +269,7 @@ private fun ScreenHeader(
     onShowDatePicker: () -> Unit,
     selectedDate: Long,
 
+    emptyExpensesList: Boolean,
     isHideData: Boolean,
     expensesTotalValue: Double,
 ) {
@@ -289,18 +292,35 @@ private fun ScreenHeader(
                 onToggleDatePicker = { onShowDatePicker() },
                 selectedDate = selectedDate,
             )
-            HorizontalDivider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 40.dp)
-                    .padding(vertical = 15.dp),
-                thickness = 1.dp,
-                color = MaterialTheme.colorScheme.outline
-            )
-            DayExpensesTotalValue(
-                isHideData = isHideData,
-                expensesTotalValue = expensesTotalValue
-            )
+            AnimatedVisibility(
+                visible = !emptyExpensesList,
+                enter = expandVertically(
+                    expandFrom = Alignment.Top,
+                    animationSpec = tween(durationMillis = 200)
+                )
+                        + fadeIn(animationSpec = tween(durationMillis = 200, delayMillis = 100)),
+
+                exit = fadeOut(animationSpec = tween(durationMillis = 200))
+                        + shrinkVertically(
+                    shrinkTowards = Alignment.Top,
+                    animationSpec = tween(durationMillis = 200, delayMillis = 100)
+                )
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    HorizontalDivider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 40.dp)
+                            .padding(vertical = 15.dp),
+                        thickness = 1.dp,
+                        color = MaterialTheme.colorScheme.outline
+                    )
+                    DayExpensesTotalValue(
+                        isHideData = isHideData,
+                        expensesTotalValue = expensesTotalValue
+                    )
+                }
+            }
         }
     }
 }
@@ -330,7 +350,9 @@ private fun DateSelect(
             modifier = Modifier
                 .weight(1f)
                 .noRippleClickable { onToggleDatePicker() },
-            text = (stringResource(R.string.ExpensesScreen_DateSelect) + " " + selectedDate.dateFormatter()),
+            text = (stringResource(R.string.ExpensesScreen_DateSelect)
+                    + " "
+                    + selectedDate.dateFormatter(DateFormates.FullDateArabic)),
             style = MyFontStyle.medium(),
             color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center,
@@ -387,7 +409,15 @@ private fun ExpensesPageState(
     onExpenseClick: (TransactionWithFund) -> Unit,
 ) {
     if (expenses.isEmpty()) {
-        EmptyExpensesPage()
+        EmptyPage(
+            modifier = Modifier.fillMaxSize(),
+            topText = stringResource(id = R.string.ExpensesScreen_EmptyExpensesPage_Title),
+            image = painterResource(id = R.drawable.img_comfort),
+            imageScale = 1.1f,
+            imageSize = 280.dp,
+            bottomText = stringResource(id = R.string.ExpensesScreen_EmptyExpensesPage_Description),
+            bottomSpace = 125.dp
+        )
     } else {
         ExpensesList(
             isHideData = isHideData,
@@ -398,48 +428,6 @@ private fun ExpensesPageState(
 }
 
 //── Tini Components ──
-@Composable
-private fun EmptyExpensesPage() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 15.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = stringResource(id = R.string.ExpensesScreen_EmptyExpensesPage_Title),
-            style = MyFontStyle.largeBold(),
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onBackground,
-            lineHeight = 28.sp
-        )
-
-        Image(
-            modifier = Modifier
-                .fillMaxWidth()
-                .scale(1.1f)
-                .size(280.dp),
-            painter = painterResource(id = R.drawable.img_comfort),
-            contentDescription = "comfort"
-        )
-
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp),
-            text = stringResource(id = R.string.ExpensesScreen_EmptyExpensesPage_Description),
-            style = MyFontStyle.medium(),
-            lineHeight = 20.sp,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSecondary
-        )
-
-        Spacer(modifier = Modifier.height(125.dp))
-    }
-}
-
 @Composable
 private fun ExpensesList(
     isHideData: Boolean,
@@ -459,6 +447,7 @@ private fun ExpensesList(
             key = { _, expense -> expense.transaction.id },
             contentType = { _, _ -> "ExpenseItem" }) { index, expense ->
             ExpenseItem(
+                modifier = Modifier.fillMaxWidth(),
                 isHideData = isHideData,
                 expense = expense,
                 onExpenseClick = onExpenseClick
@@ -479,11 +468,10 @@ private fun ExpenseItem(
 ) {
     Column(
         modifier = modifier
-            .fillMaxWidth()
             .clip(MyRoundedCornerShape.medium)
             .noRippleClickable { onExpenseClick(expense) }
             .border(
-                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
+                color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f),
                 shape = MyRoundedCornerShape.medium,
                 width = (0.5).dp
             )
@@ -492,13 +480,13 @@ private fun ExpenseItem(
             .padding(vertical = 5.dp)
     ) {
         Row(
-            modifier = modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 modifier = Modifier.padding(end = 10.dp),
-                text = expense.transaction.date.dateFormatter(),
+                text = expense.transaction.date.dateFormatter(DateFormates.FullDateArabic),
                 color = MaterialTheme.colorScheme.onSecondary,
                 style = MyFontStyle.small()
             )
@@ -507,12 +495,13 @@ private fun ExpenseItem(
                 text = expense.fund.name,
                 color = MaterialTheme.colorScheme.onSecondary,
                 style = MyFontStyle.small(),
+                textAlign = TextAlign.End,
                 align = Alignment.CenterEnd
             )
         }
         Spacer(Modifier.height(20.dp))
         Row(
-            modifier = modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             HideTextData(
@@ -522,8 +511,9 @@ private fun ExpenseItem(
                 isHideData = isHideData,
                 text = expense.transaction.description,
                 color = MaterialTheme.colorScheme.onBackground,
-                style = MyFontStyle.large(),
+                style = MyFontStyle.largeXLight(),
                 maxLines = 2,
+                textAlign = TextAlign.Start,
                 align = Alignment.CenterStart
             )
             HideTextData(
@@ -532,6 +522,7 @@ private fun ExpenseItem(
                 text = expense.transaction.amount.formatAmount(),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MyFontStyle.xxLargeBold(),
+                textAlign = TextAlign.End,
                 align = Alignment.CenterEnd
             )
             AppCurrency(textColor = MaterialTheme.colorScheme.onBackground)

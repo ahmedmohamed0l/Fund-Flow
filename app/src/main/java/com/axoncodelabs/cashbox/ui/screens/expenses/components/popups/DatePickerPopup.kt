@@ -43,7 +43,7 @@ fun DatePickerPopup(
         dividerColor = MaterialTheme.colorScheme.primary,
         weekdayContentColor = MaterialTheme.colorScheme.primary,
         dayContentColor = MaterialTheme.colorScheme.onBackground,
-        selectedDayContainerColor = MaterialTheme.colorScheme.primary,
+        selectedDayContainerColor = MaterialTheme.colorScheme.primaryContainer,
         selectedDayContentColor = MaterialTheme.colorScheme.onPrimary,
         disabledDayContentColor = MaterialTheme.colorScheme.outline,
         todayContentColor = MaterialTheme.colorScheme.primary

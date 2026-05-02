@@ -48,6 +48,12 @@ object MyFontStyle {
     )
 
     //──── Medium ────
+    fun mediumXLight() = TextStyle(
+        fontFamily = mainFont,
+        fontWeight = FontWeight.ExtraLight,
+        fontSize = 16.sp
+    )
+
     fun medium() = TextStyle(
         fontFamily = mainFont,
         fontWeight = FontWeight.Normal,
@@ -61,6 +67,12 @@ object MyFontStyle {
     )
 
     //──── Large ────
+    fun largeXLight() = TextStyle(
+        fontFamily = mainFont,
+        fontWeight = FontWeight.ExtraLight,
+        fontSize = 20.sp
+    )
+
     fun large() = TextStyle(
         fontFamily = mainFont,
         fontWeight = FontWeight.Normal,
