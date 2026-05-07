@@ -1,11 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-
-    // Edits
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -20,9 +18,6 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        // Edits
-        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -38,20 +33,16 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
     buildFeatures {
         compose = true
-        buildConfig = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.12"
     }
 }
 
-dependencies {
+kotlin {
+    jvmToolchain(11)
+}
 
+dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -62,6 +53,24 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.core)
     implementation(libs.androidx.compose.material.icons.extended)
+
+    implementation(libs.androidx.navigation.compose)
+
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+    ksp(libs.hilt.compiler)
+
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.lifecycle.livedata.ktx)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -69,26 +78,4 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-
-    // Navigation Compose
-    implementation(libs.androidx.navigation.compose)
-
-    // Hilt
-    implementation(libs.hilt.android)
-    implementation(libs.androidx.hilt.navigation.compose)
-    ksp(libs.hilt.compiler)
-
-    // Room
-    implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
-    ksp(libs.room.compiler)
-
-    implementation("androidx.datastore:datastore-preferences:1.1.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-
-    // Lifecycle ViewModel + LiveData
-    implementation(libs.lifecycle.viewmodel.ktx)
-    implementation(libs.lifecycle.livedata.ktx)
-
 }
