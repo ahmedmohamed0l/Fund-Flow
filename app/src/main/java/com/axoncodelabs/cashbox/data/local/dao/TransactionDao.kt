@@ -22,6 +22,13 @@ interface TransactionDao {
     @Delete
     suspend fun deleteTransaction(transaction: TransactionEntity)
 
+    //──── Backup & Restore ────
+    @Query("SELECT * FROM transactions")
+    suspend fun getAllTransactionsList(): List<TransactionEntity>
+
+    @Query("DELETE FROM transactions")
+    suspend fun deleteAllTransactions()
+
     //──── For (Funds_Screen) ────
     @Query("DELETE FROM transactions WHERE fundId = :fundId")
     suspend fun deleteAllTransactionsByFundId(fundId: Int)

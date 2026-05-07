@@ -10,6 +10,10 @@ android {
     namespace = "com.axoncodelabs.cashbox"
     compileSdk = 36
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "com.axoncodelabs.cashbox"
         minSdk = 26

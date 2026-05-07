@@ -3,6 +3,13 @@ package com.axoncodelabs.cashbox.ui.theme
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
+import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.Nightlight
+import androidx.compose.material.icons.outlined.CloudSync
+import androidx.compose.material.icons.outlined.DeleteForever
+import androidx.compose.material.icons.outlined.Save
+import androidx.compose.material.icons.outlined.VisibilityOff
+import androidx.compose.material.icons.rounded.History
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -176,6 +183,159 @@ object MyIcons {
         )
     }
 
+    // Theme Switch Icons
+    @Composable
+    fun LightTheme(
+        modifier: Modifier = Modifier,
+        size: Dp = 48.dp,
+        angle: Float = 0f,
+        color: Color = MyColors.Black,
+        alphaValue: Float = 1f,
+    ) {
+        Icon(
+            imageVector = Icons.Default.LightMode,
+            contentDescription = "",
+            modifier = modifier
+                .size(size)
+                .rotate(angle)
+                .alpha(alphaValue),
+            tint = color,
+        )
+    }
+
+    @Composable
+    fun DarkTheme(
+        modifier: Modifier = Modifier,
+        size: Dp = 48.dp,
+        angle: Float = 0f,
+        color: Color = MyColors.Black,
+        alphaValue: Float = 1f,
+    ) {
+        Icon(
+            imageVector = Icons.Default.Nightlight,
+            contentDescription = "",
+            modifier = modifier
+                .size(size)
+                .rotate(angle)
+                .alpha(alphaValue),
+            tint = color,
+        )
+    }
+
+    @Composable
+    fun HideData(
+        modifier: Modifier = Modifier,
+        size: Dp = 48.dp,
+        angle: Float = 0f,
+        color: Color = MyColors.Black,
+        alphaValue: Float = 1f,
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.VisibilityOff,
+            contentDescription = "",
+            modifier = modifier
+                .size(size)
+                .rotate(angle)
+                .alpha(alphaValue),
+            tint = color,
+        )
+    }
+
+    @Composable
+    fun CreateBackup(
+        modifier: Modifier = Modifier,
+        size: Dp = 48.dp,
+        angle: Float = 0f,
+        color: Color = MyColors.Black,
+        alphaValue: Float = 1f,
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_backup),
+            contentDescription = "",
+            modifier = modifier
+                .size(size)
+                .rotate(angle)
+                .alpha(alphaValue),
+            tint = color,
+        )
+    }
+
+    @Composable
+    fun RestoreBackup(
+        modifier: Modifier = Modifier,
+        size: Dp = 48.dp,
+        angle: Float = 0f,
+        color: Color = MyColors.Black,
+        alphaValue: Float = 1f,
+    ) {
+        Icon(
+            imageVector = Icons.Rounded.History,
+            contentDescription = "",
+            modifier = modifier
+                .size(size)
+                .rotate(angle)
+                .alpha(alphaValue),
+            tint = color,
+        )
+    }
+
+    @Composable
+    fun BackupFile(
+        modifier: Modifier = Modifier,
+        size: Dp = 48.dp,
+        angle: Float = 0f,
+        color: Color = MyColors.Black,
+        alphaValue: Float = 1f,
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.Save,
+            contentDescription = "",
+            modifier = modifier
+                .size(size)
+                .rotate(angle)
+                .alpha(alphaValue),
+            tint = color,
+        )
+    }
+
+    @Composable
+    fun DeleteBackup(
+        modifier: Modifier = Modifier,
+        size: Dp = 48.dp,
+        angle: Float = 0f,
+        color: Color = MyColors.Black,
+        alphaValue: Float = 1f,
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.DeleteForever,
+            contentDescription = "",
+            modifier = modifier
+                .size(size)
+                .rotate(angle)
+                .alpha(alphaValue),
+            tint = color,
+        )
+    }
+
+    @Composable
+    fun AutoBackup(
+        modifier: Modifier = Modifier,
+        size: Dp = 48.dp,
+        angle: Float = 0f,
+        color: Color = MyColors.Black,
+        alphaValue: Float = 1f,
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.CloudSync,
+            contentDescription = "",
+            modifier = modifier
+                .size(size)
+                .rotate(angle)
+                .alpha(alphaValue),
+            tint = color,
+        )
+    }
+
     @Composable
     fun Arrow(
         modifier: Modifier = Modifier,
@@ -193,6 +353,28 @@ object MyIcons {
             modifier = modifier
                 .size(size)
                 .rotate(angle)
+                .alpha(alphaValue),
+            tint = color
+        )
+    }
+
+    @Composable
+    fun IsLatestBackupArrow(
+        modifier: Modifier = Modifier,
+        size: Dp = 48.dp,
+        angle: Float = 0f,
+        color: Color = MyColors.Black,
+        alphaValue: Float = 1f,
+        autoMirroredState: Boolean,
+    ) {
+        val mirroredState =
+            if (autoMirroredState) (angle + 180) else angle
+        Icon(
+            painter = painterResource(id = R.drawable.ic_line_end_arrow_notch),
+            contentDescription = "Arrow icon",
+            modifier = modifier
+                .size(size)
+                .rotate(mirroredState)
                 .alpha(alphaValue),
             tint = color
         )

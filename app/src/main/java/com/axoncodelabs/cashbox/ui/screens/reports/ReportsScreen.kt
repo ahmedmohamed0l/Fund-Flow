@@ -459,7 +459,6 @@ private fun SelectorBar(
             MyIcons.Arrow(
                 modifier = Modifier.offset(y = (-2.5).dp),
                 autoMirroredState = true,
-                angle = 180f,
                 size = 20.dp,
                 color = MaterialTheme.colorScheme.onBackground,
             )

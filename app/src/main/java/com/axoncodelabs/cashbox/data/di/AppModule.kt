@@ -14,6 +14,8 @@ import com.axoncodelabs.cashbox.data.repository.CashBoxRepository
 import com.axoncodelabs.cashbox.data.repository.CashBoxRepositoryImpl
 import com.axoncodelabs.cashbox.data.util.StringProvider
 import com.axoncodelabs.cashbox.data.util.StringProviderImpl
+import com.axoncodelabs.cashbox.data.util.backup.BackupFileManager
+import com.axoncodelabs.cashbox.data.util.backup.BackupSerializer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,32 +41,40 @@ object AppModule {
     }
 
     @Provides
-    fun provideFundDao(db: CashBoxDatabase): FundDao {
-        return db.fundDao()
-    }
+    fun provideFundDao(db: CashBoxDatabase): FundDao = db.fundDao()
 
     @Provides
-    fun provideTransactionDao(db: CashBoxDatabase): TransactionDao {
-        return db.transactionDao()
-    }
+    fun provideTransactionDao(db: CashBoxDatabase): TransactionDao = db.transactionDao()
 
     @Provides
     @Singleton
     fun provideRepository(
+        db: CashBoxDatabase,
         fundDao: FundDao,
         transactionDao: TransactionDao,
         dataStore: DataStore<Preferences>,
-    ): CashBoxRepository = CashBoxRepositoryImpl(fundDao, transactionDao, dataStore)
+        backupFileManager: BackupFileManager,
+        backupSerializer: BackupSerializer
+    ): CashBoxRepository = CashBoxRepositoryImpl(
+        db, fundDao, transactionDao, dataStore, backupFileManager, backupSerializer
+    )
 
     @Provides
     @Singleton
-    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
-        return context.dataStore
-    }
+    fun provideBackupFileManager(@ApplicationContext context: Context): BackupFileManager =
+        BackupFileManager(context)
 
     @Provides
     @Singleton
-    fun provideStringProvider(
-        @ApplicationContext context: Context,
-    ): StringProvider = StringProviderImpl(context)
+    fun provideBackupSerializer(): BackupSerializer = BackupSerializer()
+
+    @Provides
+    @Singleton
+    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
+        context.dataStore
+
+    @Provides
+    @Singleton
+    fun provideStringProvider(@ApplicationContext context: Context): StringProvider =
+        StringProviderImpl(context)
 }

@@ -33,4 +33,13 @@
     <string name="Sheet_AddTransaction_Bttn">إضافة</string>
     <string name="Sheet_Save_Bttn">حفظ</string>
     <string name="Sheet_EditTransaction_Bttn">حفظ التعديلات</string>
+
+    <string name="Sheet_EmptyBackupList1">لا توجد نسخ احتياطية سابقة</string>
+    <string name="Sheet_EmptyBackupList2">احفظ نسخ ليتم عرضها</string>
+    <string name="Sheet_Today">اليوم</string>
+    <string name="Sheet_ChoseBackup">اختر النسخة</string>
+    <string name="Sheet_CreateBackupLabel">إنشاء نسخة احتياطية</string>
+    <string name="Sheet_CreateBackupBttn">إنشاء</string>
+    <string name="Sheet_ItsLastBackup">أحدث نسخة</string>
+    <string name="Sheet_AutoBackup">حفظ تلقائي عند فتح التطبيق</string>
 </resources>

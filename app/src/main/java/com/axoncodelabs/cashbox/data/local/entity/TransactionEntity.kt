@@ -2,7 +2,9 @@ package com.axoncodelabs.cashbox.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Entity(tableName = "transactions")
 data class TransactionEntity(
     @PrimaryKey(autoGenerate = true)
@@ -15,6 +17,7 @@ data class TransactionEntity(
     val isTransfer: Boolean = false,
 )
 
+@Serializable
 enum class TransactionType {
     INCOME, EXPENSE
 }

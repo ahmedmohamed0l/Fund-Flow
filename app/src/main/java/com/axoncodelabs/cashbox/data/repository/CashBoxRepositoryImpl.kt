@@ -4,8 +4,11 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.room.Transaction
+import androidx.room.withTransaction
+import com.axoncodelabs.cashbox.data.local.CashBoxDatabase
 import com.axoncodelabs.cashbox.data.local.dao.FundDao
 import com.axoncodelabs.cashbox.data.local.dao.TransactionDao
 import com.axoncodelabs.cashbox.data.local.dao.TransactionDao.DateRange
@@ -13,15 +16,28 @@ import com.axoncodelabs.cashbox.data.local.entity.FundEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionEntity
 import com.axoncodelabs.cashbox.data.local.entity.TransactionType
 import com.axoncodelabs.cashbox.data.local.relation.TransactionWithFund
+import com.axoncodelabs.cashbox.data.util.backup.BackupData
+import com.axoncodelabs.cashbox.data.util.backup.BackupFileManager
+import com.axoncodelabs.cashbox.data.util.backup.BackupInfo
+import com.axoncodelabs.cashbox.data.util.backup.BackupSerializer
 import com.axoncodelabs.cashbox.ui.theme.Theme
+import com.axoncodelabs.cashbox.ui.util.toMillisFromBackup
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
+import java.io.IOException
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class CashBoxRepositoryImpl @Inject constructor(
+    private val db: CashBoxDatabase,
     private val fundDao: FundDao,
     private val transactionDao: TransactionDao,
     private val dataStore: DataStore<Preferences>,
+    private val backupFileManager: BackupFileManager,
+    private val backupSerializer: BackupSerializer
 ) : CashBoxRepository {
 
     // ────────────────{ Throw Exception }────────────────
@@ -36,12 +52,95 @@ class CashBoxRepositoryImpl @Inject constructor(
     }
 
     //──── Helpers ────
-    // helper: sign of transaction for balance calculation
+    // Sign of transaction for balance calculation
     private fun signForType(type: TransactionType): Int =
         when (type) {
             TransactionType.INCOME -> 1
             TransactionType.EXPENSE -> -1
         }
+
+    // ────────────────{ Backup & Restore }────────────────
+    override suspend fun createBackup() {
+        withContext(Dispatchers.IO) {
+            val timestamp = System.currentTimeMillis()
+
+            val data = BackupData(
+                funds = fundDao.getAllFundsList(),
+                transactions = transactionDao.getAllTransactionsList()
+            )
+
+            val json = backupSerializer.serialize(data)
+                ?: throw IOException("Serialization failed")
+
+            backupFileManager.saveBackupFile(
+                json,
+                timestamp
+            ) ?: throw IOException("Could not save backup file")
+
+            val backups = getAvailableBackups()
+
+            if (backups.size >= 10) {
+                val oldest = backups.minByOrNull { it.dateTimeMillis }
+                oldest?.let {
+                    deleteBackup(oldest.folderName)
+                }
+            }
+
+            syncLastBackupDate()
+        }
+    }
+
+    override suspend fun getAvailableBackups(): List<BackupInfo> {
+        val files = backupFileManager.listBackupFiles()
+        return files.mapNotNull { file ->
+            val dateStr = file.nameWithoutExtension.removePrefix("backup_")
+            val millis = dateStr.toMillisFromBackup() ?: return@mapNotNull null
+
+            BackupInfo(
+                folderName = file.name,
+                dateTimeMillis = millis
+            )
+        }
+    }
+
+    override suspend fun restoreBackup(fileName: String) {
+        withContext(Dispatchers.IO) {
+
+            val file = backupFileManager.readBackupFile(fileName)
+                ?: throw IOException("Could not read backup file")
+
+            val data = backupSerializer.deserialize(file)
+                ?: throw IOException("Deserialization failed")
+
+            db.withTransaction {
+                transactionDao.deleteAllTransactions()
+                fundDao.deleteAllFunds()
+
+                data.funds.forEach { fundDao.insertFund(it) }
+                data.transactions.forEach { transactionDao.insertTransaction(it) }
+            }
+        }
+    }
+
+    override suspend fun deleteBackup(fileName: String) {
+        backupFileManager.deleteBackupFile(fileName)
+        syncLastBackupDate()
+    }
+
+    //── Last Date Helper ──
+    private suspend fun syncLastBackupDate() {
+        val latestMillis = getAvailableBackups()
+            .maxByOrNull { it.dateTimeMillis }
+            ?.dateTimeMillis
+
+        dataStore.edit { prefs ->
+            if (latestMillis == null) {
+                prefs.remove(Keys.LAST_BACKUP_KEY)
+            } else {
+                prefs[Keys.LAST_BACKUP_KEY] = latestMillis
+            }
+        }
+    }
 
     // ────────────────{ Fund Actions }────────────────
     override suspend fun insertFund(fund: FundEntity): Long {
@@ -145,7 +244,6 @@ class CashBoxRepositoryImpl @Inject constructor(
         endDate: Long,
     ): Flow<List<TransactionWithFund>> {
         return transactionDao.getTransactionsByDateAndType(type, startDate, endDate)
-
     }
 
     override fun getTransactionsByFundAndDateAndType(
@@ -191,6 +289,8 @@ class CashBoxRepositoryImpl @Inject constructor(
     private object Keys {
         val THEME_KEY = stringPreferencesKey("theme")
         val HIDE_KEY = booleanPreferencesKey("is_hide")
+        val LAST_BACKUP_KEY = longPreferencesKey("last_backup_date")
+        val AUTO_BACKUP_KEY = booleanPreferencesKey("auto_backup_option")
     }
 
     //──── Read Flow ────
@@ -205,6 +305,12 @@ class CashBoxRepositoryImpl @Inject constructor(
         it[Keys.HIDE_KEY] ?: false
     }
 
+    override val lastBackupDateFlow: Flow<Long?> = dataStore.data.map { it[Keys.LAST_BACKUP_KEY] }
+
+    override val autoBackupFlow: Flow<Boolean> = dataStore.data.map {
+        it[Keys.AUTO_BACKUP_KEY] ?: false
+    }
+
     //──── Save ────
     override suspend fun saveTheme(theme: Theme) {
         dataStore.edit { it[Keys.THEME_KEY] = theme.value }
@@ -212,5 +318,9 @@ class CashBoxRepositoryImpl @Inject constructor(
 
     override suspend fun saveHideData(isHide: Boolean) {
         dataStore.edit { it[Keys.HIDE_KEY] = isHide }
+    }
+
+    override suspend fun saveAutoBackup(isAutoBackup: Boolean) {
+        dataStore.edit { it[Keys.AUTO_BACKUP_KEY] = isAutoBackup }
     }
 }

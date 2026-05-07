@@ -19,6 +19,13 @@ interface FundDao {
     @Delete
     suspend fun deleteFund(fund: FundEntity)
 
+    //──── Backup & Restore ────
+    @Query("SELECT * FROM funds")
+    suspend fun getAllFundsList(): List<FundEntity>
+
+    @Query("DELETE FROM funds")
+    suspend fun deleteAllFunds()
+
     //────────────────{ DATA FLOW }────────────────
 
     @Query("SELECT * FROM funds WHERE id = :id")
