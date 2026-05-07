@@ -1,11 +1,11 @@
-Index: app/src/main/java/com/axoncodelabs/cashbox/ui/screens/UiEvent.kt
+Index: app/src/main/java/com/axoncodelabs/fundflow/ui/screens/UiEvent.kt
 IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
-diff --git a/app/src/main/java/com/axoncodelabs/cashbox/ui/screens/UiEvent.kt b/app/src/main/java/com/axoncodelabs/cashbox/ui/screens/UiEvent.kt
---- a/app/src/main/java/com/axoncodelabs/cashbox/ui/screens/UiEvent.kt
-+++ b/app/src/main/java/com/axoncodelabs/cashbox/ui/screens/UiEvent.kt	(date 1764785609614)
+diff --git a/app/src/main/java/com/axoncodelabs/fundflow/ui/screens/UiEvent.kt b/app/src/main/java/com/axoncodelabs/fundflow/ui/screens/UiEvent.kt
+--- a/app/src/main/java/com/axoncodelabs/fundflow/ui/screens/UiEvent.kt
++++ b/app/src/main/java/com/axoncodelabs/fundflow/ui/screens/UiEvent.kt	(date 1764785609614)
 @@ -8,5 +8,4 @@
          val action: String? = null,
      ) : UiEvent()

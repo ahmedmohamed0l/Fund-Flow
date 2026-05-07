@@ -1,11 +1,11 @@
-Index: app/src/main/java/com/axoncodelabs/cashbox/ui/navigation/BottomNav.kt
+Index: app/src/main/java/com/axoncodelabs/fundflow/ui/navigation/BottomNav.kt
 IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
-diff --git a/app/src/main/java/com/axoncodelabs/cashbox/ui/navigation/BottomNav.kt b/app/src/main/java/com/axoncodelabs/cashbox/ui/navigation/BottomNav.kt
---- a/app/src/main/java/com/axoncodelabs/cashbox/ui/navigation/BottomNav.kt
-+++ b/app/src/main/java/com/axoncodelabs/cashbox/ui/navigation/BottomNav.kt	(date 1765544879962)
+diff --git a/app/src/main/java/com/axoncodelabs/fundflow/ui/navigation/BottomNav.kt b/app/src/main/java/com/axoncodelabs/fundflow/ui/navigation/BottomNav.kt
+--- a/app/src/main/java/com/axoncodelabs/fundflow/ui/navigation/BottomNav.kt
++++ b/app/src/main/java/com/axoncodelabs/fundflow/ui/navigation/BottomNav.kt	(date 1765544879962)
 @@ -59,10 +59,19 @@
      val navBackStackEntry by navController.currentBackStackEntryAsState()
      val currentDestination = navBackStackEntry?.destination

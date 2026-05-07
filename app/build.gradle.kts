@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.axoncodelabs.cashbox"
+    namespace = "com.axoncodelabs.fundflow"
     compileSdk = 36
 
     buildFeatures {
@@ -15,7 +15,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.axoncodelabs.cashbox"
+        applicationId = "com.axoncodelabs.fundflow"
         minSdk = 26
         targetSdk = 36
         versionCode = 1

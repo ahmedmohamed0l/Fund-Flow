@@ -1,11 +1,11 @@
-Index: app/src/main/java/com/axoncodelabs/cashbox/ui/screens/expenses/ExpensesScreen.kt
+Index: app/src/main/java/com/axoncodelabs/fundflow/ui/screens/expenses/ExpensesScreen.kt
 IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
-diff --git a/app/src/main/java/com/axoncodelabs/cashbox/ui/screens/expenses/ExpensesScreen.kt b/app/src/main/java/com/axoncodelabs/cashbox/ui/screens/expenses/ExpensesScreen.kt
---- a/app/src/main/java/com/axoncodelabs/cashbox/ui/screens/expenses/ExpensesScreen.kt
-+++ b/app/src/main/java/com/axoncodelabs/cashbox/ui/screens/expenses/ExpensesScreen.kt
+diff --git a/app/src/main/java/com/axoncodelabs/fundflow/ui/screens/expenses/ExpensesScreen.kt b/app/src/main/java/com/axoncodelabs/fundflow/ui/screens/expenses/ExpensesScreen.kt
+--- a/app/src/main/java/com/axoncodelabs/fundflow/ui/screens/expenses/ExpensesScreen.kt
++++ b/app/src/main/java/com/axoncodelabs/fundflow/ui/screens/expenses/ExpensesScreen.kt
 @@ -267,9 +267,6 @@
      onConfirmBttnClick: (Long) -> Unit,
  ) {

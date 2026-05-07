@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Cash Box</string>
+    <string name="app_name" translatable="false">Fund Flow</string>
 
     <string name="App_Currency" translatable="false">EGP</string>
     <string name="Delete_Bttn">حذف</string>
