@@ -2,7 +2,8 @@
 <resources>
     <string name="SettingsScreen_Identifier">الإعدادات</string>
 
-    <string name="SettingsScreen_Snackbar_BackupSaved">تم استعاد النسخة الاحتياطية بنجاح</string>
+    <string name="SettingsScreen_Snackbar_BackupSaved">تم حفظ النسخة الاحتياطية بنجاح</string>
+    <string name="SettingsScreen_Snackbar_BackupRestored">تم استعاد النسخة الاحتياطية بنجاح</string>
     <string name="SettingsScreen_Snackbar_BackupDeleted">تم حذف النسخة الاحتياطية بنجاح</string>
 
     <string name="SettingsScreen_ChangeTheme">التحويل للوضع الداكن</string>

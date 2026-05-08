@@ -166,7 +166,7 @@ private fun SheetsHandler(
 
                 SettingsSheets.BackupSelection -> {
                     val backupRestored =
-                        stringResource(R.string.SettingsScreen_Snackbar_BackupSaved)
+                        stringResource(R.string.SettingsScreen_Snackbar_BackupRestored)
                     BackupSelectionSheet(
                         backups = backupList,
                         refreshBackups = refreshBackups,

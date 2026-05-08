@@ -236,7 +236,7 @@ private fun ProvideFundName(
     EditFundNameIcon(
         icon = Icons.Rounded.Edit,
         onSaveClick = onEditFundClick,
-        iconColor = MaterialTheme.colorScheme.onTertiary
+        iconColor = MaterialTheme.colorScheme.onBackground
     )
 }
 

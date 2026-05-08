@@ -79,7 +79,7 @@ fun FundSelectionBttn(
             )
             MyIcons.Arrow(
                 autoMirroredState = true,
-                size = 25.dp, color = finalBorderColor, angle = 180f
+                size = 25.dp, color = finalBorderColor
             )
         }
         if (isUnSelected) {
