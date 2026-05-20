@@ -21,8 +21,10 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -76,15 +78,13 @@ fun FundOptionsSheet(
     FundOptionsSheetRoot(
         isHideData = isHideData,
 
-        name = viewModel.name,
+        name = viewModel.fund?.name.orEmpty(),
         isEditMode = viewModel.isEditMode,
         onEditFundClick = { viewModel.onEvent(FundOptionsEvent.OnEditFundClick) },
-        onNameChange = { viewModel.onEvent(FundOptionsEvent.OnNameChange(it)) },
-        isNameEmpty = viewModel.isNameEmpty,
-        onSaveClick = { viewModel.onEvent(FundOptionsEvent.OnSaveClick) },
+        onSaveClick = { viewModel.onEvent(FundOptionsEvent.OnSaveClick(it)) },
 
-        isFundBalanceExcepted = viewModel.isFundBalanceExcepted,
-        onExceptFundToggle = { viewModel.onEvent(FundOptionsEvent.OnExceptFundToggle) },
+        isFundBalanceExcepted = viewModel.fund?.isExcepted ?: false,
+        onExceptFundToggle = { viewModel.onEvent(FundOptionsEvent.OnExceptFundToggle(it)) },
 
         onDeleteFundTransactionClick = { showDeletePopup.value = true }
     )
@@ -115,12 +115,10 @@ private fun FundOptionsSheetRoot(
     name: String,
     isEditMode: Boolean,
     onEditFundClick: () -> Unit,
-    onNameChange: (String) -> Unit,
-    isNameEmpty: Boolean,
-    onSaveClick: () -> Unit,
+    onSaveClick: (String) -> Unit,
 
     isFundBalanceExcepted: Boolean,
-    onExceptFundToggle: () -> Unit,
+    onExceptFundToggle: (Boolean) -> Unit,
 
     onDeleteFundTransactionClick: () -> Unit,
 ) {
@@ -142,8 +140,6 @@ private fun FundOptionsSheetRoot(
                     modifier = Modifier.weight(1f),
                     isHideData = isHideData,
                     name = name,
-                    onNameChange = onNameChange,
-                    isNameEmpty = isNameEmpty,
                     onSaveClick = onSaveClick
                 )
             } else {
@@ -189,20 +185,19 @@ private fun EditFundName(
     modifier: Modifier = Modifier,
     isHideData: Boolean,
     name: String,
-    onNameChange: (String) -> Unit,
-    isNameEmpty: Boolean,
-    onSaveClick: () -> Unit,
+    onSaveClick: (String) -> Unit,
 ) {
+    var currentName by remember { mutableStateOf(name) }
     Box(
         modifier = modifier.blur(if (isHideData) (1.5).dp else 0.dp)
     ) {
         SheetTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = hideDataMask(isHideData, text = (name)),
-            onValueChange = onNameChange,
+            value = hideDataMask(isHideData, text = (currentName)),
+            onValueChange = { currentName = it },
             keyboardType = KeyboardType.Text,
             singleLine = true,
-            isError = isNameEmpty,
+            isError = currentName.isBlank(),
             errorMsg = stringResource(R.string.Sheet_FundNameError)
         )
     }
@@ -210,7 +205,7 @@ private fun EditFundName(
 
     EditFundNameIcon(
         icon = Icons.Rounded.Check,
-        onSaveClick = onSaveClick,
+        onSaveClick = { onSaveClick(currentName) },
         iconColor = MaterialTheme.colorScheme.inversePrimary
     )
 }
@@ -245,11 +240,10 @@ private fun ProvideFundName(
 private fun ExceptFundSection(
     modifier: Modifier = Modifier,
     isFundBalanceExcepted: Boolean,
-    onExceptFundToggle: () -> Unit,
+    onExceptFundToggle: (Boolean) -> Unit,
 ) {
     Row(
-        modifier = modifier
-            .noRippleClickable { onExceptFundToggle() },
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -260,7 +254,7 @@ private fun ExceptFundSection(
         )
         Switch(
             checked = isFundBalanceExcepted,
-            onCheckedChange = { onExceptFundToggle() },
+            onCheckedChange = { onExceptFundToggle(it) },
             modifier = Modifier.width(70.dp),
             colors = SwitchDefaults.colors(
                 uncheckedTrackColor = MaterialTheme.colorScheme.background,

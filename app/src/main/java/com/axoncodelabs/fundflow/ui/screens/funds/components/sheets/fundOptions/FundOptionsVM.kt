@@ -21,20 +21,12 @@ class FundOptionsVM @Inject constructor(
     //──── UI State ────
     var fund by mutableStateOf<FundEntity?>(null)
         private set
-    var name by mutableStateOf("")
-        private set
 
     var isEditMode by mutableStateOf(true)
-        private set
-    var isNameEmpty by mutableStateOf(false)
-        private set
-
-    var isFundBalanceExcepted by mutableStateOf(false)
         private set
 
     //──── Helpers ────
     fun clearSheetData() {
-        isNameEmpty = false
         isEditMode = false
     }
 
@@ -42,8 +34,6 @@ class FundOptionsVM @Inject constructor(
     fun initData(fund: FundEntity) {
         //Set new
         this.fund = fund
-        name = fund.name
-        isFundBalanceExcepted = fund.isExcepted
 
         //Clear old
         clearSheetData()
@@ -59,37 +49,26 @@ class FundOptionsVM @Inject constructor(
                 isEditMode = true
             }
 
-            is FundOptionsEvent.OnNameChange -> {
-                name = event.name
-                isNameEmpty = false
-            }
-
-            FundOptionsEvent.OnSaveClick -> {
+            is FundOptionsEvent.OnSaveClick -> {
                 viewModelScope.launch {
-                    if (name.isBlank()) {
-                        isNameEmpty = true
+                    if (event.name.isBlank()) {
                         return@launch
                     }
                     fund?.let {
-                        repository.updateFund(
-                            it.copy(
-                                name = name
-                            )
-                        )
+                        val updatedFund = it.copy(name = event.name)
+                        repository.updateFund(updatedFund)
+                        fund = updatedFund
                     }
                     isEditMode = false
                 }
             }
 
-            FundOptionsEvent.OnExceptFundToggle -> {
+            is FundOptionsEvent.OnExceptFundToggle -> {
                 viewModelScope.launch {
-                    isFundBalanceExcepted = !isFundBalanceExcepted
                     fund?.let {
-                        repository.updateFund(
-                            it.copy(
-                                isExcepted = isFundBalanceExcepted
-                            )
-                        )
+                        val updatedFund = it.copy(isExcepted = event.isExcepted)
+                        repository.updateFund(updatedFund)
+                        fund = updatedFund
                     }
                 }
             }
