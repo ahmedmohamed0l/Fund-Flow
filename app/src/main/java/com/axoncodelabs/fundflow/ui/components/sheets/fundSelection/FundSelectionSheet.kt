@@ -127,7 +127,8 @@ private fun FundItem(
             text = fund.balance.formatAmount(),
             color = MaterialTheme.colorScheme.onBackground,
             style = MyFontStyle.large(),
-            align = Alignment.CenterEnd
+            align = Alignment.CenterEnd,
+            isAmount = true
         )
         AppCurrency(textColor = MaterialTheme.colorScheme.onBackground)
     }

@@ -13,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
@@ -75,7 +76,10 @@ class EditTransactionVM @Inject constructor(
     fun initTransaction(transaction: TransactionWithFund) {
         this.transaction = transaction
         fund = transaction.fund
-        amount = transaction.transaction.amount.toString()
+        amount = BigDecimal
+            .valueOf(transaction.transaction.amount)
+            .stripTrailingZeros()
+            .toPlainString()
         description = transaction.transaction.description
         selectedDate = transaction.transaction.date
 

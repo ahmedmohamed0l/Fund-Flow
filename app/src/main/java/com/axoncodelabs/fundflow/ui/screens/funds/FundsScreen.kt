@@ -275,7 +275,8 @@ private fun TotalFundsValue(
                 text = fundsTotalBalance.formatAmount(),
                 color = MaterialTheme.colorScheme.primary,
                 style = MyFontStyle.large(),
-                align = Alignment.CenterEnd
+                align = Alignment.CenterEnd,
+                isAmount = true
             )
             AppCurrency(textColor = MaterialTheme.colorScheme.primary)
         }
@@ -461,12 +462,13 @@ private fun FundHeader(
             horizontalArrangement = Arrangement.End
         ) {
             HideTextData(
-                modifier = Modifier.weight(1f, fill = false),
+                modifier = Modifier.weight(1f),
                 isHideData = isHideData,
                 text = fund.balance.formatAmount(),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MyFontStyle.large(),
-                align = Alignment.CenterEnd
+                align = Alignment.CenterEnd,
+                isAmount = true
             )
             AppCurrency(textColor = MaterialTheme.colorScheme.onBackground)
         }

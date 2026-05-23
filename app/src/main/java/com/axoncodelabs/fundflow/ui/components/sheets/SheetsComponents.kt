@@ -182,10 +182,12 @@ fun AvailableBalanceSection(
     availableBalance: Double,
     isAvailableNegative: Boolean,
 ) {
+    val balance =
+        if (availableBalance < 0.0) availableBalance.formatAmount() else "(${availableBalance.formatAmount()})"
     HideTextData(
         modifier = modifier,
         isHideData = isHideData,
-        text = (stringResource(R.string.Sheet_FundFromBalance) + " (${availableBalance.formatAmount()})"),
+        text = (stringResource(R.string.Sheet_FundFromBalance) + " $balance"),
         color = if (isAvailableNegative) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.inversePrimary,
         style = MyFontStyle.small(),
         align = Alignment.CenterEnd

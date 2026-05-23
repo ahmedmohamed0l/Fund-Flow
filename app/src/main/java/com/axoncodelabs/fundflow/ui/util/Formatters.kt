@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.axoncodelabs.fundflow.R
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -12,7 +13,7 @@ import java.util.Calendar
 import java.util.Locale
 
 //──── Double Formater ────
-private val formatter = DecimalFormat("#,##0.##;'(-'#,##0.##')'")
+private val formatter = DecimalFormat("#,##0.##;'(-'#,##0.##')'", DecimalFormatSymbols(Locale.US))
 fun Double.formatAmount(): String {
     return formatter.format(this)
 }
