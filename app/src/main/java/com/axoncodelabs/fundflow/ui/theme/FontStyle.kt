@@ -29,6 +29,12 @@ val Typography = Typography(
 object MyFontStyle {
 
     //──── Small ────
+    fun xxSmall() = TextStyle(
+        fontFamily = mainFont,
+        fontWeight = FontWeight.Normal,
+        fontSize = 10.sp
+    )
+
     fun xSmall() = TextStyle(
         fontFamily = mainFont,
         fontWeight = FontWeight.Normal,

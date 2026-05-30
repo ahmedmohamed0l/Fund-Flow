@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface FundFlowRepository {
     // ────────────────{ Backup & Restore }────────────────
-    suspend fun createBackup()
+    suspend fun createBackup(isAuto: Boolean)
     suspend fun getAvailableBackups(): List<BackupInfo>
     suspend fun restoreBackup(fileName: String)
     suspend fun deleteBackup(fileName: String)

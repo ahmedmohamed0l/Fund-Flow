@@ -49,8 +49,9 @@ fun Long.dateFormatter(formatType: DateTimeFormatter): String = Instant.ofEpochM
 
 /** > **To formate date for providing in UI** **/
 fun String.toMillisFromBackup(): Long? {
+    val clean = this.removeSuffix("_a").removeSuffix("_m")
     return runCatching {
-        LocalDateTime.parse(this, DateFormates.BackupParser)
+        LocalDateTime.parse(clean, DateFormates.BackupParser)
             .atZone(ZoneId.systemDefault())
             .toInstant()
             .toEpochMilli()

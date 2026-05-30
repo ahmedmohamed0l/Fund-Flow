@@ -185,11 +185,24 @@ private fun BackupItem(
                 .noRippleClickable { onSelect() },
             verticalAlignment = Alignment.CenterVertically
         ) {
-            MyIcons.BackupFile(
-                modifier = Modifier.offset(y = (-2.5).dp),
-                size = 25.dp,
-                color = if (isLatest) MaterialTheme.colorScheme.inversePrimary.copy(alpha = 0.6f) else MaterialTheme.colorScheme.outline,
-            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                MyIcons.BackupFile(
+                    modifier = Modifier.offset(y = (-2.5).dp),
+                    size = 25.dp,
+                    color = if (isLatest) MaterialTheme.colorScheme.inversePrimary.copy(alpha = 0.6f) else MaterialTheme.colorScheme.outline,
+                )
+
+                backup.isAuto?.let { isAuto ->
+                    Text(
+                        text = if (isAuto) stringResource(R.string.Sheet_ItsAutoBackup) else stringResource(R.string.Sheet_ItsManualBackup),
+                        color = if (isAuto) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                        style = MyFontStyle.xxSmall()
+                    )
+                }
+            }
             Spacer(Modifier.width(5.dp))
 
             Text(

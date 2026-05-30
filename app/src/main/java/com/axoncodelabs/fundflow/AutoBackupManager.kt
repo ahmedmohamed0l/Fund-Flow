@@ -10,7 +10,7 @@ class AutoBackupManager @Inject constructor(
     suspend fun run() {
         val enabled = repository.autoBackupFlow.first()
         if (enabled) {
-            repository.createBackup()
+            repository.createBackup(isAuto = true)
         }
     }
 }

@@ -60,9 +60,13 @@ class FundFlowRepositoryImpl @Inject constructor(
         }
 
     // ────────────────{ Backup & Restore }────────────────
-    override suspend fun createBackup() {
+    override suspend fun createBackup(isAuto: Boolean) {
         withContext(Dispatchers.IO) {
             val timestamp = System.currentTimeMillis()
+
+            if (isAuto) {
+                backupFileManager.deleteAutoBackupsForDate(timestamp)
+            }
 
             val data = BackupData(
                 funds = fundDao.getAllFundsList(),
@@ -74,7 +78,8 @@ class FundFlowRepositoryImpl @Inject constructor(
 
             backupFileManager.saveBackupFile(
                 json,
-                timestamp
+                timestamp,
+                isAuto
             ) ?: throw IOException("Could not save backup file")
 
             val backups = getAvailableBackups()
@@ -96,9 +101,16 @@ class FundFlowRepositoryImpl @Inject constructor(
             val dateStr = file.nameWithoutExtension.removePrefix("backup_")
             val millis = dateStr.toMillisFromBackup() ?: return@mapNotNull null
 
+            val isAuto: Boolean? = when {
+                dateStr.endsWith("_a") -> true
+                dateStr.endsWith("_m") -> false
+                else -> null
+            }
+
             BackupInfo(
                 folderName = file.name,
-                dateTimeMillis = millis
+                dateTimeMillis = millis,
+                isAuto = isAuto
             )
         }
     }

@@ -6,7 +6,8 @@ import kotlinx.serialization.Serializable
 
 data class BackupInfo(
     val folderName: String,
-    val dateTimeMillis: Long
+    val dateTimeMillis: Long,
+    val isAuto: Boolean? = null
 )
 
 @Serializable

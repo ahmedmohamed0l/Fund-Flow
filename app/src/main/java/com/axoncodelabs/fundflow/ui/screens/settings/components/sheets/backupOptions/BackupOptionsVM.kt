@@ -21,7 +21,7 @@ class BackupOptionsVM @Inject constructor(
         when (event) {
             BackupOptionsEvent.CreateBackup -> {
                 viewModelScope.launch {
-                    repository.createBackup()
+                    repository.createBackup(isAuto = false)
                     _closeEvent.send(Unit)
                 }
             }

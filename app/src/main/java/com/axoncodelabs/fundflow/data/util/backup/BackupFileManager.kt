@@ -34,13 +34,18 @@ class BackupFileManager @Inject constructor(
         return backupDir
     }
 
-    suspend fun saveBackupFile(content: String, timestamp: Long): String? =
+    suspend fun saveBackupFile(
+        content: String,
+        timestamp: Long,
+        isAuto: Boolean
+    ): String? =
         withContext(Dispatchers.IO) {
 
             val backupDir = getBackupDirectory() ?: return@withContext null
 
+            val suffix = if (isAuto) "_a" else "_m"
             val fileName =
-                BACKUP_FILE_PREFIX + FILE_DATE_FORMAT.format(Date(timestamp)) + BACKUP_FILE_EXT
+                BACKUP_FILE_PREFIX + FILE_DATE_FORMAT.format(Date(timestamp)) + suffix + BACKUP_FILE_EXT
 
             val file = File(backupDir, fileName)
 
@@ -69,6 +74,23 @@ class BackupFileManager @Inject constructor(
             } catch (e: Exception) {
                 null
             }
+        }
+
+    suspend fun deleteAutoBackupsForDate(dateMillis: Long): Boolean =
+        withContext(Dispatchers.IO) {
+
+            val backupDir = getBackupDirectory() ?: return@withContext false
+            val datePrefix = FILE_DATE_FORMAT.format(Date(dateMillis)).take(6) // "yyMMdd"
+
+            val autoFile = backupDir.listFiles()?.firstOrNull { file ->
+                file.isFile &&
+                        file.name.startsWith(BACKUP_FILE_PREFIX) &&
+                        file.name.endsWith("_a$BACKUP_FILE_EXT") &&
+                        file.name.removePrefix(BACKUP_FILE_PREFIX).take(6) == datePrefix
+            }
+            if (autoFile == null) return@withContext false
+
+            return@withContext autoFile.delete()
         }
 
     suspend fun deleteBackupFile(fileName: String): Boolean =
