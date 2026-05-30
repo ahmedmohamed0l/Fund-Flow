@@ -46,6 +46,21 @@ class ReportsViewModel @Inject constructor(
         }
     }
 
+    fun resetSelectedValues(){
+        _state.update {
+            it.copy(
+                selectedFund = null,
+                isSelectAllFunds = true,
+
+                selectedDate = System.currentTimeMillis(),
+                isSelectAllDates = false,
+                isSelectCurrentMonth = true,
+
+                exceptTransfers = false
+            )
+        }
+    }
+
     // ────────( Data Flows )────────
     private val selectedFundFlow = _state
         .map { it.selectedFund }

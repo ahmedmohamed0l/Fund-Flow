@@ -46,7 +46,7 @@ fun FundSelectionSheet(
         funds.value
     }
 
-    if (funds.value.isEmpty()) {
+    if (displayedFunds.isEmpty()) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()

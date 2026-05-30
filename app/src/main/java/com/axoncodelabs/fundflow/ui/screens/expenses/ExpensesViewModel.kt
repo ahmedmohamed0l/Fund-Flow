@@ -74,6 +74,14 @@ class ExpensesViewModel @Inject constructor(
         }
     }
 
+    fun resetSelectedDate(){
+        _state.update {
+            it.copy(
+                selectedDate = System.currentTimeMillis()
+            )
+        }
+    }
+
     //──── Events ────
     fun onEvent(event: ExpensesEvent) {
         when (event) {

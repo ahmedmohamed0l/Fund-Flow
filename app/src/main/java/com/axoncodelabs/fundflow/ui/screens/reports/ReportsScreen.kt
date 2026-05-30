@@ -87,6 +87,11 @@ fun ReportsScreen(
     val sheet = state.currentSheet
     val isHideData = state.isHideData
 
+    // Reset Selected Values
+    LaunchedEffect(Unit) {
+        viewModel.resetSelectedValues()
+    }
+
     // Clear Expanded Days
     val expandedDays = remember { mutableStateMapOf<Long, Boolean>() }
     LaunchedEffect(remember { Any() }) {

@@ -34,6 +34,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -80,6 +81,11 @@ fun ExpensesScreen(
 
     val expenses = state.expenses
     val expensesTotalValue = state.expensesTotalValue
+
+    // Reset Selected Date
+    LaunchedEffect(Unit) {
+        viewModel.resetSelectedDate()
+    }
 
     //──── AppTopBar Data ────
     SideEffect {
