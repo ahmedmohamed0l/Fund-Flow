@@ -11,6 +11,7 @@ import com.axoncodelabs.fundflow.data.local.entity.FundEntity
 import com.axoncodelabs.fundflow.data.local.entity.TransactionEntity
 import com.axoncodelabs.fundflow.data.local.entity.TransactionType
 import com.axoncodelabs.fundflow.data.repository.FundFlowRepository
+import com.axoncodelabs.fundflow.ui.util.getAdjustedTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -115,7 +116,7 @@ class AddExpenseVM @Inject constructor(
                             fundId = fund!!.id,
                             amount = amountDouble,
                             description = description,
-                            date = selectedDate,
+                            date = getAdjustedTime(selectedDate),
                             type = TransactionType.EXPENSE,
                             isTransfer = false
                         )
