@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -184,14 +185,25 @@ fun AvailableBalanceSection(
 ) {
     val balance =
         if (availableBalance < 0.0) availableBalance.formatAmount() else "(${availableBalance.formatAmount()})"
-    HideTextData(
+    Row(
         modifier = modifier,
-        isHideData = isHideData,
-        text = (stringResource(R.string.Sheet_FundFromBalance) + " $balance"),
-        color = if (isAvailableNegative) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.inversePrimary,
-        style = MyFontStyle.small(),
-        align = Alignment.CenterEnd
-    )
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = (stringResource(R.string.Sheet_FundFromBalance) + " "),
+            color = if (isAvailableNegative) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.inversePrimary,
+            style = MyFontStyle.small(),
+        )
+
+        HideTextData(
+            isHideData = isHideData,
+            text = balance,
+            color = if (isAvailableNegative) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.inversePrimary,
+            style = MyFontStyle.small(),
+            align = Alignment.CenterEnd,
+            isAmount = true
+        )
+    }
 }
 
 @Composable
