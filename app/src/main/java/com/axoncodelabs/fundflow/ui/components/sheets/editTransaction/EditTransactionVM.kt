@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.axoncodelabs.fundflow.data.local.entity.FundEntity
 import com.axoncodelabs.fundflow.data.local.relation.TransactionWithFund
 import com.axoncodelabs.fundflow.data.repository.FundFlowRepository
+import com.axoncodelabs.fundflow.ui.util.getAdjustedTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -136,7 +137,7 @@ class EditTransactionVM @Inject constructor(
                                 fundId = selectedFund.id,
                                 amount = amountDouble,
                                 description = description,
-                                date = selectedDate
+                                date = getAdjustedTime(selectedDate)
                             )
                         )
                     }
