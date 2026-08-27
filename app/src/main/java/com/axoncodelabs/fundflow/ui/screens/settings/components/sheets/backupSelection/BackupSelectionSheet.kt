@@ -1,10 +1,6 @@
 package com.axoncodelabs.fundflow.ui.screens.settings.components.sheets.backupSelection
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,10 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,12 +26,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.fundflow.R
 import com.axoncodelabs.fundflow.data.util.backup.BackupInfo
-import com.axoncodelabs.fundflow.ui.components.CustomSnackbar
 import com.axoncodelabs.fundflow.ui.components.noRippleClickable
 import com.axoncodelabs.fundflow.ui.theme.MyFontStyle
 import com.axoncodelabs.fundflow.ui.theme.MyIcons
 import com.axoncodelabs.fundflow.ui.util.backupDateFormater
-import kotlinx.coroutines.delay
 
 
 @Composable
@@ -55,67 +45,40 @@ fun BackupSelectionSheet(
             onClose()
         }
     }
-
-    //──── Custom Snackbar Handler ────
-    var isShowSnackbar by remember { mutableStateOf(false) }
-    var snackbarMessage by remember { mutableStateOf("") }
-    LaunchedEffect(isShowSnackbar) {
-        if (isShowSnackbar) {
-            delay(2500)
-            isShowSnackbar = false
-        }
-    }
-
-    Box(modifier = Modifier.fillMaxWidth()) {
-        if (backups.isEmpty()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp)
-                    .height(200.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = stringResource(R.string.Sheet_EmptyBackupList1),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MyFontStyle.large(),
-                    textAlign = TextAlign.Center
-                )
-                Spacer(Modifier.height(10.dp))
-                Text(
-                    text = stringResource(R.string.Sheet_EmptyBackupList2),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MyFontStyle.medium(),
-                    textAlign = TextAlign.Center
-                )
-            }
-        } else {
-            val backupDeletedMsg = stringResource(R.string.SettingsScreen_Snackbar_BackupDeleted)
-            BackupSelectionSheetRoot(
-                backups = backups,
-                onSelect = { fileName ->
-                    viewModel.onEvent(BackupSelectionEvent.OnSelectBackup(fileName))
-                },
-                onDelete = { fileName ->
-                    viewModel.onEvent(BackupSelectionEvent.OnDeleteBackup(fileName))
-                    refreshBackups()
-                    snackbarMessage = backupDeletedMsg
-                    isShowSnackbar = true
-                }
+    if (backups.isEmpty()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+                .height(200.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = stringResource(R.string.Sheet_EmptyBackupList1),
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MyFontStyle.large(),
+                textAlign = TextAlign.Center
+            )
+            Spacer(Modifier.height(10.dp))
+            Text(
+                text = stringResource(R.string.Sheet_EmptyBackupList2),
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MyFontStyle.medium(),
+                textAlign = TextAlign.Center
             )
         }
-
-        AnimatedVisibility(
-            visible = isShowSnackbar,
-            enter = fadeIn(),
-            exit = fadeOut(),
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 30.dp)
-        ) {
-            CustomSnackbar(message = snackbarMessage)
-        }
+    } else {
+        BackupSelectionSheetRoot(
+            backups = backups,
+            onSelect = { fileName ->
+                viewModel.onEvent(BackupSelectionEvent.OnSelectBackup(fileName))
+            },
+            onDelete = { fileName ->
+                viewModel.onEvent(BackupSelectionEvent.OnDeleteBackup(fileName))
+                refreshBackups()
+            }
+        )
     }
 }
 
