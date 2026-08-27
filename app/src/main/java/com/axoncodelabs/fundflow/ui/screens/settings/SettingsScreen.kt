@@ -1,10 +1,7 @@
 package com.axoncodelabs.fundflow.ui.screens.settings
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,13 +25,9 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,7 +41,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.fundflow.BuildConfig
 import com.axoncodelabs.fundflow.R
 import com.axoncodelabs.fundflow.data.util.backup.BackupInfo
-import com.axoncodelabs.fundflow.ui.components.CustomSnackbar
 import com.axoncodelabs.fundflow.ui.components.appTopBar.AppTopBarState
 import com.axoncodelabs.fundflow.ui.components.noRippleClickable
 import com.axoncodelabs.fundflow.ui.screens.settings.components.sheets.backupOptions.BackupOptionsSheet
@@ -57,7 +49,6 @@ import com.axoncodelabs.fundflow.ui.theme.MyFontStyle
 import com.axoncodelabs.fundflow.ui.theme.MyIcons
 import com.axoncodelabs.fundflow.ui.theme.MyRoundedCornerShape
 import com.axoncodelabs.fundflow.ui.util.backupDateFormater
-import kotlinx.coroutines.delay
 
 @Composable
 fun SettingsScreen(
@@ -73,60 +64,35 @@ fun SettingsScreen(
         onTopBarChange(AppTopBarState(titleRes = R.string.SettingsScreen_Identifier))
     }
 
-    //──── Custom Snackbar Handler ────
-    var isShowSnackbar by remember { mutableStateOf(false) }
-    var snackbarMessage by remember { mutableStateOf("") }
-    LaunchedEffect(isShowSnackbar) {
-        if (isShowSnackbar) {
-            delay(2500)
-            isShowSnackbar = false
+    //──── Sheets & Popups Handling ────
+    SheetsHandler(
+        sheet = sheet,
+        isAutoBackup = state.isAutoBackup ?: false,
+        onToggleAutoBackup = { viewModel.onEvent(SettingsEvent.ToggleAutoBackup(it)) },
+
+        backupList = state.backupList,
+        refreshBackups = { viewModel.refreshBackups() },
+        onClose = {
+            viewModel.onEvent(SettingsEvent.CloseSheet)
+            viewModel.refreshBackups()
         }
-    }
+    )
 
-    // For Custom Snackbar
-    Box(modifier = Modifier.fillMaxSize()) {
-        //──── Sheets & Popups Handling ────
-        SheetsHandler(
-            sheet = sheet,
-            isAutoBackup = state.isAutoBackup ?: false,
-            onToggleAutoBackup = { viewModel.onEvent(SettingsEvent.ToggleAutoBackup(it)) },
-            showSavedSnackbar = { snackbarMessage = it; isShowSnackbar = true },
+    //──── Screen Layout ────
+    SettingsScreenRoot(
+        darkMode = state.darkMode == true,
+        onThemeSwitcherClick = { viewModel.onEvent(SettingsEvent.ToggleTheme(it)) },
 
-            backupList = state.backupList,
-            refreshBackups = { viewModel.refreshBackups() },
-            onClose = {
-                viewModel.onEvent(SettingsEvent.CloseSheet)
-                viewModel.refreshBackups()
-            }
-        )
+        isHideData = state.isHideData,
+        onHideDataClick = { viewModel.onEvent(SettingsEvent.ToggleHideData(it)) },
 
-        //──── Screen Layout ────
-        SettingsScreenRoot(
-            darkMode = state.darkMode == true,
-            onThemeSwitcherClick = { viewModel.onEvent(SettingsEvent.ToggleTheme(it)) },
+        lastBackupDate = state.lastBackupDate?.backupDateFormater(),
+        onShowBackupSheet = {
+            viewModel.onEvent(SettingsEvent.SheetDisplayed(SettingsSheets.BackupOptions(state.isAutoBackup == false)))
+        },
 
-            isHideData = state.isHideData,
-            onHideDataClick = { viewModel.onEvent(SettingsEvent.ToggleHideData(it)) },
-
-            lastBackupDate = state.lastBackupDate?.backupDateFormater(),
-            onShowBackupSheet = {
-                viewModel.onEvent(SettingsEvent.SheetDisplayed(SettingsSheets.BackupOptions(state.isAutoBackup == false)))
-            },
-
-            onShowRestoreSheet = { viewModel.onEvent(SettingsEvent.SheetDisplayed(SettingsSheets.BackupSelection)) },
-        )
-
-        AnimatedVisibility(
-            visible = isShowSnackbar,
-            enter = fadeIn(),
-            exit = fadeOut(),
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 100.dp)
-        ) {
-            CustomSnackbar(message = snackbarMessage)
-        }
-    }
+        onShowRestoreSheet = { viewModel.onEvent(SettingsEvent.SheetDisplayed(SettingsSheets.BackupSelection)) },
+    )
 }
 
 // ────────────────{ Handlers }────────────────
@@ -136,7 +102,6 @@ private fun SheetsHandler(
     sheet: SettingsSheets,
     isAutoBackup: Boolean,
     onToggleAutoBackup: (Boolean) -> Unit,
-    showSavedSnackbar: (String) -> Unit,
 
     backupList: List<BackupInfo>,
     refreshBackups: () -> Unit,
@@ -152,27 +117,22 @@ private fun SheetsHandler(
         ) {
             when (sheet) {
                 is SettingsSheets.BackupOptions -> {
-                    val backupSaved = stringResource(R.string.SettingsScreen_Snackbar_BackupSaved)
                     BackupOptionsSheet(
                         isAutoBackup = isAutoBackup,
                         onToggleAutoBackup = onToggleAutoBackup,
                         onClose = {
                             onClose()
                             refreshBackups()
-                            showSavedSnackbar(backupSaved)
                         }
                     )
                 }
 
                 SettingsSheets.BackupSelection -> {
-                    val backupRestored =
-                        stringResource(R.string.SettingsScreen_Snackbar_BackupRestored)
                     BackupSelectionSheet(
                         backups = backupList,
                         refreshBackups = refreshBackups,
                         onClose = {
                             onClose()
-                            showSavedSnackbar(backupRestored)
                         }
                     )
                 }
