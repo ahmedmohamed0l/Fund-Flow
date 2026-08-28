@@ -62,12 +62,15 @@ fun FundOptionsSheet(
         viewModel.initData(fund)
     }
 
+    // Snackbar Messages
+    val fundTransactionsDeleted = stringResource(R.string.Snackbar_FundTransactions_Deleted)
+
     // Send Close Event
     LaunchedEffect(Unit) {
         viewModel.endSheetEvent.collect { result ->
             when (result) {
                 SheetResult.Deleted -> {
-                    onShowSnackbar(""/* TODO ToDo: Create Snackbar message. */)
+                    onShowSnackbar(fundTransactionsDeleted)
                     onClose()
                 }
 

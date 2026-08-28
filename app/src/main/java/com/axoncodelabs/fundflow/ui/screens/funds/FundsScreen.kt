@@ -194,6 +194,9 @@ private fun PopupsHandler(
     onDeleteFund: (FundEntity) -> Unit,
     onShowSnackbar: (String) -> Unit
 ) {
+    // Snackbar Messages
+    val fundDeleted = stringResource(R.string.Snackbar_Fund_Deleted)
+
     when (popup) {
         is FundsPopup.DeleteFund -> {
             Dialog(
@@ -205,7 +208,7 @@ private fun PopupsHandler(
                         when (result) {
                             PopupResult.Deleted -> {
                                 onDeleteFund(popup.fund)
-                                onShowSnackbar(""/* TODO ToDo: Create Snackbar message. */)
+                                onShowSnackbar(fundDeleted)
                             }
 
                             PopupResult.Cancelled -> onClose()

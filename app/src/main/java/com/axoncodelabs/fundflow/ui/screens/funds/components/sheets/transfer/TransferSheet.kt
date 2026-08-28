@@ -40,12 +40,15 @@ fun TransferSheet(
         viewModel.initTransaction(fromFund)
     }
 
+    // Snackbar Messages
+    val transferAdded = stringResource(R.string.Snackbar_Transfer_Added)
+
     // Send Close Event
     LaunchedEffect(Unit) {
         viewModel.endSheetEvent.collect { result ->
             when (result) {
                 SheetResult.Added -> {
-                    onShowSnackbar(""/* TODO ToDo: Create Snackbar message. */)
+                    onShowSnackbar(transferAdded)
                     onClose()
                 }
 

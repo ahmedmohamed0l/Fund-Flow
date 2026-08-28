@@ -36,12 +36,15 @@ fun AddAmountSheet(
         viewModel.initData(fund)
     }
 
+    // Snackbar Messages
+    val amountAdded = stringResource(R.string.Snackbar_Amount_Added)
+
     // Send Close Event
     LaunchedEffect(Unit) {
         viewModel.endSheetEvent.collect { result ->
             when (result) {
                 SheetResult.Added -> {
-                    onShowSnackbar(""/* TODO ToDo: Create Snackbar message. */)
+                    onShowSnackbar(amountAdded)
                     onClose()
                 }
 

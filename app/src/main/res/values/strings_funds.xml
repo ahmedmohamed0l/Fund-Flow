@@ -9,5 +9,4 @@
 
     <string name="FundsScreen_AddBalance_Bttn">أضف رصيد</string>
     <string name="FundsScreen_FundsTransfer_Bttn">تحويل لصندوق آخر</string>
-    <!--    <string name="FundsScreen_DeleteFunds_Bttn">حذف</string>-->
 </resources>
