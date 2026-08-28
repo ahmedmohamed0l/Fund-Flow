@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="SettingsScreen_Identifier">الإعدادات</string>
+    <string name="SettingsScreen_Identifier">Settings</string>
 
-    <string name="SettingsScreen_ChangeTheme">التحويل للوضع الداكن</string>
-    <string name="SettingsScreen_HideData">إخفاء جميع البيانات</string>
-    <string name="SettingsScreen_Backup">حفظ نسخة احتياطية</string>
-    <string name="SettingsScreen_Restore">استعادة النسخ الاحتياطية</string>
+    <string name="SettingsScreen_ChangeTheme">Switch to dark mode</string>
+    <string name="SettingsScreen_HideData">Hide all data</string>
+    <string name="SettingsScreen_Backup">Save backup</string>
+    <string name="SettingsScreen_Restore">Restore backups</string>
 </resources>

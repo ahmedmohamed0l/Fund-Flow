@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="FundsScreen_Identifier">الصناديق</string>
+
+    <string name="FundsScreen_FundsTotal">مجموع الصناديق :</string>
+
+    <string name="FundsScreen_EmptyFundsPage_Title">ابدأ في إضافة الصناديق لتتمكن من إدارة ميزانيتك وإضافة مصاريف</string>
+    <string name="FundsScreen_EmptyFundsPage_Description">أضف كل ميزانياتك مثل مصاريف البيت، الحساب البنكي، إلتزامات شهرية… عشان تقدر تضيف أو تصرف من الصندوق أو تحول بينهم</string>
+
+    <string name="FundsScreen_AddBalance_Bttn">أضف رصيد</string>
+    <string name="FundsScreen_FundsTransfer_Bttn">تحويل لصندوق آخر</string>
+</resources>

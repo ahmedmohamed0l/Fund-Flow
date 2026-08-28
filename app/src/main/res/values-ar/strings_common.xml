@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Delete_Bttn">حذف</string>
+    <string name="Cancel_Bttn">إلغاء</string>
+</resources>
