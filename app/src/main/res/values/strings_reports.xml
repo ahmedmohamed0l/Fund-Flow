@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="ReportsScreen_Identifier">التقارير</string>
+    <string name="ReportsScreen_Identifier">Reports</string>
 
-    <string name="ReportsScreen_FundSelection">الصندوق</string>
-    <string name="ReportsScreen_ZoneSelection">الفترة</string>
+    <string name="ReportsScreen_FundSelection">Fund</string>
+    <string name="ReportsScreen_ZoneSelection">Period</string>
 
-    <string name="ReportsScreen_SelectAll">إختيار الكل</string>
-    <string name="ReportsScreen_SelectCurrentMonth">اختيار الشهر الحالي</string>
-    <string name="ReportsScreen_AllSelected">الكل</string>
+    <string name="ReportsScreen_SelectAll">Select all</string>
+    <string name="ReportsScreen_SelectCurrentMonth">Select current month</string>
+    <string name="ReportsScreen_AllSelected">All</string>
 
-    <string name="ReportsScreen_ExceptTransfer">إستثناء عمليات التحويل من المجموع</string>
-    <string name="ReportsScreen_Income_Identifier">الإيرادات</string>
-    <string name="ReportsScreen_Expense_Identifier">المصروفات</string>
+    <string name="ReportsScreen_ExceptTransfer">Exclude transfers from total</string>
+    <string name="ReportsScreen_Income_Identifier">Income</string>
+    <string name="ReportsScreen_Expense_Identifier">Expenses</string>
 
-    <string name="ReportsScreen_TransferTransaction">عملية تحويل بين الصناديق</string>
+    <string name="ReportsScreen_TransferTransaction">Transfer between funds</string>
 
-    <string name="ReportsScreen_NoReports_Title">لا توجد تقارير في هذه الفترة</string>
-    <string name="ReportsScreen_NoReports_Description">يمكنك تغيير الفترة أو الصندوق لمشاهدة نتائج مختلفة</string>
+    <string name="ReportsScreen_NoReports_Title">No reports for this period</string>
+    <string name="ReportsScreen_NoReports_Description">You can change the period or fund to see different results</string>
 </resources>

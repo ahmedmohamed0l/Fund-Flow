@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="ExpensesScreen_Identifier">المصروفات</string>
+    <string name="ExpensesScreen_Identifier">Expenses</string>
 
-    <string name="ExpensesScreen_DateSelect">مصروفات يوم</string>
-    <string name="ExpensesScreen_ExpensesTotal">إجمالي مصروفات اليوم :</string>
+    <string name="ExpensesScreen_DateSelect">Expenses for</string>
+    <string name="ExpensesScreen_ExpensesTotal">Total day expenses :</string>
 
-    <string name="ExpensesScreen_EmptyExpensesPage_Title">ابدأ في إضافة مصروفاتك اليومية لتتمكن من مشاهدتها لاحقاً</string>
-    <string name="ExpensesScreen_EmptyExpensesPage_Description">ولا تنسي أن تكتب كل المصروفات حتي لو كانت صغيرة مثل المواصلات، وجبة الإفطار، مصروفات المنزل، مصروف الأولاد…</string>
+    <string name="ExpensesScreen_EmptyExpensesPage_Title">Start adding your daily expenses to view them here later</string>
+    <string name="ExpensesScreen_EmptyExpensesPage_Description">And don\'t forget to add all your expenses, even small ones like transportation, breakfast, household expenses, or your children\'s expenses…</string>
 
-    <string name="ExpensesScreen_AddExpenses_Butt">أضف مصروف</string>
+    <string name="ExpensesScreen_AddExpenses_Butt">Add expense</string>
 </resources>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Snackbar_Expense_Added">تم إضافة المصروف ✔</string>
+
+    <string name="Snackbar_Transaction_Updated">تم تعديل العملية بنجاح ✔</string>
+    <string name="Snackbar_Transaction_Deleted">تم حذف العملية بنجاح ✔</string>
+
+    <string name="Snackbar_Fund_Added">تم إنشاء صندوق جديد ✔</string>
+    <string name="Snackbar_Amount_Added">تم إضافة الرصيد ✔</string>
+    <string name="Snackbar_FundTransactions_Deleted">تم حذف جميع معاملات الصندوق ✔</string>
+    <string name="Snackbar_Transfer_Added">تم التحويل بين الصندوقين بنجاح ✔</string>
+    <string name="Snackbar_Fund_Deleted">تم حذف الصندوق ✔</string>
+
+    <string name="Snackbar_Backup_Saved">تم حفظ النسخة الاحتياطية بنجاح ✔</string>
+    <string name="Snackbar_Backup_Restored">تم استعاد النسخة الاحتياطية بنجاح ✔</string>
+    <string name="Snackbar_Backup_Deleted">تم حذف النسخة الاحتياطية بنجاح ✔</string>
+</resources>

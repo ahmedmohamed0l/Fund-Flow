@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="DatePickerTodaySelect">اختيار تاريخ النهارده</string>
+    <string name="DatePickerTodaySelect">Select today</string>
 
-    <string name="Popups_DeleteFundConfirm_Message">هل أنت متأكد من حذف الصندوق</string>
-    <string name="Popups_DeleteFundTransactionsConfirm_Message">هل أنت متأكد من حذف كل معاملات الصندوق</string>
-    <string name="Popups_DeleteTransactionConfirm_Message">هل أنت متأكد من حذف المعاملة</string>
+    <string name="Popups_DeleteFundConfirm_Message">Are you sure you want to delete this fund?</string>
+    <string name="Popups_DeleteFundTransactionsConfirm_Message">Are you sure you want to delete all transactions for this fund?</string>
+    <string name="Popups_DeleteTransactionConfirm_Message">Are you sure you want to delete this transaction?</string>
 
-    <string name="Popups_DatePickerConfirm_Bttn">إختيار</string>
+    <string name="Popups_DatePickerConfirm_Bttn">Select</string>
 
-    <string name="Popups_MonthPickerTitle">اختر فترة التقارير</string>
-    <string name="Popups_MonthPicker_Year">السنة</string>
-    <string name="Popups_MonthPicker_Month">الشهر</string>
+    <string name="Popups_MonthPickerTitle">Select report period</string>
+    <string name="Popups_MonthPicker_Year">Year</string>
+    <string name="Popups_MonthPicker_Month">Month</string>
 
 </resources>
