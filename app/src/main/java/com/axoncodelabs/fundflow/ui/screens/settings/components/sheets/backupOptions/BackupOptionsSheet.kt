@@ -38,12 +38,15 @@ fun BackupOptionsSheet(
     onClose: () -> Unit,
     onShowSnackbar: (String) -> Unit
 ) {
+    // Snackbar Messages
+    val backupSaved = stringResource(R.string.Snackbar_Backup_Saved)
+
     // Send Close Event
     LaunchedEffect(Unit) {
         viewModel.endSheetEvent.collect { result ->
             when (result) {
                 SheetResult.Added -> {
-                    onShowSnackbar(""/* TODO ToDo: Create Snackbar message. */)
+                    onShowSnackbar(backupSaved)
                     onClose()
                 }
 

@@ -51,17 +51,21 @@ fun EditTransactionSheet(
         viewModel.initTransaction(transaction)
     }
 
+    // Snackbar Messages
+    val transactionUpdated = stringResource(R.string.Snackbar_Transaction_Updated)
+    val transactionDeleted = stringResource(R.string.Snackbar_Transaction_Deleted)
+
     // Send Close Event
     LaunchedEffect(Unit) {
         viewModel.endSheetEvent.collect { result ->
             when (result) {
                 SheetResult.Updated -> {
-                    onShowSnackbar(""/* TODO ToDo: Create Snackbar message. */)
+                    onShowSnackbar(transactionUpdated)
                     onClose()
                 }
 
                 SheetResult.Deleted -> {
-                    onShowSnackbar(""/* TODO ToDo: Create Snackbar message. */)
+                    onShowSnackbar(transactionDeleted)
                     onClose()
                 }
 

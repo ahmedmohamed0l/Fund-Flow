@@ -41,17 +41,21 @@ fun BackupSelectionSheet(
     onClose: () -> Unit,
     onShowSnackbar: (String) -> Unit
 ) {
+    // Snackbar Messages
+    val backupRestored = stringResource(R.string.Snackbar_Backup_Restored)
+    val backupDeleted = stringResource(R.string.Snackbar_Backup_Deleted)
+
     // Send Close Event
     LaunchedEffect(Unit) {
         viewModel.endSheetEvent.collect { result ->
             when (result) {
                 SheetResult.Updated -> {
-                    onShowSnackbar(""/* TODO ToDo: Create Snackbar message. */)
+                    onShowSnackbar(backupRestored)
                     onClose()
                 }
 
                 SheetResult.Deleted -> {
-                    onShowSnackbar(""/* TODO ToDo: Create Snackbar message. */)
+                    onShowSnackbar(backupDeleted)
                     onClose()
                 }
 
