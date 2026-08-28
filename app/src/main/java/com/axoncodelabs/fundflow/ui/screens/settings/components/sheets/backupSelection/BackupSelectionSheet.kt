@@ -27,6 +27,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.fundflow.R
 import com.axoncodelabs.fundflow.data.util.backup.BackupInfo
 import com.axoncodelabs.fundflow.ui.components.noRippleClickable
+import com.axoncodelabs.fundflow.ui.components.sheets.SheetResult
 import com.axoncodelabs.fundflow.ui.theme.MyFontStyle
 import com.axoncodelabs.fundflow.ui.theme.MyIcons
 import com.axoncodelabs.fundflow.ui.util.backupDateFormater
@@ -38,11 +39,24 @@ fun BackupSelectionSheet(
     backups: List<BackupInfo>,
     refreshBackups: () -> Unit,
     onClose: () -> Unit,
+    onShowSnackbar: (String) -> Unit
 ) {
     // Send Close Event
     LaunchedEffect(Unit) {
-        viewModel.closeEvent.collect {
-            onClose()
+        viewModel.endSheetEvent.collect { result ->
+            when (result) {
+                SheetResult.Updated -> {
+                    onShowSnackbar(""/* TODO ToDo: Create Snackbar message. */)
+                    onClose()
+                }
+
+                SheetResult.Deleted -> {
+                    onShowSnackbar(""/* TODO ToDo: Create Snackbar message. */)
+                    onClose()
+                }
+
+                else -> Unit
+            }
         }
     }
     if (backups.isEmpty()) {

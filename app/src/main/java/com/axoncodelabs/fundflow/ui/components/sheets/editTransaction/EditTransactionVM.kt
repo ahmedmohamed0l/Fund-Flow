@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.axoncodelabs.fundflow.data.local.entity.FundEntity
 import com.axoncodelabs.fundflow.data.local.relation.TransactionWithFund
 import com.axoncodelabs.fundflow.data.repository.FundFlowRepository
+import com.axoncodelabs.fundflow.ui.components.sheets.SheetResult
 import com.axoncodelabs.fundflow.ui.util.getAdjustedTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -90,8 +91,8 @@ class EditTransactionVM @Inject constructor(
     }
 
     //──── Events ────
-    private val _closeEvent = Channel<Unit>(Channel.CONFLATED)
-    val closeEvent = _closeEvent.receiveAsFlow()
+    private val _endSheetEvent = Channel<SheetResult>(Channel.CONFLATED)
+    val endSheetEvent = _endSheetEvent.receiveAsFlow()
 
     fun onEvent(event: EditTransactionEvent) {
         when (event) {
@@ -141,7 +142,7 @@ class EditTransactionVM @Inject constructor(
                             )
                         )
                     }
-                    _closeEvent.send(Unit)
+                    _endSheetEvent.send(SheetResult.Updated)
                 }
             }
 
@@ -150,13 +151,13 @@ class EditTransactionVM @Inject constructor(
                     transaction?.transaction?.let { transaction ->
                         repository.deleteTransaction(transaction)
                     }
-                    _closeEvent.send(Unit)
+                    _endSheetEvent.send(SheetResult.Deleted)
                 }
             }
 
             EditTransactionEvent.OnCancelClick -> {
                 viewModelScope.launch {
-                    _closeEvent.send(Unit)
+                    _endSheetEvent.send(SheetResult.Cancelled)
                 }
             }
         }

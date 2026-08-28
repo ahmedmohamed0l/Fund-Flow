@@ -19,21 +19,30 @@ import com.axoncodelabs.fundflow.R
 import com.axoncodelabs.fundflow.ui.components.MainBttn
 import com.axoncodelabs.fundflow.ui.components.sheets.SheetFieldLabel
 import com.axoncodelabs.fundflow.ui.components.sheets.SheetNumField
+import com.axoncodelabs.fundflow.ui.components.sheets.SheetResult
 import com.axoncodelabs.fundflow.ui.components.sheets.SheetTextField
 
 @Composable
 fun AddFundSheet(
     viewModel: AddFundVM = hiltViewModel(),
     onClose: () -> Unit,
+    onShowSnackbar: (String) -> Unit
 ) {
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(Unit) {
         viewModel.initData()
     }
 
     // Send Close Event
     LaunchedEffect(Unit) {
-        viewModel.closeEvent.collect {
-            onClose()
+        viewModel.endSheetEvent.collect { result ->
+            when (result) {
+                SheetResult.Added -> {
+                    onShowSnackbar(""/* TODO ToDo: Create Snackbar message. */)
+                    onClose()
+                }
+
+                else -> Unit
+            }
         }
     }
 

@@ -68,7 +68,8 @@ import com.axoncodelabs.fundflow.ui.util.formatAmount
 @Composable
 fun ExpensesScreen(
     viewModel: ExpensesViewModel = hiltViewModel(),
-    onTopBarChange: (AppTopBarState) -> Unit
+    onTopBarChange: (AppTopBarState) -> Unit,
+    onShowSnackbar: (String) -> Unit
 ) {
     //──── State & ViewModel Setup ────
     val state by viewModel.state.collectAsState()
@@ -97,7 +98,8 @@ fun ExpensesScreen(
         sheet = sheet,
         isHideData = isHideData,
         selectedDate = selectedDate,
-        onClose = { viewModel.onEvent(ExpensesEvent.CloseSheet) }
+        onClose = { viewModel.onEvent(ExpensesEvent.CloseSheet) },
+        onShowSnackbar = onShowSnackbar
     )
 
     PopupsHandler(
@@ -146,7 +148,8 @@ private fun SheetsHandler(
     sheet: ExpensesSheets,
     isHideData: Boolean,
     selectedDate: Long,
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    onShowSnackbar: (String) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -161,7 +164,8 @@ private fun SheetsHandler(
                     AddExpenseSheet(
                         isHideData = isHideData,
                         selectedDate = selectedDate,
-                        onClose = onClose
+                        onClose = onClose,
+                        onShowSnackbar = onShowSnackbar
                     )
                 }
 
@@ -169,7 +173,8 @@ private fun SheetsHandler(
                     EditTransactionSheet(
                         isHideData = isHideData,
                         transaction = sheet.expense,
-                        onClose = onClose
+                        onClose = onClose,
+                        onShowSnackbar = onShowSnackbar
                     )
                 }
 

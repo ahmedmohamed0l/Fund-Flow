@@ -38,11 +38,13 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.fundflow.R
 import com.axoncodelabs.fundflow.data.local.entity.FundEntity
-import com.axoncodelabs.fundflow.ui.components.DeletePopup
 import com.axoncodelabs.fundflow.ui.components.HideTextData
 import com.axoncodelabs.fundflow.ui.components.hideDataMask
 import com.axoncodelabs.fundflow.ui.components.noRippleClickable
+import com.axoncodelabs.fundflow.ui.components.sheets.SheetResult
 import com.axoncodelabs.fundflow.ui.components.sheets.SheetTextField
+import com.axoncodelabs.fundflow.ui.components.sheets.popups.DeletePopup
+import com.axoncodelabs.fundflow.ui.components.sheets.popups.PopupResult
 import com.axoncodelabs.fundflow.ui.theme.MyFontStyle
 import com.axoncodelabs.fundflow.ui.theme.MyRoundedCornerShape
 
@@ -52,6 +54,7 @@ fun FundOptionsSheet(
     fund: FundEntity,
     viewModel: FundOptionsVM = hiltViewModel(),
     onClose: () -> Unit,
+    onShowSnackbar: (String) -> Unit,
 ) {
     val showDeletePopup = remember { mutableStateOf(false) }
 
@@ -61,18 +64,34 @@ fun FundOptionsSheet(
 
     // Send Close Event
     LaunchedEffect(Unit) {
-        viewModel.closeEvent.collect {
-            onClose()
+        viewModel.endSheetEvent.collect { result ->
+            when (result) {
+                SheetResult.Deleted -> {
+                    onShowSnackbar(""/* TODO ToDo: Create Snackbar message. */)
+                    onClose()
+                }
+
+                SheetResult.Cancelled -> onClose()
+
+                else -> Unit
+            }
         }
     }
 
     DeleteConfirmationDialog(
         show = showDeletePopup.value,
-        onDelete = {
-            viewModel.onEvent(FundOptionsEvent.OnDeleteClick)
-            showDeletePopup.value = false
-        },
-        onClosePop = { showDeletePopup.value = false }
+        onEndPopup = { result ->
+            when (result) {
+                PopupResult.Deleted -> {
+                    viewModel.onEvent(FundOptionsEvent.OnDeleteClick)
+                    showDeletePopup.value = false
+                }
+
+                PopupResult.Cancelled -> {
+                    showDeletePopup.value = false
+                }
+            }
+        }
     )
 
     FundOptionsSheetRoot(
@@ -93,15 +112,13 @@ fun FundOptionsSheet(
 @Composable
 private fun DeleteConfirmationDialog(
     show: Boolean,
-    onDelete: () -> Unit,
-    onClosePop: () -> Unit
+    onEndPopup: (PopupResult) -> Unit
 ) {
     if (show) {
-        Dialog(onDismissRequest = onClosePop) {
+        Dialog(onDismissRequest = { onEndPopup(PopupResult.Cancelled) }) {
             DeletePopup(
                 title = stringResource(id = R.string.Popups_DeleteTransactionConfirm_Message),
-                onDelete = onDelete,
-                onCancel = onClosePop
+                onEndPopup = onEndPopup
             )
         }
     }
