@@ -12,6 +12,7 @@ import com.axoncodelabs.fundflow.data.local.entity.TransactionEntity
 import com.axoncodelabs.fundflow.data.local.entity.TransactionType
 import com.axoncodelabs.fundflow.data.repository.FundFlowRepository
 import com.axoncodelabs.fundflow.data.util.StringProvider
+import com.axoncodelabs.fundflow.ui.components.sheets.SheetResult
 import com.axoncodelabs.fundflow.ui.util.getAdjustedTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -56,8 +57,8 @@ class AddAmountVM @Inject constructor(
     }
 
     //──── Events ────
-    private val _closeEvent = Channel<Unit>(Channel.CONFLATED)
-    val closeEvent = _closeEvent.receiveAsFlow()
+    private val _endSheetEvent = Channel<SheetResult>(Channel.CONFLATED)
+    val endSheetEvent = _endSheetEvent.receiveAsFlow()
 
     fun onEvent(event: AddAmountEvent) {
         when (event) {
@@ -99,7 +100,7 @@ class AddAmountVM @Inject constructor(
                         )
                     }
                     clearSheetData()
-                    _closeEvent.send(Unit)
+                    _endSheetEvent.send(SheetResult.Added)
                 }
             }
         }

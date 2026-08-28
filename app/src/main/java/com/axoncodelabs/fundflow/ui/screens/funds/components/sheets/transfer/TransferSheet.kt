@@ -24,6 +24,7 @@ import com.axoncodelabs.fundflow.ui.components.sheets.FundNameSection
 import com.axoncodelabs.fundflow.ui.components.sheets.LabelAmountSection
 import com.axoncodelabs.fundflow.ui.components.sheets.LabelDescriptionSection
 import com.axoncodelabs.fundflow.ui.components.sheets.SheetFieldLabel
+import com.axoncodelabs.fundflow.ui.components.sheets.SheetResult
 import com.axoncodelabs.fundflow.ui.components.sheets.fundSelection.FundSelectionBttn
 import java.util.Calendar
 
@@ -33,6 +34,7 @@ fun TransferSheet(
     fromFund: FundEntity,
     viewModel: TransferVM = hiltViewModel(),
     onClose: () -> Unit,
+    onShowSnackbar: (String) -> Unit
 ) {
     LaunchedEffect(key1 = fromFund.id) {
         viewModel.initTransaction(fromFund)
@@ -40,8 +42,15 @@ fun TransferSheet(
 
     // Send Close Event
     LaunchedEffect(Unit) {
-        viewModel.closeEvent.collect {
-            onClose()
+        viewModel.endSheetEvent.collect { result ->
+            when (result) {
+                SheetResult.Added -> {
+                    onShowSnackbar(""/* TODO ToDo: Create Snackbar message. */)
+                    onClose()
+                }
+
+                else -> Unit
+            }
         }
     }
 

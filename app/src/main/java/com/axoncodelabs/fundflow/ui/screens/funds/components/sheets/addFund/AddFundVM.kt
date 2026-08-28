@@ -9,6 +9,7 @@ import com.axoncodelabs.fundflow.data.local.entity.FundEntity
 import com.axoncodelabs.fundflow.data.local.entity.TransactionEntity
 import com.axoncodelabs.fundflow.data.local.entity.TransactionType
 import com.axoncodelabs.fundflow.data.repository.FundFlowRepository
+import com.axoncodelabs.fundflow.ui.components.sheets.SheetResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -45,8 +46,8 @@ class AddFundVM @Inject constructor(
     }
 
     //──── Events ────
-    private val _closeEvent = Channel<Unit>(Channel.CONFLATED)
-    val closeEvent = _closeEvent.receiveAsFlow()
+    private val _endSheetEvent = Channel<SheetResult>(Channel.CONFLATED)
+    val endSheetEvent = _endSheetEvent.receiveAsFlow()
 
     fun onEvent(event: AddFundEvent) {
         when (event) {
@@ -86,7 +87,7 @@ class AddFundVM @Inject constructor(
                         )
                     )
                     clearSheetData()
-                    _closeEvent.send(Unit)
+                    _endSheetEvent.send(SheetResult.Added)
                 }
             }
         }

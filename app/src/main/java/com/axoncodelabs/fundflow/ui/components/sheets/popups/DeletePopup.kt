@@ -1,4 +1,4 @@
-package com.axoncodelabs.fundflow.ui.components
+package com.axoncodelabs.fundflow.ui.components.sheets.popups
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,14 +18,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.axoncodelabs.fundflow.R
+import com.axoncodelabs.fundflow.ui.components.noRippleClickable
 import com.axoncodelabs.fundflow.ui.theme.MyFontStyle
 import com.axoncodelabs.fundflow.ui.theme.MyRoundedCornerShape
 
 @Composable
 fun DeletePopup(
     title: String,
-    onDelete: () -> Unit,
-    onCancel: () -> Unit,
+    onEndPopup: (PopupResult) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -51,13 +51,13 @@ fun DeletePopup(
                 text = stringResource(id = R.string.Cancel_Bttn),
                 color = MaterialTheme.colorScheme.primary,
                 style = MyFontStyle.small(),
-                modifier = Modifier.noRippleClickable { onCancel() }
+                modifier = Modifier.noRippleClickable { onEndPopup(PopupResult.Cancelled) }
             )
             Text(
                 text = stringResource(id = R.string.Delete_Bttn),
                 color = MaterialTheme.colorScheme.error,
                 style = MyFontStyle.small(),
-                modifier = Modifier.noRippleClickable { onDelete() })
+                modifier = Modifier.noRippleClickable { onEndPopup(PopupResult.Deleted) })
 
         }
     }

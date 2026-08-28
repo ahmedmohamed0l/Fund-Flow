@@ -54,6 +54,7 @@ import com.axoncodelabs.fundflow.ui.util.backupDateFormater
 fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
     onTopBarChange: (AppTopBarState) -> Unit,
+    onShowSnackbar: (String) -> Unit
 ) {
     //──── State & ViewModel Setup ────
     val state by viewModel.state.collectAsState()
@@ -75,7 +76,8 @@ fun SettingsScreen(
         onClose = {
             viewModel.onEvent(SettingsEvent.CloseSheet)
             viewModel.refreshBackups()
-        }
+        },
+        onShowSnackbar = onShowSnackbar
     )
 
     //──── Screen Layout ────
@@ -105,7 +107,8 @@ private fun SheetsHandler(
 
     backupList: List<BackupInfo>,
     refreshBackups: () -> Unit,
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    onShowSnackbar: (String) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -123,7 +126,8 @@ private fun SheetsHandler(
                         onClose = {
                             onClose()
                             refreshBackups()
-                        }
+                        },
+                        onShowSnackbar = onShowSnackbar
                     )
                 }
 
@@ -131,9 +135,8 @@ private fun SheetsHandler(
                     BackupSelectionSheet(
                         backups = backupList,
                         refreshBackups = refreshBackups,
-                        onClose = {
-                            onClose()
-                        }
+                        onClose = onClose,
+                        onShowSnackbar = onShowSnackbar
                     )
                 }
 

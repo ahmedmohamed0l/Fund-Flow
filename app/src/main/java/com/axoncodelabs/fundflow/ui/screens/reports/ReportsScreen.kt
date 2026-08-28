@@ -79,7 +79,8 @@ import com.axoncodelabs.fundflow.ui.util.startOfDay
 @Composable
 fun ReportsScreen(
     viewModel: ReportsViewModel = hiltViewModel(),
-    onTopBarChange: (AppTopBarState) -> Unit
+    onTopBarChange: (AppTopBarState) -> Unit,
+    onShowSnackbar: (String) -> Unit
 ) {
     //──── State & ViewModel Setup ────
     val state by viewModel.state.collectAsState()
@@ -122,7 +123,8 @@ fun ReportsScreen(
         onSelectCurrentMonth = { viewModel.onEvent(ReportsEvent.OnSelectCurrentMonth) },
         onDateSelected = { viewModel.onEvent(ReportsEvent.OnDateChange(it)) },
 
-        onClose = { viewModel.onEvent(ReportsEvent.CloseSheet) }
+        onClose = { viewModel.onEvent(ReportsEvent.CloseSheet) },
+        onShowSnackbar = onShowSnackbar
     )
 
     //──── Screen Layout ────
@@ -180,7 +182,8 @@ private fun SheetsHandler(
     onSelectCurrentMonth: () -> Unit,
     onDateSelected: (Long) -> Unit,
 
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    onShowSnackbar: (String) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -238,7 +241,8 @@ private fun SheetsHandler(
                     EditTransactionSheet(
                         isHideData = isHideData,
                         transaction = sheet.transaction,
-                        onClose = onClose
+                        onClose = onClose,
+                        onShowSnackbar = onShowSnackbar
                     )
                 }
 

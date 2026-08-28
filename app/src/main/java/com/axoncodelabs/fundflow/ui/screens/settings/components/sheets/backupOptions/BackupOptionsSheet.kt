@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.fundflow.R
 import com.axoncodelabs.fundflow.ui.components.MainBttn
+import com.axoncodelabs.fundflow.ui.components.sheets.SheetResult
 import com.axoncodelabs.fundflow.ui.theme.MyFontStyle
 import com.axoncodelabs.fundflow.ui.theme.MyIcons
 
@@ -35,11 +36,19 @@ fun BackupOptionsSheet(
     isAutoBackup: Boolean,
     onToggleAutoBackup: (Boolean) -> Unit,
     onClose: () -> Unit,
+    onShowSnackbar: (String) -> Unit
 ) {
     // Send Close Event
     LaunchedEffect(Unit) {
-        viewModel.closeEvent.collect {
-            onClose()
+        viewModel.endSheetEvent.collect { result ->
+            when (result) {
+                SheetResult.Added -> {
+                    onShowSnackbar(""/* TODO ToDo: Create Snackbar message. */)
+                    onClose()
+                }
+
+                else -> Unit
+            }
         }
     }
 

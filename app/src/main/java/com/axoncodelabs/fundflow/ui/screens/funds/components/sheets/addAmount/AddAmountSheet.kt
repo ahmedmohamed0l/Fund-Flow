@@ -21,6 +21,7 @@ import com.axoncodelabs.fundflow.ui.components.MainBttn
 import com.axoncodelabs.fundflow.ui.components.sheets.FundNameSection
 import com.axoncodelabs.fundflow.ui.components.sheets.LabelAmountSection
 import com.axoncodelabs.fundflow.ui.components.sheets.LabelDescriptionSection
+import com.axoncodelabs.fundflow.ui.components.sheets.SheetResult
 import java.util.Calendar
 
 @Composable
@@ -29,6 +30,7 @@ fun AddAmountSheet(
     fund: FundEntity,
     viewModel: AddAmountVM = hiltViewModel(),
     onClose: () -> Unit,
+    onShowSnackbar: (String) -> Unit
 ) {
     LaunchedEffect(key1 = fund.id) {
         viewModel.initData(fund)
@@ -36,8 +38,15 @@ fun AddAmountSheet(
 
     // Send Close Event
     LaunchedEffect(Unit) {
-        viewModel.closeEvent.collect {
-            onClose()
+        viewModel.endSheetEvent.collect { result ->
+            when (result) {
+                SheetResult.Added -> {
+                    onShowSnackbar(""/* TODO ToDo: Create Snackbar message. */)
+                    onClose()
+                }
+
+                else -> Unit
+            }
         }
     }
 

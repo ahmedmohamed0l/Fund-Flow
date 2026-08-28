@@ -45,11 +45,12 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.fundflow.R
 import com.axoncodelabs.fundflow.data.local.entity.FundEntity
 import com.axoncodelabs.fundflow.ui.components.AppCurrency
-import com.axoncodelabs.fundflow.ui.components.DeletePopup
 import com.axoncodelabs.fundflow.ui.components.EmptyPage
 import com.axoncodelabs.fundflow.ui.components.HideTextData
 import com.axoncodelabs.fundflow.ui.components.appTopBar.AppTopBarState
 import com.axoncodelabs.fundflow.ui.components.noRippleClickable
+import com.axoncodelabs.fundflow.ui.components.sheets.popups.DeletePopup
+import com.axoncodelabs.fundflow.ui.components.sheets.popups.PopupResult
 import com.axoncodelabs.fundflow.ui.screens.funds.components.sheets.addAmount.AddAmountSheet
 import com.axoncodelabs.fundflow.ui.screens.funds.components.sheets.addFund.AddFundSheet
 import com.axoncodelabs.fundflow.ui.screens.funds.components.sheets.fundOptions.FundOptionsSheet
@@ -63,6 +64,7 @@ import com.axoncodelabs.fundflow.ui.util.formatAmount
 fun FundsScreen(
     viewModel: FundsViewModel = hiltViewModel(),
     onTopBarChange: (AppTopBarState) -> Unit,
+    onShowSnackbar: (String) -> Unit
 ) {
     //──── State & ViewModel Setup ────
     val state by viewModel.state.collectAsState()
@@ -92,7 +94,8 @@ fun FundsScreen(
     SheetsHandler(
         sheet = sheet,
         isHideData = isHideData,
-        onClose = { viewModel.onEvent(FundsEvent.CloseSheet) }
+        onClose = { viewModel.onEvent(FundsEvent.CloseSheet) },
+        onShowSnackbar = onShowSnackbar
     )
 
     PopupsHandler(
@@ -100,7 +103,8 @@ fun FundsScreen(
         onClose = { viewModel.onEvent(FundsEvent.ClosePopup) },
         onDeleteFund = { fund ->
             viewModel.onEvent(FundsEvent.DeleteFund(fund))
-        }
+        },
+        onShowSnackbar = onShowSnackbar
     )
 
     //──── Screen Layout ────
@@ -132,6 +136,7 @@ private fun SheetsHandler(
     sheet: FundsSheets,
     isHideData: Boolean,
     onClose: () -> Unit,
+    onShowSnackbar: (String) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -143,14 +148,18 @@ private fun SheetsHandler(
         ) {
             when (sheet) {
                 FundsSheets.AddFund -> {
-                    AddFundSheet(onClose = onClose)
+                    AddFundSheet(
+                        onClose = onClose,
+                        onShowSnackbar = onShowSnackbar
+                    )
                 }
 
                 is FundsSheets.FundOptions -> {
                     FundOptionsSheet(
                         isHideData = isHideData,
                         fund = sheet.fund,
-                        onClose = onClose
+                        onClose = onClose,
+                        onShowSnackbar = onShowSnackbar
                     )
                 }
 
@@ -158,7 +167,8 @@ private fun SheetsHandler(
                     AddAmountSheet(
                         isHideData = isHideData,
                         fund = sheet.fund,
-                        onClose = onClose
+                        onClose = onClose,
+                        onShowSnackbar = onShowSnackbar
                     )
                 }
 
@@ -166,7 +176,8 @@ private fun SheetsHandler(
                     TransferSheet(
                         isHideData = isHideData,
                         fromFund = sheet.fund,
-                        onClose = onClose
+                        onClose = onClose,
+                        onShowSnackbar = onShowSnackbar
                     )
                 }
 
@@ -180,7 +191,8 @@ private fun SheetsHandler(
 private fun PopupsHandler(
     popup: FundsPopup,
     onClose: () -> Unit,
-    onDeleteFund: (FundEntity) -> Unit
+    onDeleteFund: (FundEntity) -> Unit,
+    onShowSnackbar: (String) -> Unit
 ) {
     when (popup) {
         is FundsPopup.DeleteFund -> {
@@ -189,8 +201,16 @@ private fun PopupsHandler(
             ) {
                 DeletePopup(
                     title = stringResource(id = R.string.Popups_DeleteFundConfirm_Message),
-                    onDelete = { onDeleteFund(popup.fund) },
-                    onCancel = onClose
+                    onEndPopup = { result ->
+                        when (result) {
+                            PopupResult.Deleted -> {
+                                onDeleteFund(popup.fund)
+                                onShowSnackbar(""/* TODO ToDo: Create Snackbar message. */)
+                            }
+
+                            PopupResult.Cancelled -> onClose()
+                        }
+                    }
                 )
             }
         }

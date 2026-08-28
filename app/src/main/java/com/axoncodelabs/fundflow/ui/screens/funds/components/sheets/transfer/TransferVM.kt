@@ -11,6 +11,7 @@ import com.axoncodelabs.fundflow.R
 import com.axoncodelabs.fundflow.data.local.entity.FundEntity
 import com.axoncodelabs.fundflow.data.repository.FundFlowRepository
 import com.axoncodelabs.fundflow.data.util.StringProvider
+import com.axoncodelabs.fundflow.ui.components.sheets.SheetResult
 import com.axoncodelabs.fundflow.ui.util.getAdjustedTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -73,8 +74,8 @@ class TransferVM @Inject constructor(
     }
 
     //──── Events ────
-    private val _closeEvent = Channel<Unit>(Channel.CONFLATED)
-    val closeEvent = _closeEvent.receiveAsFlow()
+    private val _endSheetEvent = Channel<SheetResult>(Channel.CONFLATED)
+    val endSheetEvent = _endSheetEvent.receiveAsFlow()
 
     fun onEvent(event: TransferEvent) {
         when (event) {
@@ -113,7 +114,7 @@ class TransferVM @Inject constructor(
 
                     if (description.isBlank()) {
                         description =
-                            (stringProvider.getString(R.string.Sheet_TransferFromDescription)) + " " + "(${source.name})" +
+                            (stringProvider.getString(R.string.Sheet_TransferFromDescription)) + " " + "(${source.name})" + " " +
                                     (stringProvider.getString(R.string.Sheet_TransferToDescription)) + " " + "(${target.name})"
                     }
 
@@ -126,7 +127,7 @@ class TransferVM @Inject constructor(
                     )
 
                     clearSheetData()
-                    _closeEvent.send(Unit)
+                    _endSheetEvent.send(SheetResult.Added)
                 }
             }
         }

@@ -21,6 +21,7 @@ import com.axoncodelabs.fundflow.ui.components.sheets.AvailableBalanceSection
 import com.axoncodelabs.fundflow.ui.components.sheets.IconAmountSection
 import com.axoncodelabs.fundflow.ui.components.sheets.IconDescriptionSection
 import com.axoncodelabs.fundflow.ui.components.sheets.IconFundSelectionSection
+import com.axoncodelabs.fundflow.ui.components.sheets.SheetResult
 
 @Composable
 fun AddExpenseSheet(
@@ -28,6 +29,7 @@ fun AddExpenseSheet(
     selectedDate: Long,
     viewModel: AddExpenseVM = hiltViewModel(),
     onClose: () -> Unit,
+    onShowSnackbar: (String) -> Unit
 ) {
     LaunchedEffect(key1 = selectedDate) {
         viewModel.initTransaction(selectedDate)
@@ -35,8 +37,15 @@ fun AddExpenseSheet(
 
     // Send Close Event
     LaunchedEffect(Unit) {
-        viewModel.closeEvent.collect {
-            onClose()
+        viewModel.endSheetEvent.collect { result ->
+            when (result) {
+                SheetResult.Added -> {
+                    onShowSnackbar(""/* TODO ToDo: Create Snackbar message. */)
+                    onClose()
+                }
+
+                else -> Unit
+            }
         }
     }
 

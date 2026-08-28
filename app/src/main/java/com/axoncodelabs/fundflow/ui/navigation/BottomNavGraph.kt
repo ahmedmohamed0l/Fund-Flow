@@ -19,7 +19,8 @@ import com.axoncodelabs.fundflow.ui.screens.settings.SettingsScreen
 fun BottomNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    onTopBarChange: (AppTopBarState) -> Unit
+    onTopBarChange: (AppTopBarState) -> Unit,
+    onShowSnackbar: (String) -> Unit
 ) {
     NavHost(
         modifier = modifier.fillMaxSize(),
@@ -30,16 +31,16 @@ fun BottomNavGraph(
         exitTransition = { fadeOut(animationSpec = tween(300)) },
     ) {
         composable(route = BottomBarScreen.Expenses.route) {
-            ExpensesScreen(onTopBarChange = onTopBarChange)
+            ExpensesScreen(onTopBarChange = onTopBarChange, onShowSnackbar = onShowSnackbar)
         }
         composable(route = BottomBarScreen.Reports.route) {
-            ReportsScreen(onTopBarChange = onTopBarChange)
+            ReportsScreen(onTopBarChange = onTopBarChange, onShowSnackbar = onShowSnackbar)
         }
         composable(route = BottomBarScreen.Funds.route) {
-            FundsScreen(onTopBarChange = onTopBarChange)
+            FundsScreen(onTopBarChange = onTopBarChange, onShowSnackbar = onShowSnackbar)
         }
         composable(route = BottomBarScreen.Settings.route) {
-            SettingsScreen(onTopBarChange = onTopBarChange)
+            SettingsScreen(onTopBarChange = onTopBarChange, onShowSnackbar = onShowSnackbar)
         }
     }
 }
