@@ -4,6 +4,7 @@
 
     <string name="SettingsScreen_ChangeTheme">التحويل للوضع الداكن</string>
     <string name="SettingsScreen_HideData">إخفاء جميع البيانات</string>
+    <string name="SettingsScreen_Language">اللغة الحالية</string>
     <string name="SettingsScreen_Backup">حفظ نسخة احتياطية</string>
     <string name="SettingsScreen_Restore">استعادة النسخ الاحتياطية</string>
 </resources>

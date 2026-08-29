@@ -38,13 +38,15 @@ class SettingsViewModel @Inject constructor(
         combine(
             repository.themeFlow,
             repository.hideDataFlow,
+            repository.languageFlow,
             repository.lastBackupDateFlow,
             repository.autoBackupFlow
-        ) { theme, isHideData, lastBackup, isAutoBackup ->
+        ) { theme, isHideData, language, lastBackup, isAutoBackup ->
             _state.update { currentState ->
                 currentState.copy(
                     darkMode = theme is Theme.Dark,
                     isHideData = isHideData,
+                    currentLanguage = language,
                     lastBackupDate = lastBackup,
                     isAutoBackup = isAutoBackup
                 )
@@ -84,6 +86,13 @@ class SettingsViewModel @Inject constructor(
                 }
             }
 
+            //── Change Language ──
+            is SettingsEvent.SetLanguage -> {
+                viewModelScope.launch {
+                    repository.saveLanguage(event.language)
+                }
+            }
+
             //── AutoBackup Toggle ──
             is SettingsEvent.ToggleAutoBackup -> {
                 viewModelScope.launch {
@@ -92,7 +101,7 @@ class SettingsViewModel @Inject constructor(
             }
 
             SettingsEvent.RefreshBackupList -> {
-
+                // TODO CHECKPOINT: Refresh Backup List
             }
         }
     }

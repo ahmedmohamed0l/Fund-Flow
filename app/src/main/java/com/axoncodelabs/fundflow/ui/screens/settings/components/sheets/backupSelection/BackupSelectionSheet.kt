@@ -56,7 +56,6 @@ fun BackupSelectionSheet(
 
                 SheetResult.Deleted -> {
                     onShowSnackbar(backupDeleted)
-                    onClose()
                 }
 
                 else -> Unit

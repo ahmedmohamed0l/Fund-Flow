@@ -34,6 +34,10 @@
     <string name="Sheet_Save_Bttn">Save</string>
     <string name="Sheet_EditTransaction_Bttn">Save changes</string>
 
+    <string name="Sheet_LanguageChanger_Label">Select Language</string>
+    <string name="Sheet_LanguageChanger_Ar" translatable="false">العربية</string>
+    <string name="Sheet_LanguageChanger_En" translatable="false">English</string>
+
     <string name="Sheet_CreateBackupLabel">Create backup</string>
     <string name="Sheet_CreateBackupBttn">Create</string>
     <string name="Sheet_AutoBackup">Automatically save a backup when opening the app</string>

@@ -11,6 +11,7 @@ import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material.icons.rounded.History
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
+import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -240,6 +241,26 @@ object MyIcons {
             tint = color,
         )
     }
+
+    @Composable
+    fun Language(
+        modifier: Modifier = Modifier,
+        size: Dp = 48.dp,
+        angle: Float = 0f,
+        color: Color = MyColors.Black,
+        alphaValue: Float = 1f,
+    ) {
+        Icon(
+            imageVector = Icons.Rounded.Language,
+            contentDescription = "",
+            modifier = modifier
+                .size(size)
+                .rotate(angle)
+                .alpha(alphaValue),
+            tint = color,
+        )
+    }
+
 
     @Composable
     fun CreateBackup(
