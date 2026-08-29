@@ -1,4 +1,4 @@
-package com.axoncodelabs.fundflow.ui.components.sheets.popups
+package com.axoncodelabs.fundflow.ui.components.popups
 
 sealed interface PopupResult {
     data object Deleted : PopupResult

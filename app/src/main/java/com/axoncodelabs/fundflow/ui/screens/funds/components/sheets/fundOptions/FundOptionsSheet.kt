@@ -41,10 +41,10 @@ import com.axoncodelabs.fundflow.data.local.entity.FundEntity
 import com.axoncodelabs.fundflow.ui.components.HideTextData
 import com.axoncodelabs.fundflow.ui.components.hideDataMask
 import com.axoncodelabs.fundflow.ui.components.noRippleClickable
+import com.axoncodelabs.fundflow.ui.components.popups.DeletePopup
+import com.axoncodelabs.fundflow.ui.components.popups.PopupResult
 import com.axoncodelabs.fundflow.ui.components.sheets.SheetResult
 import com.axoncodelabs.fundflow.ui.components.sheets.SheetTextField
-import com.axoncodelabs.fundflow.ui.components.sheets.popups.DeletePopup
-import com.axoncodelabs.fundflow.ui.components.sheets.popups.PopupResult
 import com.axoncodelabs.fundflow.ui.theme.MyFontStyle
 import com.axoncodelabs.fundflow.ui.theme.MyRoundedCornerShape
 

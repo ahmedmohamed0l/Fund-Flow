@@ -49,8 +49,8 @@ import com.axoncodelabs.fundflow.ui.components.EmptyPage
 import com.axoncodelabs.fundflow.ui.components.HideTextData
 import com.axoncodelabs.fundflow.ui.components.appTopBar.AppTopBarState
 import com.axoncodelabs.fundflow.ui.components.noRippleClickable
-import com.axoncodelabs.fundflow.ui.components.sheets.popups.DeletePopup
-import com.axoncodelabs.fundflow.ui.components.sheets.popups.PopupResult
+import com.axoncodelabs.fundflow.ui.components.popups.DeletePopup
+import com.axoncodelabs.fundflow.ui.components.popups.PopupResult
 import com.axoncodelabs.fundflow.ui.screens.funds.components.sheets.addAmount.AddAmountSheet
 import com.axoncodelabs.fundflow.ui.screens.funds.components.sheets.addFund.AddFundSheet
 import com.axoncodelabs.fundflow.ui.screens.funds.components.sheets.fundOptions.FundOptionsSheet

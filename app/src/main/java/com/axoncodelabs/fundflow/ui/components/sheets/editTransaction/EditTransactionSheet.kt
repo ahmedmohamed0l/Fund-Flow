@@ -28,12 +28,12 @@ import com.axoncodelabs.fundflow.data.local.relation.TransactionWithFund
 import com.axoncodelabs.fundflow.ui.components.DateSelection
 import com.axoncodelabs.fundflow.ui.components.hideDataMask
 import com.axoncodelabs.fundflow.ui.components.noRippleClickable
+import com.axoncodelabs.fundflow.ui.components.popups.DeletePopup
+import com.axoncodelabs.fundflow.ui.components.popups.PopupResult
 import com.axoncodelabs.fundflow.ui.components.sheets.IconAmountSection
 import com.axoncodelabs.fundflow.ui.components.sheets.IconDescriptionSection
 import com.axoncodelabs.fundflow.ui.components.sheets.IconFundSelectionSection
 import com.axoncodelabs.fundflow.ui.components.sheets.SheetResult
-import com.axoncodelabs.fundflow.ui.components.sheets.popups.DeletePopup
-import com.axoncodelabs.fundflow.ui.components.sheets.popups.PopupResult
 import com.axoncodelabs.fundflow.ui.theme.MyFontStyle
 import java.util.Calendar
 

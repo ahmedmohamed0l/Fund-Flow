@@ -1,4 +1,4 @@
-package com.axoncodelabs.fundflow.ui.components.sheets.popups
+package com.axoncodelabs.fundflow.ui.components.popups
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
