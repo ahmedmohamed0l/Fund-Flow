@@ -7,6 +7,7 @@ import com.axoncodelabs.fundflow.data.local.entity.TransactionType
 import com.axoncodelabs.fundflow.data.local.relation.TransactionWithFund
 import com.axoncodelabs.fundflow.data.util.backup.BackupInfo
 import com.axoncodelabs.fundflow.ui.theme.Theme
+import com.axoncodelabs.fundflow.util.language.Language
 import kotlinx.coroutines.flow.Flow
 
 interface FundFlowRepository {
@@ -68,11 +69,13 @@ interface FundFlowRepository {
     //──── Read Flow ────
     val themeFlow: Flow<Theme>
     val hideDataFlow: Flow<Boolean>
+    val languageFlow: Flow<Language>
     val lastBackupDateFlow: Flow<Long?>
     val autoBackupFlow: Flow<Boolean>
 
     //──── Save ────
     suspend fun saveTheme(theme: Theme)
     suspend fun saveHideData(isHide: Boolean)
+    suspend fun saveLanguage(language: Language)
     suspend fun saveAutoBackup(isAutoBackup: Boolean)
 }

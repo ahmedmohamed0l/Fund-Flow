@@ -34,6 +34,8 @@
     <string name="Sheet_Save_Bttn">حفظ</string>
     <string name="Sheet_EditTransaction_Bttn">حفظ التعديلات</string>
 
+    <string name="Sheet_LanguageChanger_Label">اختر اللغة</string>
+
     <string name="Sheet_CreateBackupLabel">إنشاء نسخة احتياطية</string>
     <string name="Sheet_CreateBackupBttn">إنشاء</string>
     <string name="Sheet_AutoBackup">حفظ تلقائي عند فتح التطبيق</string>

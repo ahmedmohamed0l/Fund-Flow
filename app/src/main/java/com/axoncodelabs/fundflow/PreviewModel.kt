@@ -15,7 +15,7 @@ import com.axoncodelabs.fundflow.data.local.entity.FundEntity
 import com.axoncodelabs.fundflow.data.local.entity.TransactionEntity
 import com.axoncodelabs.fundflow.data.local.entity.TransactionType
 import com.axoncodelabs.fundflow.data.local.relation.TransactionWithFund
-import com.axoncodelabs.fundflow.ui.theme.CashBoxTheme
+import com.axoncodelabs.fundflow.ui.theme.FundFlowTheme
 
 @Preview(showBackground = true, widthDp = 360, heightDp = 780)
 @Composable
@@ -24,7 +24,7 @@ private fun Preview() {
         LocalLayoutDirection provides LayoutDirection.Rtl
     ) {
         val darkMode = false
-        CashBoxTheme(
+        FundFlowTheme(
             darkTheme = darkMode
         ) {
             //──── Content ────

@@ -4,6 +4,7 @@
 
     <string name="SettingsScreen_ChangeTheme">Switch to dark mode</string>
     <string name="SettingsScreen_HideData">Hide all data</string>
+    <string name="SettingsScreen_Language">Language</string>
     <string name="SettingsScreen_Backup">Save backup</string>
     <string name="SettingsScreen_Restore">Restore backups</string>
 </resources>

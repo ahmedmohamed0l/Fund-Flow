@@ -1,9 +1,11 @@
 package com.axoncodelabs.fundflow.ui.screens.settings
 
 import com.axoncodelabs.fundflow.data.util.backup.BackupInfo
+import com.axoncodelabs.fundflow.util.language.Language
 
 sealed class SettingsSheets {
     object None : SettingsSheets()
+    data class LanguageChanger(var currentLanguage: Language) : SettingsSheets()
     data class BackupOptions(var isAutoBackup: Boolean) : SettingsSheets()
     object BackupSelection : SettingsSheets()
 }
@@ -13,6 +15,8 @@ data class SettingsState(
 
     val darkMode: Boolean? = null,
     val isHideData: Boolean = false,
+
+    val currentLanguage: Language = Language.Arabic,
 
     val lastBackupDate: Long? = null,
     val isAutoBackup: Boolean? = null,

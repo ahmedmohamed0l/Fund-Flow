@@ -45,10 +45,12 @@ import com.axoncodelabs.fundflow.ui.components.appTopBar.AppTopBarState
 import com.axoncodelabs.fundflow.ui.components.noRippleClickable
 import com.axoncodelabs.fundflow.ui.screens.settings.components.sheets.backupOptions.BackupOptionsSheet
 import com.axoncodelabs.fundflow.ui.screens.settings.components.sheets.backupSelection.BackupSelectionSheet
+import com.axoncodelabs.fundflow.ui.screens.settings.components.sheets.language.LanguageChangerSheet
 import com.axoncodelabs.fundflow.ui.theme.MyFontStyle
 import com.axoncodelabs.fundflow.ui.theme.MyIcons
 import com.axoncodelabs.fundflow.ui.theme.MyRoundedCornerShape
 import com.axoncodelabs.fundflow.ui.util.backupDateFormater
+import com.axoncodelabs.fundflow.util.language.Language
 
 @Composable
 fun SettingsScreen(
@@ -68,6 +70,10 @@ fun SettingsScreen(
     //──── Sheets & Popups Handling ────
     SheetsHandler(
         sheet = sheet,
+
+        currentLanguage = state.currentLanguage,
+        onSetLanguage = { viewModel.onEvent(SettingsEvent.SetLanguage(it)) },
+
         isAutoBackup = state.isAutoBackup ?: false,
         onToggleAutoBackup = { viewModel.onEvent(SettingsEvent.ToggleAutoBackup(it)) },
 
@@ -88,6 +94,12 @@ fun SettingsScreen(
         isHideData = state.isHideData,
         onHideDataClick = { viewModel.onEvent(SettingsEvent.ToggleHideData(it)) },
 
+        /*todo ToDo: Language*/
+        currentLanguage = state.currentLanguage,
+        onLanguageClick = {
+            viewModel.onEvent(SettingsEvent.SheetDisplayed(SettingsSheets.LanguageChanger(state.currentLanguage)))
+        },
+
         lastBackupDate = state.lastBackupDate?.backupDateFormater(),
         onShowBackupSheet = {
             viewModel.onEvent(SettingsEvent.SheetDisplayed(SettingsSheets.BackupOptions(state.isAutoBackup == false)))
@@ -102,6 +114,10 @@ fun SettingsScreen(
 @Composable
 private fun SheetsHandler(
     sheet: SettingsSheets,
+
+    currentLanguage: Language,
+    onSetLanguage: (Language) -> Unit,
+
     isAutoBackup: Boolean,
     onToggleAutoBackup: (Boolean) -> Unit,
 
@@ -119,6 +135,12 @@ private fun SheetsHandler(
             sheetState = sheetState
         ) {
             when (sheet) {
+                is SettingsSheets.LanguageChanger -> {
+                    LanguageChangerSheet(
+                        currentLanguage = currentLanguage, onSelect = onSetLanguage
+                    )
+                }
+
                 is SettingsSheets.BackupOptions -> {
                     BackupOptionsSheet(
                         isAutoBackup = isAutoBackup,
@@ -149,14 +171,13 @@ private fun SheetsHandler(
 // ────────────────{ Screen Layout }────────────────
 @Composable
 private fun SettingsScreenRoot(
-    darkMode: Boolean,
-    onThemeSwitcherClick: (Boolean) -> Unit,
+    darkMode: Boolean, onThemeSwitcherClick: (Boolean) -> Unit,
 
-    isHideData: Boolean,
-    onHideDataClick: (Boolean) -> Unit,
+    isHideData: Boolean, onHideDataClick: (Boolean) -> Unit,
 
-    lastBackupDate: String?,
-    onShowBackupSheet: () -> Unit,
+    currentLanguage: Language, onLanguageClick: () -> Unit,
+
+    lastBackupDate: String?, onShowBackupSheet: () -> Unit,
 
     onShowRestoreSheet: () -> Unit
 ) {
@@ -181,6 +202,13 @@ private fun SettingsScreenRoot(
         )
         RowsDivider()
 
+        LanguageRow(
+            modifier = Modifier.fillMaxWidth(),
+            currentLanguage = currentLanguage,
+            onLanguageClick = onLanguageClick
+        )
+        RowsDivider()
+
         BackupRow(
             modifier = Modifier.fillMaxWidth(),
             lastBackupDate = lastBackupDate,
@@ -189,8 +217,7 @@ private fun SettingsScreenRoot(
         RowsDivider()
 
         RestoreRow(
-            modifier = Modifier.fillMaxWidth(),
-            onRestoreClick = onShowRestoreSheet
+            modifier = Modifier.fillMaxWidth(), onRestoreClick = onShowRestoreSheet
         )
         RowsDivider()
 
@@ -217,9 +244,7 @@ private fun RowsDivider() {
 // ────────( Switch Theme )────────
 @Composable
 private fun ThemeToggle(
-    modifier: Modifier = Modifier,
-    darkMode: Boolean,
-    onThemeSwitcherClick: (Boolean) -> Unit
+    modifier: Modifier = Modifier, darkMode: Boolean, onThemeSwitcherClick: (Boolean) -> Unit
 ) {
     Row(
         modifier = modifier.padding(vertical = 20.dp),
@@ -241,8 +266,7 @@ private fun ThemeToggle(
         }
 
         ThemeSwitch(
-            darkMode = darkMode,
-            onThemeSwitcherClick = onThemeSwitcherClick
+            darkMode = darkMode, onThemeSwitcherClick = onThemeSwitcherClick
         )
     }
 }
@@ -257,8 +281,7 @@ private fun ThemeSwitch(
     color2: Color = MaterialTheme.colorScheme.background,
 ) {
     val offset by animateDpAsState(
-        targetValue = if (darkMode) 0.dp else size,
-        animationSpec = tween(durationMillis = 300)
+        targetValue = if (darkMode) 0.dp else size, animationSpec = tween(durationMillis = 300)
     )
 
     Box(
@@ -267,34 +290,28 @@ private fun ThemeSwitch(
             .height(size)
             .clip(shape = CircleShape)
             .noRippleClickable { onThemeSwitcherClick(!darkMode) }
-            .background(color1)
-    ) {
+            .background(color1)) {
         Box(
             modifier = Modifier
                 .size(size)
                 .offset { IntOffset(offset.roundToPx(), 0) }
                 .padding(all = 3.dp)
                 .clip(shape = CircleShape)
-                .background(color2)
-        ) {}
+                .background(color2)) {}
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
-                modifier = Modifier.size(size),
-                contentAlignment = Alignment.Center
+                modifier = Modifier.size(size), contentAlignment = Alignment.Center
             ) {
                 MyIcons.DarkTheme(
-                    size = (size / 3),
-                    color = if (darkMode) color1 else color2
+                    size = (size / 3), color = if (darkMode) color1 else color2
                 )
             }
 
             Box(
-                modifier = Modifier.size(size),
-                contentAlignment = Alignment.Center
+                modifier = Modifier.size(size), contentAlignment = Alignment.Center
             ) {
                 MyIcons.LightTheme(
-                    size = (size / 3),
-                    color = if (darkMode) color2 else color1
+                    size = (size / 3), color = if (darkMode) color2 else color1
                 )
             }
         }
@@ -343,20 +360,60 @@ private fun HideData(
     }
 }
 
+// ────────( Language )────────
+@Composable
+private fun LanguageRow(
+    modifier: Modifier = Modifier, currentLanguage: Language, onLanguageClick: () -> Unit
+) {
+    Row(
+        modifier = modifier
+            .noRippleClickable { onLanguageClick() }
+            .padding(vertical = 20.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            MyIcons.Language(
+                modifier = Modifier.offset(y = (-2.5).dp),
+                size = 25.dp,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(
+                text = stringResource(R.string.SettingsScreen_Language),
+                color = MaterialTheme.colorScheme.onSecondary,
+                style = MyFontStyle.medium()
+            )
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = when (currentLanguage) {
+                    Language.Arabic -> stringResource(R.string.Sheet_LanguageChanger_Ar)
+                    Language.English -> stringResource(R.string.Sheet_LanguageChanger_En)
+                },
+                color = MaterialTheme.colorScheme.onBackground, style = MyFontStyle.medium()
+            )
+            MyIcons.Arrow(
+                modifier = Modifier.offset(y = (-2.5).dp),
+                autoMirroredState = true,
+                size = 30.dp,
+                color = MaterialTheme.colorScheme.onSecondary,
+            )
+        }
+    }
+}
+
 // ────────( Backup )────────
 @Composable
 private fun BackupRow(
-    modifier: Modifier = Modifier,
-    lastBackupDate: String?,
-    onBackupClick: () -> Unit
+    modifier: Modifier = Modifier, lastBackupDate: String?, onBackupClick: () -> Unit
 ) {
     Row(
         modifier = modifier
             .noRippleClickable { onBackupClick() }
             .padding(vertical = 20.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
+        horizontalArrangement = Arrangement.SpaceBetween) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             MyIcons.CreateBackup(
                 modifier = Modifier.offset(y = (-2.5).dp),
@@ -392,16 +449,14 @@ private fun BackupRow(
 // ────────( Restore )────────
 @Composable
 private fun RestoreRow(
-    modifier: Modifier = Modifier,
-    onRestoreClick: () -> Unit
+    modifier: Modifier = Modifier, onRestoreClick: () -> Unit
 ) {
     Row(
         modifier = modifier
             .noRippleClickable { onRestoreClick() }
             .padding(vertical = 20.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
+        horizontalArrangement = Arrangement.SpaceBetween) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             MyIcons.RestoreBackup(
                 modifier = Modifier.offset(y = (-2.5).dp),

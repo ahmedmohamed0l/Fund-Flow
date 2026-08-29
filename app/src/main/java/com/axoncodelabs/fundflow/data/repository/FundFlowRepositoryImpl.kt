@@ -22,6 +22,7 @@ import com.axoncodelabs.fundflow.data.util.backup.BackupInfo
 import com.axoncodelabs.fundflow.data.util.backup.BackupSerializer
 import com.axoncodelabs.fundflow.ui.theme.Theme
 import com.axoncodelabs.fundflow.ui.util.toMillisFromBackup
+import com.axoncodelabs.fundflow.util.language.Language
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -301,6 +302,7 @@ class FundFlowRepositoryImpl @Inject constructor(
     private object Keys {
         val THEME_KEY = stringPreferencesKey("theme")
         val HIDE_KEY = booleanPreferencesKey("is_hide")
+        val LANGUAGE_KEY = stringPreferencesKey("language")
         val LAST_BACKUP_KEY = longPreferencesKey("last_backup_date")
         val AUTO_BACKUP_KEY = booleanPreferencesKey("auto_backup_option")
     }
@@ -317,6 +319,12 @@ class FundFlowRepositoryImpl @Inject constructor(
         it[Keys.HIDE_KEY] ?: false
     }
 
+    override val languageFlow: Flow<Language> = dataStore.data.map { preferences ->
+        Language.entries.firstOrNull {
+            it.languageTag == preferences[Keys.LANGUAGE_KEY]
+        } ?: Language.Arabic
+    }
+
     override val lastBackupDateFlow: Flow<Long?> = dataStore.data.map { it[Keys.LAST_BACKUP_KEY] }
 
     override val autoBackupFlow: Flow<Boolean> = dataStore.data.map {
@@ -330,6 +338,10 @@ class FundFlowRepositoryImpl @Inject constructor(
 
     override suspend fun saveHideData(isHide: Boolean) {
         dataStore.edit { it[Keys.HIDE_KEY] = isHide }
+    }
+
+    override suspend fun saveLanguage(language: Language) {
+        dataStore.edit { it[Keys.LANGUAGE_KEY] = language.languageTag }
     }
 
     override suspend fun saveAutoBackup(isAutoBackup: Boolean) {
