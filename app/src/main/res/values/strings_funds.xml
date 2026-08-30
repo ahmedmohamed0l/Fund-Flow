@@ -2,7 +2,7 @@
 <resources>
     <string name="FundsScreen_Identifier">Funds</string>
 
-    <string name="FundsScreen_FundsTotal">"Funds Total : "</string>
+    <string name="FundsScreen_FundsTotal">"Total Balance : "</string>
 
     <string name="FundsScreen_EmptyFundsPage_Title">Start adding funds to manage your budget and add expenses</string>
     <string name="FundsScreen_EmptyFundsPage_Description">Add all the funds you need to manage, such as household expenses, a bank account, or monthly obligations… so you can add to, spend from, or transfer between your funds</string>

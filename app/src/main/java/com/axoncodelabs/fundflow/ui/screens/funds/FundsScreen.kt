@@ -36,9 +36,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -415,7 +417,13 @@ private fun FundItem(
                         .offset(x = (-10).dp, y = (10).dp)
                         .width(60.dp)
                         .height(5.dp)
-                        .rotate(35f)
+                        .rotate(
+                            if (LocalLayoutDirection.current == LayoutDirection.Rtl) {
+                                35f
+                            } else {
+                                -35f
+                            }
+                        )
                         .background(MaterialTheme.colorScheme.error)
                 )
             }

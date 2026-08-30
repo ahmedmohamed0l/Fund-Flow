@@ -15,7 +15,7 @@
 
     <string name="Sheet_Amount_Lapel">Amount</string>
     <string name="Sheet_FundFromBalance">Available</string>
-    <string name="Sheet_Amount_Hint">Amount… 0.00</string>
+    <string name="Sheet_Amount_Hint" translatable="false">0.00</string>
     <string name="Sheet_NegativeAmountError">Fund balance can\'t be negative</string>
     <string name="Sheet_FundAmountError">Amount can\'t have more than two decimal places</string>
     <string name="Sheet_AddFundAmountError">You need to enter the amount to add</string>
@@ -40,7 +40,7 @@
 
     <string name="Sheet_CreateBackupLabel">Create backup</string>
     <string name="Sheet_CreateBackupBttn">Create</string>
-    <string name="Sheet_AutoBackup">Automatically save a backup when opening the app</string>
+    <string name="Sheet_AutoBackup">Auto-save backup when opening the app</string>
 
     <string name="Sheet_EmptyBackupList1">No previous backups</string>
     <string name="Sheet_EmptyBackupList2">Save backups to see them here</string>

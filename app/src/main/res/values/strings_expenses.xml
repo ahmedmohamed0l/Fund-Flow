@@ -5,8 +5,8 @@
     <string name="ExpensesScreen_DateSelect">Expenses for</string>
     <string name="ExpensesScreen_ExpensesTotal">Total day expenses :</string>
 
-    <string name="ExpensesScreen_EmptyExpensesPage_Title">Start adding your daily expenses to view them here later</string>
-    <string name="ExpensesScreen_EmptyExpensesPage_Description">And don\'t forget to add all your expenses, even small ones like transportation, breakfast, household expenses, or your children\'s expenses…</string>
+    <string name="ExpensesScreen_EmptyExpensesPage_Title">Add your first day expense to track it here</string>
+    <string name="ExpensesScreen_EmptyExpensesPage_Description">Record every expense, no matter how small—like transport, meals, or household needs.</string>
 
-    <string name="ExpensesScreen_AddExpenses_Butt">Add expense</string>
+    <string name="ExpensesScreen_AddExpenses_Butt">Add Expense</string>
 </resources>

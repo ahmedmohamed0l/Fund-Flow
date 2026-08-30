@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="DatePickerTodaySelect">Select today</string>
+    <string name="DatePickerTodaySelect">Select Today</string>
 
     <string name="Popups_DeleteFundConfirm_Message">Are you sure you want to delete this fund?</string>
     <string name="Popups_DeleteFundTransactionsConfirm_Message">Are you sure you want to delete all transactions for this fund?</string>
