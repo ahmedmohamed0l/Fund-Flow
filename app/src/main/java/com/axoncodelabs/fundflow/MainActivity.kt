@@ -32,25 +32,31 @@ import com.axoncodelabs.fundflow.ui.navigation.BottomBar
 import com.axoncodelabs.fundflow.ui.navigation.BottomNavGraph
 import com.axoncodelabs.fundflow.ui.screens.settings.SettingsViewModel
 import com.axoncodelabs.fundflow.ui.theme.FundFlowTheme
-import com.axoncodelabs.fundflow.ui.theme.LocaleHelper
+import com.axoncodelabs.fundflow.util.language.LocaleHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     override fun attachBaseContext(newBase: Context) {
-        val context = LocaleHelper.setLocale(newBase, Locale.forLanguageTag("ar"))
-        super.attachBaseContext(context)
+        val app = newBase.applicationContext as FundFlowApp
+
+        super.attachBaseContext(
+            LocaleHelper.localizedContext(
+                context = newBase,
+                language = app.appLanguageManager.currentLanguage
+            )
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
+
         setContent {
-
             Root()
-
         }
     }
 }
@@ -68,23 +74,18 @@ fun Root() {
 
     state.darkMode?.let { dark ->
         FundFlowTheme(darkTheme = dark) {
-            Scaffold(
-                modifier = Modifier.fillMaxSize(),
-                topBar = {
-                    AppTopBar(state = appTopBarState)
-                },
-                snackbarHost = {
-                    SnackbarHost(
-                        hostState = snackbarHostState
-                    ) { snackbarData ->
-                        CustomSnackbar(
-                            modifier = Modifier
-                                .padding(bottom = 100.dp),
-                            snackbarData = snackbarData
-                        )
-                    }
+            Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
+                AppTopBar(state = appTopBarState)
+            }, snackbarHost = {
+                SnackbarHost(
+                    hostState = snackbarHostState
+                ) { snackbarData ->
+                    CustomSnackbar(
+                        modifier = Modifier.padding(bottom = 100.dp),
+                        snackbarData = snackbarData
+                    )
                 }
-            ) { innerPadding ->
+            }) { innerPadding ->
                 Box(
                     modifier = Modifier
                         .padding(innerPadding)
@@ -92,24 +93,21 @@ fun Root() {
                 ) {
 
                     BottomNavGraph(
-                        modifier = Modifier
-                            .fillMaxSize(),
+                        modifier = Modifier.fillMaxSize(),
                         navController = navController,
                         onTopBarChange = { appTopBarState = it },
                         onShowSnackbar = { message ->
                             scope.launch {
                                 snackbarHostState.showSnackbar(message)
                             }
-                        }
-                    )
+                        })
 
                     BottomBar(
                         navController = navController,
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .fillMaxWidth()
-                            .pointerInput(Unit) {}
-                    )
+                            .pointerInput(Unit) {})
                 }
             }
         }

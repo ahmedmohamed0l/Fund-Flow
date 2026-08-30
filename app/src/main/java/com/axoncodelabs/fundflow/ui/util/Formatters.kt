@@ -3,6 +3,7 @@ package com.axoncodelabs.fundflow.ui.util
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.axoncodelabs.fundflow.R
+import com.axoncodelabs.fundflow.util.language.appLocale
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.time.Instant
@@ -20,22 +21,22 @@ fun Double.formatAmount(): String {
 
 //──── Date Formatters ────
 object DateFormates {
-    private val arabicTag = Locale.forLanguageTag("ar")
     private val englishTag = Locale.US
 
-    val FullDateArabic: DateTimeFormatter =
-        DateTimeFormatter.ofPattern("EEEE d MMMM yyyy", arabicTag)
+    val FullDate: DateTimeFormatter
+        get() = DateTimeFormatter.ofPattern("EEEE d MMMM yyyy", appLocale)
 
-    val FullNumDateArabic: DateTimeFormatter =
-        DateTimeFormatter.ofPattern("dd-MM-yyyy", arabicTag)
+    val FullNumDate: DateTimeFormatter
+        get() = DateTimeFormatter.ofPattern("dd-MM-yyyy", appLocale)
 
-    val MonthYearArabic: DateTimeFormatter =
-        DateTimeFormatter.ofPattern("MMMM، yyyy", arabicTag)
+    val MonthYear: DateTimeFormatter
+        get() = DateTimeFormatter.ofPattern("MMMM، yyyy", appLocale)
 
-    val DayMonthArabic: DateTimeFormatter =
-        DateTimeFormatter.ofPattern("EEEE d MMMM", arabicTag)
+    val DayMonth: DateTimeFormatter
+        get() = DateTimeFormatter.ofPattern("EEEE d MMMM", appLocale)
 
-    val TimeArabic: DateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a", arabicTag)
+    val Time: DateTimeFormatter
+        get() = DateTimeFormatter.ofPattern("hh:mm a", appLocale)
 
     val BackupParser: DateTimeFormatter = DateTimeFormatter.ofPattern("yyMMddHHmm", englishTag)
 }
@@ -61,9 +62,9 @@ fun String.toMillisFromBackup(): Long? {
 /** > **To formate backup date for providing in UI** **/
 @Composable
 fun Long.backupDateFormater(): String {
-    val date = this.dateFormatter(DateFormates.DayMonthArabic)
-    val time = this.dateFormatter(DateFormates.TimeArabic)
-    val currentDate = System.currentTimeMillis().dateFormatter(DateFormates.DayMonthArabic)
+    val date = this.dateFormatter(DateFormates.DayMonth)
+    val time = this.dateFormatter(DateFormates.Time)
+    val currentDate = System.currentTimeMillis().dateFormatter(DateFormates.DayMonth)
 
     val finalDate = if (date == currentDate) stringResource(R.string.Sheet_Today) else date
 

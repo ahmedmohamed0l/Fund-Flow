@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.axoncodelabs.fundflow.data.repository.FundFlowRepository
 import com.axoncodelabs.fundflow.ui.theme.Theme
+import com.axoncodelabs.fundflow.util.language.AppLanguageManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val repository: FundFlowRepository,
+    private val appLanguageManager: AppLanguageManager
 ) : ViewModel() {
 
     //── State ──
@@ -88,6 +90,8 @@ class SettingsViewModel @Inject constructor(
 
             //── Change Language ──
             is SettingsEvent.SetLanguage -> {
+                appLanguageManager.setLanguage(event.language)
+
                 viewModelScope.launch {
                     repository.saveLanguage(event.language)
                 }

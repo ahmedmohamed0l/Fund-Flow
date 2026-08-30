@@ -16,7 +16,7 @@ data class SettingsState(
     val darkMode: Boolean? = null,
     val isHideData: Boolean = false,
 
-    val currentLanguage: Language = Language.Arabic,
+    val currentLanguage: Language? = null,
 
     val lastBackupDate: Long? = null,
     val isAutoBackup: Boolean? = null,

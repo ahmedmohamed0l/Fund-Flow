@@ -48,7 +48,7 @@ fun DateSelection(
                     .noRippleClickable { onDateDecrease() }
             )
             Text(
-                text = date.dateFormatter(DateFormates.FullNumDateArabic),
+                text = date.dateFormatter(DateFormates.FullNumDate),
                 style = MyFontStyle.medium(),
                 color = dateColor
             )
