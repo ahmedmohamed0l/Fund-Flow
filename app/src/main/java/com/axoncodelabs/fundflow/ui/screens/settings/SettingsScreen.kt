@@ -33,12 +33,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.fundflow.BuildConfig
+import com.axoncodelabs.fundflow.MainActivity
 import com.axoncodelabs.fundflow.R
 import com.axoncodelabs.fundflow.data.util.backup.BackupInfo
 import com.axoncodelabs.fundflow.ui.components.appTopBar.AppTopBarState
@@ -62,6 +64,10 @@ fun SettingsScreen(
     val state by viewModel.state.collectAsState()
     val sheet = state.currentSheet
 
+    val currentLanguage = state.currentLanguage ?: return
+
+    val context = LocalContext.current
+
     //──── AppTopBar Data ────
     SideEffect {
         onTopBarChange(AppTopBarState(titleRes = R.string.SettingsScreen_Identifier))
@@ -71,8 +77,15 @@ fun SettingsScreen(
     SheetsHandler(
         sheet = sheet,
 
-        currentLanguage = state.currentLanguage,
-        onSetLanguage = { viewModel.onEvent(SettingsEvent.SetLanguage(it)) },
+        currentLanguage = currentLanguage,
+        onSetLanguage = { language ->
+
+            viewModel.onEvent(
+                SettingsEvent.SetLanguage(language)
+            )
+
+            (context as? MainActivity)?.recreate()
+        },
 
         isAutoBackup = state.isAutoBackup ?: false,
         onToggleAutoBackup = { viewModel.onEvent(SettingsEvent.ToggleAutoBackup(it)) },
@@ -94,10 +107,15 @@ fun SettingsScreen(
         isHideData = state.isHideData,
         onHideDataClick = { viewModel.onEvent(SettingsEvent.ToggleHideData(it)) },
 
-        /*todo ToDo: Language*/
-        currentLanguage = state.currentLanguage,
+        currentLanguage = currentLanguage,
         onLanguageClick = {
-            viewModel.onEvent(SettingsEvent.SheetDisplayed(SettingsSheets.LanguageChanger(state.currentLanguage)))
+            viewModel.onEvent(
+                SettingsEvent.SheetDisplayed(
+                    SettingsSheets.LanguageChanger(
+                        currentLanguage
+                    )
+                )
+            )
         },
 
         lastBackupDate = state.lastBackupDate?.backupDateFormater(),

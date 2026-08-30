@@ -110,7 +110,7 @@ private fun DateItem(
             )
             Spacer(modifier = Modifier.width(15.dp))
             Text(
-                text = date.dateFormatter(DateFormates.MonthYearArabic),
+                text = date.dateFormatter(DateFormates.MonthYear),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MyFontStyle.medium()
             )

@@ -1,6 +1,5 @@
 package com.axoncodelabs.fundflow.ui.theme
 
-import android.content.Context
 import android.os.Build
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -9,15 +8,6 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import java.util.Locale
-
-object LocaleHelper {
-    fun setLocale(context: Context, locale: Locale): Context {
-        val config = context.resources.configuration
-        config.setLocale(locale)
-        return context.createConfigurationContext(config)
-    }
-}
 
 sealed class Theme(val value: String) {
     object Light : Theme("light")

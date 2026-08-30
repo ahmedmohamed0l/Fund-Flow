@@ -137,7 +137,7 @@ fun ReportsScreen(
 
         onDateSelectorClick = { viewModel.onEvent(ReportsEvent.SheetDisplayed(ReportsSheets.DateSelection)) },
         isSelectAllDates = state.isSelectAllDates,
-        selectedDate = (state.selectedDate?.dateFormatter(DateFormates.MonthYearArabic)).orEmpty(),
+        selectedDate = (state.selectedDate?.dateFormatter(DateFormates.MonthYear)).orEmpty(),
 
         exceptTransfers = state.exceptTransfers,
         onExceptClick = { viewModel.onEvent(ReportsEvent.OnToggleTransfers) },
@@ -742,7 +742,7 @@ private fun TransactionsList(
                     modifier = Modifier.fillMaxWidth(),
                     isHideData = isHideData,
                     isExpended = isExpanded,
-                    date = dayStart.dateFormatter(DateFormates.FullDateArabic),
+                    date = dayStart.dateFormatter(DateFormates.FullDate),
                     dayExpensesTotal = total,
                     onHeaderClick = { onToggleDay(dayStart) },
                     transactions = dayTransactions,

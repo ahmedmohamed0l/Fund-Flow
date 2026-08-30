@@ -363,7 +363,7 @@ private fun DateSelect(
                 .noRippleClickable { onToggleDatePicker() },
             text = (stringResource(R.string.ExpensesScreen_DateSelect)
                     + " "
-                    + selectedDate.dateFormatter(DateFormates.FullDateArabic)),
+                    + selectedDate.dateFormatter(DateFormates.FullDate)),
             style = MyFontStyle.medium(),
             color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center,
@@ -497,7 +497,7 @@ private fun ExpenseItem(
         ) {
             Text(
                 modifier = Modifier.padding(end = 10.dp),
-                text = expense.transaction.date.dateFormatter(DateFormates.FullDateArabic),
+                text = expense.transaction.date.dateFormatter(DateFormates.FullDate),
                 color = MaterialTheme.colorScheme.onSecondary,
                 style = MyFontStyle.small()
             )
