@@ -33,14 +33,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.axoncodelabs.fundflow.BuildConfig
-import com.axoncodelabs.fundflow.MainActivity
 import com.axoncodelabs.fundflow.R
 import com.axoncodelabs.fundflow.data.util.backup.BackupInfo
 import com.axoncodelabs.fundflow.ui.components.appTopBar.AppTopBarState
@@ -63,10 +61,7 @@ fun SettingsScreen(
     //──── State & ViewModel Setup ────
     val state by viewModel.state.collectAsState()
     val sheet = state.currentSheet
-
     val currentLanguage = state.currentLanguage ?: return
-
-    val context = LocalContext.current
 
     //──── AppTopBar Data ────
     SideEffect {
@@ -80,11 +75,9 @@ fun SettingsScreen(
         currentLanguage = currentLanguage,
         onSetLanguage = { language ->
 
-            viewModel.onEvent(
-                SettingsEvent.SetLanguage(language)
-            )
+            viewModel.onEvent(SettingsEvent.SetLanguage(language))
 
-            (context as? MainActivity)?.recreate()
+            viewModel.onEvent(SettingsEvent.CloseSheet)
         },
 
         isAutoBackup = state.isAutoBackup ?: false,
@@ -155,7 +148,8 @@ private fun SheetsHandler(
             when (sheet) {
                 is SettingsSheets.LanguageChanger -> {
                     LanguageChangerSheet(
-                        currentLanguage = currentLanguage, onSelect = onSetLanguage
+                        currentLanguage = currentLanguage,
+                        onSelect = onSetLanguage
                     )
                 }
 
@@ -189,13 +183,17 @@ private fun SheetsHandler(
 // ────────────────{ Screen Layout }────────────────
 @Composable
 private fun SettingsScreenRoot(
-    darkMode: Boolean, onThemeSwitcherClick: (Boolean) -> Unit,
+    darkMode: Boolean,
+    onThemeSwitcherClick: (Boolean) -> Unit,
 
-    isHideData: Boolean, onHideDataClick: (Boolean) -> Unit,
+    isHideData: Boolean,
+    onHideDataClick: (Boolean) -> Unit,
 
-    currentLanguage: Language, onLanguageClick: () -> Unit,
+    currentLanguage: Language,
+    onLanguageClick: () -> Unit,
 
-    lastBackupDate: String?, onShowBackupSheet: () -> Unit,
+    lastBackupDate: String?,
+    onShowBackupSheet: () -> Unit,
 
     onShowRestoreSheet: () -> Unit
 ) {
@@ -235,7 +233,8 @@ private fun SettingsScreenRoot(
         RowsDivider()
 
         RestoreRow(
-            modifier = Modifier.fillMaxWidth(), onRestoreClick = onShowRestoreSheet
+            modifier = Modifier.fillMaxWidth(),
+            onRestoreClick = onShowRestoreSheet
         )
         RowsDivider()
 
@@ -262,7 +261,9 @@ private fun RowsDivider() {
 // ────────( Switch Theme )────────
 @Composable
 private fun ThemeToggle(
-    modifier: Modifier = Modifier, darkMode: Boolean, onThemeSwitcherClick: (Boolean) -> Unit
+    modifier: Modifier = Modifier,
+    darkMode: Boolean,
+    onThemeSwitcherClick: (Boolean) -> Unit
 ) {
     Row(
         modifier = modifier.padding(vertical = 20.dp),
@@ -284,7 +285,8 @@ private fun ThemeToggle(
         }
 
         ThemeSwitch(
-            darkMode = darkMode, onThemeSwitcherClick = onThemeSwitcherClick
+            darkMode = darkMode,
+            onThemeSwitcherClick = onThemeSwitcherClick
         )
     }
 }
@@ -299,7 +301,8 @@ private fun ThemeSwitch(
     color2: Color = MaterialTheme.colorScheme.background,
 ) {
     val offset by animateDpAsState(
-        targetValue = if (darkMode) 0.dp else size, animationSpec = tween(durationMillis = 300)
+        targetValue = if (darkMode) 0.dp else size,
+        animationSpec = tween(durationMillis = 300)
     )
 
     Box(
@@ -308,7 +311,8 @@ private fun ThemeSwitch(
             .height(size)
             .clip(shape = CircleShape)
             .noRippleClickable { onThemeSwitcherClick(!darkMode) }
-            .background(color1)) {
+            .background(color1)
+    ) {
         Box(
             modifier = Modifier
                 .size(size)
@@ -318,18 +322,22 @@ private fun ThemeSwitch(
                 .background(color2)) {}
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
-                modifier = Modifier.size(size), contentAlignment = Alignment.Center
+                modifier = Modifier.size(size),
+                contentAlignment = Alignment.Center
             ) {
                 MyIcons.DarkTheme(
-                    size = (size / 3), color = if (darkMode) color1 else color2
+                    size = (size / 3),
+                    color = if (darkMode) color1 else color2
                 )
             }
 
             Box(
-                modifier = Modifier.size(size), contentAlignment = Alignment.Center
+                modifier = Modifier.size(size),
+                contentAlignment = Alignment.Center
             ) {
                 MyIcons.LightTheme(
-                    size = (size / 3), color = if (darkMode) color2 else color1
+                    size = (size / 3),
+                    color = if (darkMode) color2 else color1
                 )
             }
         }
@@ -381,14 +389,17 @@ private fun HideData(
 // ────────( Language )────────
 @Composable
 private fun LanguageRow(
-    modifier: Modifier = Modifier, currentLanguage: Language, onLanguageClick: () -> Unit
+    modifier: Modifier = Modifier,
+    currentLanguage: Language,
+    onLanguageClick: () -> Unit
 ) {
     Row(
         modifier = modifier
             .noRippleClickable { onLanguageClick() }
             .padding(vertical = 20.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween) {
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             MyIcons.Language(
                 modifier = Modifier.offset(y = (-2.5).dp),
@@ -409,8 +420,10 @@ private fun LanguageRow(
                     Language.Arabic -> stringResource(R.string.Sheet_LanguageChanger_Ar)
                     Language.English -> stringResource(R.string.Sheet_LanguageChanger_En)
                 },
-                color = MaterialTheme.colorScheme.onBackground, style = MyFontStyle.medium()
+                color = MaterialTheme.colorScheme.primary,
+                style = MyFontStyle.medium()
             )
+            Spacer(modifier = Modifier.width(10.dp))
             MyIcons.Arrow(
                 modifier = Modifier.offset(y = (-2.5).dp),
                 autoMirroredState = true,
@@ -424,14 +437,17 @@ private fun LanguageRow(
 // ────────( Backup )────────
 @Composable
 private fun BackupRow(
-    modifier: Modifier = Modifier, lastBackupDate: String?, onBackupClick: () -> Unit
+    modifier: Modifier = Modifier,
+    lastBackupDate: String?,
+    onBackupClick: () -> Unit
 ) {
     Row(
         modifier = modifier
             .noRippleClickable { onBackupClick() }
             .padding(vertical = 20.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween) {
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             MyIcons.CreateBackup(
                 modifier = Modifier.offset(y = (-2.5).dp),
@@ -467,14 +483,16 @@ private fun BackupRow(
 // ────────( Restore )────────
 @Composable
 private fun RestoreRow(
-    modifier: Modifier = Modifier, onRestoreClick: () -> Unit
+    modifier: Modifier = Modifier,
+    onRestoreClick: () -> Unit
 ) {
     Row(
         modifier = modifier
             .noRippleClickable { onRestoreClick() }
             .padding(vertical = 20.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween) {
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             MyIcons.RestoreBackup(
                 modifier = Modifier.offset(y = (-2.5).dp),
