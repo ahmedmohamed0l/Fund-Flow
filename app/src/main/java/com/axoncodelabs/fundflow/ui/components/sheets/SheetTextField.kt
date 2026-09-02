@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.axoncodelabs.fundflow.ui.components.HideTextData
 import com.axoncodelabs.fundflow.ui.theme.MyFontStyle
+import com.axoncodelabs.fundflow.ui.util.ThousandsSeparatorVisualTransformation
 
 @Composable
 fun SheetFieldLabel(
@@ -190,6 +191,7 @@ fun SheetNumField(
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             maxLines = actualMaxLines,
             singleLine = singleLine,
+            visualTransformation = ThousandsSeparatorVisualTransformation(),
             decorationBox = { innerTextField ->
                 if (value.isEmpty()) {
                     Text(
