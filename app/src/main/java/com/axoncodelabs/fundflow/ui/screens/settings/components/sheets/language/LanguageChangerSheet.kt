@@ -91,13 +91,13 @@ private fun LanguageItem(
     Row(
         modifier = modifier
             .height(40.dp)
-            .noRippleClickable { onSelect() },
+            .noRippleClickable { if (!isCurrent) onSelect() },
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(
             modifier = Modifier.offset(y = (-2.5).dp),
             selected = isCurrent,
-            onClick = onSelect,
+            onClick = { if (!isCurrent) onSelect() },
             colors = RadioButtonDefaults.colors(selectedColor = MaterialTheme.colorScheme.primary)
         )
         Spacer(Modifier.width(5.dp))
