@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -61,6 +62,7 @@ import com.axoncodelabs.fundflow.ui.theme.MyFontStyle
 import com.axoncodelabs.fundflow.ui.theme.MyIcons
 import com.axoncodelabs.fundflow.ui.theme.MyRoundedCornerShape
 import com.axoncodelabs.fundflow.ui.util.formatAmount
+import kotlinx.coroutines.launch
 
 @Composable
 fun FundsScreen(
@@ -142,16 +144,24 @@ private fun SheetsHandler(
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
+    val scope = rememberCoroutineScope()
+    fun dismissSheet() {
+        scope.launch {
+            sheetState.hide()
+            onClose()
+        }
+    }
+
     if (sheet != FundsSheets.None) {
         ModalBottomSheet(
-            onDismissRequest = onClose,
+            onDismissRequest = { dismissSheet() },
             containerColor = MaterialTheme.colorScheme.background,
             sheetState = sheetState
         ) {
             when (sheet) {
                 FundsSheets.AddFund -> {
                     AddFundSheet(
-                        onClose = onClose,
+                        onClose = { dismissSheet() },
                         onShowSnackbar = onShowSnackbar
                     )
                 }
@@ -160,7 +170,7 @@ private fun SheetsHandler(
                     FundOptionsSheet(
                         isHideData = isHideData,
                         fund = sheet.fund,
-                        onClose = onClose,
+                        onClose = { dismissSheet() },
                         onShowSnackbar = onShowSnackbar
                     )
                 }
@@ -169,7 +179,7 @@ private fun SheetsHandler(
                     AddAmountSheet(
                         isHideData = isHideData,
                         fund = sheet.fund,
-                        onClose = onClose,
+                        onClose = { dismissSheet() },
                         onShowSnackbar = onShowSnackbar
                     )
                 }
@@ -178,7 +188,7 @@ private fun SheetsHandler(
                     TransferSheet(
                         isHideData = isHideData,
                         fromFund = sheet.fund,
-                        onClose = onClose,
+                        onClose = { dismissSheet() },
                         onShowSnackbar = onShowSnackbar
                     )
                 }

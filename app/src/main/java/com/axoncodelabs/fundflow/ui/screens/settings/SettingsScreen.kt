@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,6 +52,7 @@ import com.axoncodelabs.fundflow.ui.theme.MyIcons
 import com.axoncodelabs.fundflow.ui.theme.MyRoundedCornerShape
 import com.axoncodelabs.fundflow.ui.util.backupDateFormater
 import com.axoncodelabs.fundflow.util.language.Language
+import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsScreen(
@@ -103,11 +105,7 @@ fun SettingsScreen(
         currentLanguage = currentLanguage,
         onLanguageClick = {
             viewModel.onEvent(
-                SettingsEvent.SheetDisplayed(
-                    SettingsSheets.LanguageChanger(
-                        currentLanguage
-                    )
-                )
+                SettingsEvent.SheetDisplayed(SettingsSheets.LanguageChanger(currentLanguage))
             )
         },
 
@@ -139,9 +137,17 @@ private fun SheetsHandler(
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
+    val scope = rememberCoroutineScope()
+    fun dismissSheet() {
+        scope.launch {
+            sheetState.hide()
+            onClose()
+        }
+    }
+
     if (sheet != SettingsSheets.None) {
         ModalBottomSheet(
-            onDismissRequest = onClose,
+            onDismissRequest = { dismissSheet() },
             containerColor = MaterialTheme.colorScheme.background,
             sheetState = sheetState
         ) {
@@ -149,7 +155,10 @@ private fun SheetsHandler(
                 is SettingsSheets.LanguageChanger -> {
                     LanguageChangerSheet(
                         currentLanguage = currentLanguage,
-                        onSelect = onSetLanguage
+                        onSelect = { language ->
+                            onSetLanguage(language)
+                            dismissSheet()
+                        }
                     )
                 }
 
@@ -158,7 +167,7 @@ private fun SheetsHandler(
                         isAutoBackup = isAutoBackup,
                         onToggleAutoBackup = onToggleAutoBackup,
                         onClose = {
-                            onClose()
+                            dismissSheet()
                             refreshBackups()
                         },
                         onShowSnackbar = onShowSnackbar
@@ -169,7 +178,7 @@ private fun SheetsHandler(
                     BackupSelectionSheet(
                         backups = backupList,
                         refreshBackups = refreshBackups,
-                        onClose = onClose,
+                        onClose = { dismissSheet() },
                         onShowSnackbar = onShowSnackbar
                     )
                 }

@@ -12,6 +12,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,6 +25,7 @@ import com.axoncodelabs.fundflow.ui.components.HideTextData
 import com.axoncodelabs.fundflow.ui.components.noRippleClickable
 import com.axoncodelabs.fundflow.ui.theme.MyFontStyle
 import com.axoncodelabs.fundflow.ui.theme.MyIcons
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,9 +42,19 @@ fun FundSelectionBttn(
     unSelectedErrorMsg: String = "",
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+
+    val scope = rememberCoroutineScope()
+    fun dismissSheet() {
+        scope.launch {
+            sheetState.hide()
+            viewModel.showFunds = false
+        }
+    }
+
     if (viewModel.showFunds) {
         ModalBottomSheet(
-            onDismissRequest = { viewModel.showFunds = false },
+            onDismissRequest = { dismissSheet() },
             sheetState = sheetState,
             containerColor = MaterialTheme.colorScheme.background
         ) {
@@ -50,7 +62,7 @@ fun FundSelectionBttn(
                 isHideData = isHideData,
                 onSelect = {
                     onFundSelected(it)
-                    viewModel.showFunds = false
+                    dismissSheet()
                 },
                 fromFundId = fromFundId
             )
