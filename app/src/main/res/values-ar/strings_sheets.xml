@@ -12,6 +12,7 @@
 
     <string name="Sheet_FundName">اسم الصندوق</string>
     <string name="Sheet_FundNameError">مينفعش تسيب اسم الصندوق فاضي</string>
+    <string name="Sheet_FundDefaultDescription">القيمة الأولية للصندوق</string>
 
     <string name="Sheet_Amount_Lapel">المبلغ</string>
     <string name="Sheet_FundFromBalance">المتاح</string>
@@ -25,7 +26,7 @@
     <string name="Sheet_Description_Hint">وصف العملية</string>
     <string name="Sheet_TransferFromDescription">تحويل من</string>
     <string name="Sheet_TransferToDescription">إلى</string>
-    <string name="Sheet_AddFundDescription">شحن صندوق</string>
+    <string name="Sheet_AddAmoundDescription">شحن صندوق</string>
 
     <string name="Sheet_TransactionDateSelector">تاريخ المعاملة</string>
 

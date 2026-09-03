@@ -12,6 +12,7 @@
 
     <string name="Sheet_FundName">Fund name</string>
     <string name="Sheet_FundNameError">Fund name can\'t be empty</string>
+    <string name="Sheet_FundDefaultDescription">Initial fund balance</string>
 
     <string name="Sheet_Amount_Lapel">Amount</string>
     <string name="Sheet_FundFromBalance">Available</string>
@@ -26,7 +27,7 @@
     <string name="Sheet_Description_Hint">Description</string>
     <string name="Sheet_TransferFromDescription">Transfer from</string>
     <string name="Sheet_TransferToDescription">To</string>
-    <string name="Sheet_AddFundDescription">Add balance to fund</string>
+    <string name="Sheet_AddAmoundDescription">Add balance to</string>
 
     <string name="Sheet_TransactionDateSelector">Transaction date</string>
 

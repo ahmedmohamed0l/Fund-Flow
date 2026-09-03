@@ -85,7 +85,7 @@ class AddAmountVM @Inject constructor(
 
                     if (description.isBlank()) {
                         description =
-                            (stringProvider.getString(R.string.Sheet_AddFundDescription) + "" + fund?.name.orEmpty())
+                            (stringProvider.getString(R.string.Sheet_AddAmoundDescription) + " " + "(${fund?.name.orEmpty()})")
                     }
 
                     fund?.let {

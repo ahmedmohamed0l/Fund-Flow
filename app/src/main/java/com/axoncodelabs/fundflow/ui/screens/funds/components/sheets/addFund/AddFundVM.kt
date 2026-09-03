@@ -5,10 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.axoncodelabs.fundflow.R
 import com.axoncodelabs.fundflow.data.local.entity.FundEntity
 import com.axoncodelabs.fundflow.data.local.entity.TransactionEntity
 import com.axoncodelabs.fundflow.data.local.entity.TransactionType
 import com.axoncodelabs.fundflow.data.repository.FundFlowRepository
+import com.axoncodelabs.fundflow.data.util.StringProvider
 import com.axoncodelabs.fundflow.ui.components.sheets.SheetResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -19,6 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddFundVM @Inject constructor(
     private val repository: FundFlowRepository,
+    private val stringProvider: StringProvider
 ) : ViewModel() {
 
     //──── UI State ────
@@ -82,7 +85,7 @@ class AddFundVM @Inject constructor(
                         TransactionEntity(
                             fundId = fundId,
                             amount = initialAmount,
-                            description = description.ifBlank { "القيمة الأولية للصندوق" },
+                            description = description.ifBlank { stringProvider.getString(R.string.Sheet_FundDefaultDescription) },
                             type = TransactionType.INCOME
                         )
                     )
