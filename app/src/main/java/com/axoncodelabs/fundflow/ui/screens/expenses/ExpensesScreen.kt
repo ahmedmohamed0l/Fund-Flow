@@ -38,6 +38,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -64,6 +65,7 @@ import com.axoncodelabs.fundflow.ui.theme.MyRoundedCornerShape
 import com.axoncodelabs.fundflow.ui.util.DateFormates
 import com.axoncodelabs.fundflow.ui.util.dateFormatter
 import com.axoncodelabs.fundflow.ui.util.formatAmount
+import kotlinx.coroutines.launch
 
 @Composable
 fun ExpensesScreen(
@@ -153,9 +155,17 @@ private fun SheetsHandler(
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
+    val scope = rememberCoroutineScope()
+    fun dismissSheet() {
+        scope.launch {
+            sheetState.hide()
+            onClose()
+        }
+    }
+
     if (sheet != ExpensesSheets.None) {
         ModalBottomSheet(
-            onDismissRequest = onClose,
+            onDismissRequest = { dismissSheet() },
             containerColor = MaterialTheme.colorScheme.background,
             sheetState = sheetState
         ) {
@@ -164,7 +174,7 @@ private fun SheetsHandler(
                     AddExpenseSheet(
                         isHideData = isHideData,
                         selectedDate = selectedDate,
-                        onClose = onClose,
+                        onClose = { dismissSheet() },
                         onShowSnackbar = onShowSnackbar
                     )
                 }
@@ -173,7 +183,7 @@ private fun SheetsHandler(
                     EditTransactionSheet(
                         isHideData = isHideData,
                         transaction = sheet.expense,
-                        onClose = onClose,
+                        onClose = { dismissSheet() },
                         onShowSnackbar = onShowSnackbar
                     )
                 }

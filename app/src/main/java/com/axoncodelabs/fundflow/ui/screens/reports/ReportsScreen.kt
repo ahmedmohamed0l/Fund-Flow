@@ -46,6 +46,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -75,6 +76,7 @@ import com.axoncodelabs.fundflow.ui.util.DateFormates
 import com.axoncodelabs.fundflow.ui.util.dateFormatter
 import com.axoncodelabs.fundflow.ui.util.formatAmount
 import com.axoncodelabs.fundflow.ui.util.startOfDay
+import kotlinx.coroutines.launch
 
 @Composable
 fun ReportsScreen(
@@ -187,9 +189,17 @@ private fun SheetsHandler(
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
+    val scope = rememberCoroutineScope()
+    fun dismissSheet() {
+        scope.launch {
+            sheetState.hide()
+            onClose()
+        }
+    }
+
     if (sheet != ReportsSheets.None) {
         ModalBottomSheet(
-            onDismissRequest = onClose,
+            onDismissRequest = { dismissSheet() },
             containerColor = MaterialTheme.colorScheme.background,
             sheetState = sheetState
         ) {
@@ -202,11 +212,17 @@ private fun SheetsHandler(
                             modifier = Modifier.padding(start = 20.dp),
                             isActive = isSelectAllFunds,
                             lapel = stringResource(R.string.ReportsScreen_SelectAll),
-                            onClick = onSelectAllFunds
+                            onClick = {
+                                onSelectAllFunds()
+                                dismissSheet()
+                            }
                         )
                         FundSelectionSheet(
                             isHideData = isHideData,
-                            onSelect = onFundSelected
+                            onSelect = { fund ->
+                                onFundSelected(fund)
+                                dismissSheet()
+                            },
                         )
                     }
                 }
@@ -224,16 +240,27 @@ private fun SheetsHandler(
                                 modifier = Modifier.padding(start = 20.dp),
                                 isActive = isSelectAllDates,
                                 lapel = stringResource(R.string.ReportsScreen_SelectAll),
-                                onClick = onSelectAllDates
+                                onClick = {
+                                    onSelectAllDates()
+                                    dismissSheet()
+                                }
                             )
                             SelectValueBttn(
                                 modifier = Modifier.padding(end = 20.dp),
                                 isActive = isSelectCurrentMonth,
                                 lapel = stringResource(R.string.ReportsScreen_SelectCurrentMonth),
-                                onClick = onSelectCurrentMonth
+                                onClick = {
+                                    onSelectCurrentMonth()
+                                    dismissSheet()
+                                }
                             )
                         }
-                        MonthSelectionSheet(onSelect = onDateSelected)
+                        MonthSelectionSheet(
+                            onSelect = { month ->
+                                onDateSelected(month)
+                                dismissSheet()
+                            }
+                        )
                     }
                 }
 
@@ -241,7 +268,7 @@ private fun SheetsHandler(
                     EditTransactionSheet(
                         isHideData = isHideData,
                         transaction = sheet.transaction,
-                        onClose = onClose,
+                        onClose = { dismissSheet() },
                         onShowSnackbar = onShowSnackbar
                     )
                 }

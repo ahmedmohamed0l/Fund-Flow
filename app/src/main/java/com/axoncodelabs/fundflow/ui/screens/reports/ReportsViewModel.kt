@@ -203,8 +203,7 @@ class ReportsViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         selectedFund = event.fund,
-                        isSelectAllFunds = false,
-                        currentSheet = ReportsSheets.None
+                        isSelectAllFunds = false
                     )
                 }
             }
@@ -213,8 +212,7 @@ class ReportsViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         selectedFund = null,
-                        isSelectAllFunds = true,
-                        currentSheet = ReportsSheets.None
+                        isSelectAllFunds = true
                     )
                 }
             }
@@ -225,8 +223,7 @@ class ReportsViewModel @Inject constructor(
                     it.copy(
                         selectedDate = event.date,
                         isSelectAllDates = false,
-                        isSelectCurrentMonth = false,
-                        currentSheet = ReportsSheets.None
+                        isSelectCurrentMonth = false
                     )
                 }
             }
@@ -236,8 +233,7 @@ class ReportsViewModel @Inject constructor(
                     it.copy(
                         selectedDate = null,
                         isSelectAllDates = true,
-                        isSelectCurrentMonth = false,
-                        currentSheet = ReportsSheets.None
+                        isSelectCurrentMonth = false
                     )
                 }
             }
@@ -247,8 +243,7 @@ class ReportsViewModel @Inject constructor(
                     it.copy(
                         selectedDate = System.currentTimeMillis(),
                         isSelectAllDates = false,
-                        isSelectCurrentMonth = true,
-                        currentSheet = ReportsSheets.None
+                        isSelectCurrentMonth = true
                     )
                 }
 
