@@ -106,7 +106,7 @@ fun ReportsScreen(
     //──── AppTopBar Data ────
     SideEffect {
         onTopBarChange(
-            AppTopBarState(titleRes = R.string.ReportsScreen_Identifier)
+            AppTopBarState(titleResId = R.string.ReportsScreen_Identifier)
         )
     }
 

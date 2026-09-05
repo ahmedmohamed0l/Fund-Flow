@@ -80,7 +80,7 @@ fun Root() {
     val state by viewModel.state.collectAsState()
     val navController = rememberNavController()
     var appTopBarState by remember {
-        mutableStateOf(AppTopBarState(titleRes = R.string.ExpensesScreen_Identifier))
+        mutableStateOf(AppTopBarState(titleResId = R.string.ExpensesScreen_Identifier))
     }
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()

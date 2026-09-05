@@ -84,10 +84,10 @@ fun FundsScreen(
     SideEffect {
         onTopBarChange(
             AppTopBarState(
-                titleRes = R.string.FundsScreen_Identifier,
+                titleResId = R.string.FundsScreen_Identifier,
                 showAction = true,
-                actionIconRes = R.drawable.ic_add_card,
-                onActionClick = {
+                barStartActionIconRes = R.drawable.ic_add_card,
+                onBarStartActionClick = {
                     viewModel.onEvent(FundsEvent.SheetDisplayed(FundsSheets.AddFund))
                 }
             )

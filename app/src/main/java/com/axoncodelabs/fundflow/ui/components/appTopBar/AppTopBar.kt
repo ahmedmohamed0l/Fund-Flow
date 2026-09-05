@@ -45,7 +45,7 @@ fun AppTopBar(
                 .height(60.dp)
         ) {
             Text(
-                text = stringResource(id = state.titleRes),
+                text = stringResource(id = state.titleResId),
                 color = onBarColor,
                 style = MyFontStyle.mediumBold(),
                 modifier = Modifier
@@ -53,7 +53,7 @@ fun AppTopBar(
                     .padding(vertical = 20.dp),
                 textAlign = TextAlign.Center
             )
-            if (state.showAction && state.actionIconRes != null && state.onActionClick != null) {
+            if (state.showAction && state.barStartActionIconRes != null && state.onBarStartActionClick != null) {
                 Row(
                     modifier = Modifier
                         .align(Alignment.CenterStart)
@@ -61,11 +61,11 @@ fun AppTopBar(
                 ) {
                     Box(
                         modifier = Modifier
-                            .noRippleClickable { state.onActionClick.invoke() }
+                            .noRippleClickable { state.onBarStartActionClick.invoke() }
                             .padding(10.dp),
                     ) {
                         Icon(
-                            painter = painterResource(id = state.actionIconRes),
+                            painter = painterResource(id = state.barStartActionIconRes),
                             contentDescription = "Action",
                             tint = onBarColor,
                         )
@@ -79,6 +79,35 @@ fun AppTopBar(
                         thickness = 1.dp,
                         color = onBarColor.copy(alpha = 0.5f)
                     )
+                }
+            }
+            if (state.showAction && state.barEndActionIconRes != null && state.onBarEndActionClick != null) {
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(end = 8.dp)
+                ) {
+                    VerticalDivider(
+                        modifier = Modifier
+                            .height(30.dp)
+                            .padding(end = 5.dp)
+                            .clip(CircleShape)
+                            .align(Alignment.CenterVertically),
+                        thickness = 1.dp,
+                        color = onBarColor.copy(alpha = 0.5f)
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .noRippleClickable { state.onBarEndActionClick.invoke() }
+                            .padding(10.dp),
+                    ) {
+                        Icon(
+                            painter = painterResource(id = state.barEndActionIconRes),
+                            contentDescription = "Action",
+                            tint = onBarColor,
+                        )
+                    }
                 }
             }
         }

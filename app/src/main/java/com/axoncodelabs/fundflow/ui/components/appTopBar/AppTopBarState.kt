@@ -1,8 +1,10 @@
 package com.axoncodelabs.fundflow.ui.components.appTopBar
 
 data class AppTopBarState(
-    val titleRes: Int,
+    val titleResId: Int,
     val showAction: Boolean = false,
-    val actionIconRes: Int? = null,
-    val onActionClick: (() -> Unit)? = null
+    val barStartActionIconRes: Int? = null,
+    val onBarStartActionClick: (() -> Unit)? = null,
+    val barEndActionIconRes: Int? = null,
+    val onBarEndActionClick: (() -> Unit)? = null
 )

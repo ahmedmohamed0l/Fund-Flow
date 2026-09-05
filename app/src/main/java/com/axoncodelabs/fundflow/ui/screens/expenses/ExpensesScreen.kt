@@ -92,7 +92,7 @@ fun ExpensesScreen(
 
     //──── AppTopBar Data ────
     SideEffect {
-        onTopBarChange(AppTopBarState(titleRes = R.string.ExpensesScreen_Identifier))
+        onTopBarChange(AppTopBarState(titleResId = R.string.ExpensesScreen_Identifier))
     }
 
     //──── Sheets & Popups Handling ────

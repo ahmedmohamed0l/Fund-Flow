@@ -67,7 +67,7 @@ fun SettingsScreen(
 
     //──── AppTopBar Data ────
     SideEffect {
-        onTopBarChange(AppTopBarState(titleRes = R.string.SettingsScreen_Identifier))
+        onTopBarChange(AppTopBarState(titleResId = R.string.SettingsScreen_Identifier))
     }
 
     //──── Sheets & Popups Handling ────
